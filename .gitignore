@@ -32,4 +32,5 @@
 *.app
 
 # Visual Studio
-.vs/*.*
+.vs/
+Debug/
