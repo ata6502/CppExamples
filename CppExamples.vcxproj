@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Arrays.h" />
+    <ClInclude Include="AutoDecltypeTypedef.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
