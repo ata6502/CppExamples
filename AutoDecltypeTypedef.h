@@ -11,7 +11,7 @@ using std::endl;
 using std::string;
 
 // Used in Auto() in Typedef()
-class Book { public: int someMemberFunction() { return 0; } };
+class SomeClass { public: int someMemberFunction() { return 0; } };
 int someFunction(int n) { return 0; }
 
 // Used in Decltype() to show a side effect.
@@ -32,8 +32,6 @@ class A { private: A(); };
 
 void Auto()
 {
-    cout << "*** AUTO DECLTYPE TYPEDEF ***" << endl;
-
     //
     // auto
     //
@@ -68,9 +66,9 @@ void Auto()
     auto c1 = clock; // c1 is not volatile anymore
 
     // Arrays are turned into pointers.
-    Book books[10];
-    auto b1 = books; // b1 is of type Book*
-    auto& b2 = books; // b2 is of type Book(&)[10] - a reference to the array
+    SomeClass items[10];
+    auto b1 = items; // b1 is of type SomeClass*
+    auto& b2 = items; // b2 is of type SomeClass(&)[10] - a reference to the array
 
     // If you need a reference, specify that explicitly.
     auto g = someFunction; // g is int(*)(int)
@@ -120,8 +118,6 @@ void Decltype()
     // It's used in generic programming. The following example shows the usage of dectype but most
     // likely you won't use it in this context.
     decltype(i) j = 8; // j is of type int
-
-    cout << endl;
 }
 
 void Typedef()
@@ -141,10 +137,10 @@ void Typedef()
     action = someFunction;
 
     // a function pointer type MFUN that points to a member function of a class MyClass
-    typedef int (Book::* MFUN) ();
-    Book obj;
+    typedef int (SomeClass::* MFUN) ();
+    SomeClass obj;
     MFUN action2;
-    action2 = &Book::someMemberFunction;
+    action2 = &SomeClass::someMemberFunction;
     int n = (obj.*action2)(); // deference the function pointer
 }
 

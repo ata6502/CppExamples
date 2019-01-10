@@ -10,8 +10,6 @@ using std::string;
 
 void Arrays()
 {
-    cout << "*** ARRAYS ***" << endl;
-
     //
     // Array declaration and initialization
     //
@@ -78,8 +76,4 @@ void Arrays()
     for (int i = 0; (dst[i] = src[i]) != '\0'; i++)
         ;
     cout << dst << " ";
-
-    // ===============
-
-    cout << endl;
 }

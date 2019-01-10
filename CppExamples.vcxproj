@@ -21,6 +21,9 @@
   <ItemGroup>
     <ClInclude Include="Arrays.h" />
     <ClInclude Include="AutoDecltypeTypedef.h" />
+    <ClInclude Include="Casting.h" />
+    <ClInclude Include="Classes.h" />
+    <ClInclude Include="Containers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
