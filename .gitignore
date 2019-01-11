@@ -34,3 +34,7 @@
 # Visual Studio
 .vs/
 Debug/
+
+# Data files
+*.txt
+

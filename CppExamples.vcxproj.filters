@@ -6,6 +6,11 @@
     <ClInclude Include="Casting.h" />
     <ClInclude Include="Classes.h" />
     <ClInclude Include="Containers.h" />
+    <ClInclude Include="Enums.h" />
+    <ClInclude Include="Exceptions.h" />
+    <ClInclude Include="FilesAndStreams.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="Lambda.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />

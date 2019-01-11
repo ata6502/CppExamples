@@ -24,7 +24,6 @@ using std::endl;
     - Make use of accessors when they exist, even within the class.
 */
 
-
 class Complex
 {
 public:
