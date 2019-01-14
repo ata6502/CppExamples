@@ -11,6 +11,7 @@
     <ClInclude Include="FilesAndStreams.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Lambda.h" />
+    <ClInclude Include="Initialization.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />

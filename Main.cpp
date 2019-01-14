@@ -7,6 +7,7 @@
 #include "Enums.h"
 #include "Exceptions.h"
 #include "FilesAndStreams.h"
+#include "Initialization.h"
 #include "Input.h"
 #include "Lambda.h"
 
@@ -32,7 +33,7 @@ int main()
     cout << endl << endl;
 
     cout << "*** Containers ***" << endl;
-    Containers();
+    ContainerExamples::Containers();
     cout << endl << endl;
 
     cout << "*** Enums ***" << endl;
@@ -45,6 +46,10 @@ int main()
 
     cout << "*** Files & Streams ***" << endl;
     FilesAndStreamsExamples::FilesAndStreams();
+    cout << endl << endl;
+
+    cout << "*** Initialization ***" << endl;
+    InitializationExamples::Initialization();
     cout << endl << endl;
 
     //cout << "*** Input ***" << endl;
