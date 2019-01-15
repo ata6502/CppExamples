@@ -12,6 +12,10 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Lambda.h" />
     <ClInclude Include="Initialization.h" />
+    <ClInclude Include="Formatting.h" />
+    <ClInclude Include="Rand.h" />
+    <ClInclude Include="Conversion.h" />
+    <ClInclude Include="Numbers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />

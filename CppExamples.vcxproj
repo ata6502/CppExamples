@@ -24,12 +24,16 @@
     <ClInclude Include="Casting.h" />
     <ClInclude Include="Classes.h" />
     <ClInclude Include="Containers.h" />
+    <ClInclude Include="Conversion.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="FilesAndStreams.h" />
+    <ClInclude Include="Formatting.h" />
     <ClInclude Include="Initialization.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Lambda.h" />
+    <ClInclude Include="Numbers.h" />
+    <ClInclude Include="Rand.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
