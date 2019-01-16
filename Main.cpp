@@ -12,8 +12,12 @@
 #include "Initialization.h"
 #include "Input.h"
 #include "Lambda.h"
+#include "OperatorOverloading.h"
 #include "Numbers.h"
+#include "PointersAndReferences.h"
 #include "Rand.h"
+
+#include "Recursion\RecursionTest.h"
 
 //
 // The purpose of this application is to provide examples of C++ and STL features.
@@ -76,9 +80,19 @@ int main()
     NumbersExamples::Numbers();
     cout << endl << endl;
 
+    cout << "*** Operator overloading ***" << endl;
+    OperatorOverloadingExamples::OperatorOverloading();
+    cout << endl << endl;
+
+    cout << "*** Pointers & References ***" << endl;
+    PointersAndReferencesExamples::PointersAndReferences();
+    cout << endl << endl;
+
     cout << "*** Rand ***" << endl;
     RandExamples::Rand();
     cout << endl << endl;
+
+    RecursionTest();
 
     return 0;
 }

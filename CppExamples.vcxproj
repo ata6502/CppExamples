@@ -33,7 +33,12 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Lambda.h" />
     <ClInclude Include="Numbers.h" />
+    <ClInclude Include="OperatorOverloading.h" />
+    <ClInclude Include="PointersAndReferences.h" />
     <ClInclude Include="Rand.h" />
+    <ClInclude Include="Recursion\CalculatePower.h" />
+    <ClInclude Include="Recursion\RecursionTest.h" />
+    <ClInclude Include="Recursion\ReverseEnumerator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
