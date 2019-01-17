@@ -27,6 +27,15 @@
     <ClInclude Include="Recursion\CalculatePower.h">
       <Filter>Recursion</Filter>
     </ClInclude>
+    <ClInclude Include="GreatestCommonDivisor.h">
+      <Filter>Recursion</Filter>
+    </ClInclude>
+    <ClInclude Include="CalculateFactorial.h">
+      <Filter>Recursion</Filter>
+    </ClInclude>
+    <ClInclude Include="TowerOfHanoi.h">
+      <Filter>Recursion</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
