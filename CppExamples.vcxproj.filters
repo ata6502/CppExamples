@@ -27,13 +27,13 @@
     <ClInclude Include="Recursion\CalculatePower.h">
       <Filter>Recursion</Filter>
     </ClInclude>
-    <ClInclude Include="GreatestCommonDivisor.h">
+    <ClInclude Include="Recursion\CalculateFactorial.h">
       <Filter>Recursion</Filter>
     </ClInclude>
-    <ClInclude Include="CalculateFactorial.h">
+    <ClInclude Include="Recursion\GreatestCommonDivisor.h">
       <Filter>Recursion</Filter>
     </ClInclude>
-    <ClInclude Include="TowerOfHanoi.h">
+    <ClInclude Include="Recursion\TowerOfHanoi.h">
       <Filter>Recursion</Filter>
     </ClInclude>
   </ItemGroup>

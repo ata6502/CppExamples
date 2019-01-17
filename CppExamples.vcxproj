@@ -21,7 +21,6 @@
   <ItemGroup>
     <ClInclude Include="Arrays.h" />
     <ClInclude Include="AutoDecltypeTypedef.h" />
-    <ClInclude Include="CalculateFactorial.h" />
     <ClInclude Include="Casting.h" />
     <ClInclude Include="Classes.h" />
     <ClInclude Include="Containers.h" />
@@ -30,7 +29,6 @@
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="FilesAndStreams.h" />
     <ClInclude Include="Formatting.h" />
-    <ClInclude Include="GreatestCommonDivisor.h" />
     <ClInclude Include="Initialization.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Lambda.h" />
@@ -38,10 +36,12 @@
     <ClInclude Include="OperatorOverloading.h" />
     <ClInclude Include="PointersAndReferences.h" />
     <ClInclude Include="Rand.h" />
+    <ClInclude Include="Recursion\CalculateFactorial.h" />
     <ClInclude Include="Recursion\CalculatePower.h" />
+    <ClInclude Include="Recursion\GreatestCommonDivisor.h" />
     <ClInclude Include="Recursion\RecursionTest.h" />
     <ClInclude Include="Recursion\ReverseEnumerator.h" />
-    <ClInclude Include="TowerOfHanoi.h" />
+    <ClInclude Include="Recursion\TowerOfHanoi.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
