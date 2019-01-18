@@ -36,6 +36,11 @@
     <ClInclude Include="Recursion\TowerOfHanoi.h">
       <Filter>Recursion</Filter>
     </ClInclude>
+    <ClInclude Include="Strings.h" />
+    <ClInclude Include="Templates.h" />
+    <ClInclude Include="Applications\Histogram.h">
+      <Filter>Applications</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -43,6 +48,9 @@
   <ItemGroup>
     <Filter Include="Recursion">
       <UniqueIdentifier>{dfe07a4f-73a2-4cfd-9f5b-832b459397c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Applications">
+      <UniqueIdentifier>{10e8d7fc-4584-483c-918f-eb2e8b196168}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

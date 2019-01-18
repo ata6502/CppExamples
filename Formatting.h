@@ -24,6 +24,10 @@ namespace FormattingExamples
         cout << std::setiosflags(std::ios::fixed | std::ios::showpoint)
             << std::setprecision(2) << std::setw(10) << pow(4.5, 5.0) // 1845.28
             << " ";
+
+        // Use std::to_string()
+        double d = 2.72;
+        cout << std::to_string(d) << " "; // 2.720000
     }
 
     // Show integer values of characters as decimal and hexadecimal numbers.

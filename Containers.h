@@ -57,17 +57,25 @@ namespace ContainerExamples
             cout << n;
         cout << " ";
 
-        // Multiply each element of a vector by 3.
-        // Declaring elem as a reference is important because otherwise the statements in the body of the
-        // for loop act on a local copy of the elements in the vector (which sometimes also might be useful).
-        for (auto& n : vec)
-            n *= 3;
-
         // To avoid calling the copy constructor and the destructor for each element, 
         // you should usually declare the current element to be a constant reference.
         for (const auto& n : vec)
             cout << n;
         cout << " ";
+
+        // If you need to modify an element in a range-for loop, use a reference as 
+        // the element variable.
+        for (int& n : vec)
+            ++n;
+        for (int n : vec)
+            cout << n;
+        cout << " ";
+
+        // Multiply each element of a vector by 3.
+        // Declaring n as a reference is important because otherwise the statements in the body of the
+        // for loop act on a local copy of the elements in the vector (which sometimes also might be useful).
+        for (auto& n : vec)
+            n *= 2;
 
         // for loop
         for (unsigned int i = 0; i < vec.size(); ++i)
@@ -89,7 +97,7 @@ namespace ContainerExamples
             cout << *it;
         cout << " ";
 
-        // iterator - using member methods begin() and end()
+        // iterator - using member iterator methods begin() and end()
         for (auto it = vec.begin(), _end = vec.end(); it != _end; ++it)
             cout << *it;
         cout << " ";
@@ -98,8 +106,8 @@ namespace ContainerExamples
         for_each(vec.begin(), vec.end(), [](int i) { cout << i; });
         cout << " ";
 
-        // Use the range-based for loop for an initializer list.
-        for (int i : { 4,5,6 })
+        // Iterate over an initializer list..
+        for (int i : { 1, 2, 3 })
             cout << i;
         cout << " ";
 

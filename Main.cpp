@@ -16,8 +16,11 @@
 #include "Numbers.h"
 #include "PointersAndReferences.h"
 #include "Rand.h"
+#include "Strings.h"
+#include "Templates.h"
 
 #include "Recursion\RecursionTest.h"
+#include "Applications\Histogram.h"
 
 //
 // The purpose of this application is to provide examples of C++ and STL features.
@@ -92,7 +95,16 @@ int main()
     RandExamples::Rand();
     cout << endl << endl;
 
+    cout << "*** Strings ***" << endl;
+    StringsExamples::Strings();
+    cout << endl << endl;
+
+    cout << "*** Templates ***" << endl;
+    TemplatesExamples::Templates();
+    cout << endl << endl;
+
     // RecursionTest();
+    Applications::Histogram();
 
     return 0;
 }

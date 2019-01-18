@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Applications\Histogram.h" />
     <ClInclude Include="Arrays.h" />
     <ClInclude Include="AutoDecltypeTypedef.h" />
     <ClInclude Include="Casting.h" />
@@ -42,6 +43,8 @@
     <ClInclude Include="Recursion\RecursionTest.h" />
     <ClInclude Include="Recursion\ReverseEnumerator.h" />
     <ClInclude Include="Recursion\TowerOfHanoi.h" />
+    <ClInclude Include="Strings.h" />
+    <ClInclude Include="Templates.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
