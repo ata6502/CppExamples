@@ -10,6 +10,11 @@ using std::endl;
     In C++ the template arguments don't have to be type names. 
     They can be variable names, function names, and constant 
     expressions as well.
+
+    Variadic templates allow templates to take an arbitrary 
+    number of type parameters.
+
+    Local and unnamed types can be used as template arguments.
 */
 
 // Function templates
@@ -48,7 +53,9 @@ private:
 };
 
 
-void Accumulate()
+// Tests
+
+void AccumulatorTest()
 {
     Accumulator<int> accum(0); // always specify a type for class templates
     accum += 3;
@@ -61,7 +68,7 @@ void Accumulate()
     cout << accum2.GetTotal() << " ";
 }
 
-void MinMax()
+void MinMaxTest()
 {
     int a = 2, b = 8;
     cout << "min=" << Min(a, b) << " "; // the compiler figures out what type you want to use; the same as Min<double>(a,b)
@@ -81,7 +88,7 @@ namespace TemplatesExamples
 {
     void Templates()
     {
-        Accumulate();
-        MinMax();
+        AccumulatorTest();
+        MinMaxTest();
     }
 }

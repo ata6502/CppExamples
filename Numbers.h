@@ -12,6 +12,18 @@ using std::setw;
 using std::ios;
 
 /*
+    In C++, the size of int may not be four bytes.
+    sizeof returns the size of int (of type size_t).
+
+    <cstdint> defines integral types of fixed sizes.
+    Use it to create portable code.
+
+    int32_t is guaranteed to be a signed 32-bit integer type.
+    uint64_t is guaranteed to be an unsigned 64-bit integer type.
+
+    float is also not standardized, but on desktop is usually 32-bit.
+    double is 64-bit.
+
     Useful mathematical functions:
     ceil(x)     rounds x to the smallest integer not less than x
     floor(x)    rounds x to the largest integer not greater than x
@@ -25,6 +37,18 @@ using std::ios;
 
 namespace NumbersExamples
 {
+    void Size()
+    {
+        // pass the type
+        size_t a = sizeof(int);
+
+        // pass a variable
+        int n = 0;
+        size_t b = sizeof(n);
+
+        cout << a << " " << b << " ";
+    }
+
     void RoundAndTruncate()
     {
         double r = 2.5176;
@@ -103,6 +127,7 @@ namespace NumbersExamples
 
     void Numbers()
     {
+        Size();
         RoundAndTruncate();
         NumericLimits();
         ShowDecimalDigits();

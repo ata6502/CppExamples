@@ -104,7 +104,7 @@ int main()
     cout << endl << endl;
 
     // RecursionTest();
-    Applications::Histogram();
+    // Applications::Histogram();
 
     return 0;
 }

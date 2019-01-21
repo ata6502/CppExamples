@@ -68,6 +68,12 @@ void Arrays()
         for (int i = 0; i < 3; ++i)
             d[i][j] = 1.0f;
 
+    // Initialize a multidimensional array.
+    int e[2][2]{ { 1, 0 }, { 0, 1 } };
+
+    // Modify a multidimensional array.
+    e[0][1] = 8;
+
     //
     // Copy a char array i.e., a C-style string
     //

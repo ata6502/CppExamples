@@ -41,6 +41,17 @@ namespace LambdaExamples
 {
     void LambdaInvocation()
     {
+        // Simple lambda.
+        auto doubleValue = [](int z) { return z * 2; };
+        cout << doubleValue(4) << " "; // 8
+
+        // Capture an external variable.
+        int x = 4;
+        auto increaseValue = [x](int z) { return z + x; };
+        cout << increaseValue(3) << " "; // 7
+        x = 10; // change the variable
+        cout << increaseValue(3) << " "; // still 7 because the variables are captured by value and x was 4 when it was captured: 3 + 4 = 7
+
         //
         // Create a lambda expression and immediately execute it.
         //

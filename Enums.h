@@ -38,7 +38,13 @@ enum class TestEnum : unsigned long
 // Named enums
 //
 // Declare a named enum. 'Opcode' is a type. LDA, STA, PHA are of type 'Opcode'.
-enum Opcode { LDA, STA, PHA };
+// The values LDA, STA, PHA are accessible globally.
+enum Opcode 
+{ 
+    LDA, 
+    STA, 
+    PHA 
+};
 
 // Declare a "no name" enum.
 enum { P1, P2, P3 };
