@@ -1,9 +1,11 @@
 #pragma once
 
 #include <iostream>
+#include <string>
 
 using std::cout;
 using std::endl;
+using std::string;
 
 /*
     The rule of three. Always write these three methods when you have manual memory management:
@@ -23,6 +25,74 @@ using std::endl;
     Good practices:
     - Make use of accessors when they exist, even within the class.
 */
+
+class Person
+{
+public:
+    Person(int age, const string& name)
+        : m_age(age), m_name(name)
+    { }
+
+    string GetName() const { return m_name; }
+
+    virtual void Greet()
+    {
+        cout << "Hello" << " ";
+    }
+
+private:
+    int m_age;
+    string m_name;
+};
+
+class Employee : public Person
+{
+public:
+    Employee() : Person(0, "") { }
+
+    Employee(int age, const string& name, string department = string())
+        : Person(age, name), m_department(department)
+    { }
+
+    string GetDepartment() const { return m_department; }
+
+    void Greet() override
+    {
+        Person::Greet();
+        cout << m_department << " ";
+    }
+
+    // Allows us to access the Employee's private members in the EmployeeFactory class.
+    friend class EmployeeFactory;
+
+private:
+    string m_department;
+    int m_taxId;
+};
+
+class EmployeeFactory
+{
+public:
+    Employee MakeEmployee(int id)
+    {
+        Employee emp;
+        emp.m_taxId = id; // we can access the private member here because EmployeeFactory is the Employee's friend
+        return emp;
+    }
+};
+
+class TestClass
+{
+public:
+    // constants have to be declared as static 
+    const static int burak = 1;
+
+    // a static member
+    static int carrot;
+};
+
+// static members have to be initialized outside of the class definition
+int TestClass::carrot = 2;
 
 class Complex
 {
@@ -219,6 +289,50 @@ void Classes()
     obj.ShowFormatted();
     obj.Format();
     obj.ShowFormatted();
+
+
+    //
+    // Test Person and Employee
+    //
+    Person person(45, "Pat");
+    Employee employee(33, "Mike", "IT");
+
+    auto printPerson = [](const Person& p)
+    {
+        cout << p.GetName() << " ";
+    };
+
+    printPerson(employee);
+
+    // Get Person reference from Employee reference (downcast: get base class from derived).
+    Person &pr = employee;
+
+    // Get Employee reference from Person reference (upcast: derived class from base class).
+    // It is valid because we know that pr came from Employee.
+    // Better yet, you can use the dynamic_cast because static_cast does not check if pr
+    // is really of Employee type or derived from Employee.
+    // dynamic_cast is more flexible: it throws an exception or returns nullptr if a cast
+    // is not valid.
+    Employee &er = static_cast<Employee&>(pr);
+    cout << er.GetDepartment() << " ";
+
+    // Virtual members.
+    pr.Greet(); // although pr is of type Person&, the Employee's Greet method is called becase pr references an Employee
+
+    // When casting references fails we get an exception.
+    // person is of type Person, not Employee&. We know this cast will fail.
+    try
+    {
+        Employee& er2 = dynamic_cast<Employee&>(person);
+    }
+    catch(const std::bad_cast& exc)
+    {
+        cout << "CastError ";
+    }
+
+    // When casting pointers fails we get nullptr.
+    Person *pp = &person;
+    Employee *ep = dynamic_cast<Employee*>(pp); // *ep is nullptr
 }
 
 
