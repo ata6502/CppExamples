@@ -44,6 +44,10 @@ void StringOperations()
     cout << s.substr(6, 5) << " "; // substr(index,length) - "there"
     s.replace(6, 5, "buba"); // replace(first,length,newstr) the replacement string need not be the same size as the substring that it is replacing
     cout << s << " ";
+
+    // Initialize a variable to an empty string.
+    s = string();
+    cout << s << " ";
 }
 
 // Use StringStream to keep concatenated values.

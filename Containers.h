@@ -102,6 +102,16 @@ namespace ContainerExamples
             cout << *it;
         cout << " ";
 
+        // iterator - using const member iterator methods cbegin() and cend()
+        for (auto it = vec.cbegin(), _end = vec.cend(); it != _end; ++it)
+            cout << *it;
+        cout << " ";
+
+        // reverse iterator - rbegin() points to the last element
+        for (auto it = vec.rbegin(); it != vec.rend(); ++it)
+            cout << *it;
+        cout << " ";
+
         // for_each algorithm with a lambda expression; it could be a function name instead of lambda
         for_each(vec.begin(), vec.end(), [](int i) { cout << i; });
         cout << " ";
