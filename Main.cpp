@@ -12,8 +12,9 @@
 #include "Initialization.h"
 #include "Input.h"
 #include "Lambda.h"
-#include "OperatorOverloading.h"
+#include "MoveSemantics.h"
 #include "Numbers.h"
+#include "OperatorOverloading.h"
 #include "PointersAndReferences.h"
 #include "Rand.h"
 #include "Strings.h"
@@ -79,12 +80,16 @@ int main()
     LambdaExamples::Lambda();
     cout << endl << endl;
 
-    cout << "*** Numbers ***" << endl;
-    NumbersExamples::Numbers();
+    cout << "*** Move Semantics ***" << endl;
+    MoveSemanticsExamples::MoveSemantics();
     cout << endl << endl;
 
     cout << "*** Operator overloading ***" << endl;
     OperatorOverloadingExamples::OperatorOverloading();
+    cout << endl << endl;
+
+    cout << "*** Numbers ***" << endl;
+    NumbersExamples::Numbers();
     cout << endl << endl;
 
     cout << "*** Pointers & References ***" << endl;

@@ -41,6 +41,7 @@
     <ClInclude Include="Applications\Histogram.h">
       <Filter>Applications</Filter>
     </ClInclude>
+    <ClInclude Include="MoveSemantics.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
