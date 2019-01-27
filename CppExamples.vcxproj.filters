@@ -42,6 +42,7 @@
       <Filter>Applications</Filter>
     </ClInclude>
     <ClInclude Include="MoveSemantics.h" />
+    <ClInclude Include="SmartPointers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />

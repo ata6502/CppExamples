@@ -17,6 +17,7 @@
 #include "OperatorOverloading.h"
 #include "PointersAndReferences.h"
 #include "Rand.h"
+#include "SmartPointers.h"
 #include "Strings.h"
 #include "Templates.h"
 
@@ -98,6 +99,10 @@ int main()
 
     cout << "*** Rand ***" << endl;
     RandExamples::Rand();
+    cout << endl << endl;
+
+    cout << "*** Smart Pointers ***" << endl;
+    SmartPointersExamples::SmartPointers();
     cout << endl << endl;
 
     cout << "*** Strings ***" << endl;
