@@ -4,8 +4,9 @@
 #include <string>
 #include <vector>
 #include <algorithm> // sort, unique_copy
-#include <iomanip> // std::setprecision
-#include <fstream> // std::ofstream, std::ifstream
+#include <iomanip> // setprecision
+#include <fstream> // ofstream, ifstream
+#include <sstream> // ostringstream
 
 using std::cout;
 using std::endl;
@@ -30,7 +31,7 @@ namespace FilesAndStreamsExamples
         std::ofstream file;
         file.open(FILENAME, std::ios::out); 
 
-        file << "B" << endl << "D" << endl << "A" << endl << "B" << endl << "C";
+        file << "B\nD\nA\nB\nC" << endl; // ??? does endl flush the stream?
 
         file.flush();
         file.close();
@@ -81,5 +82,17 @@ namespace FilesAndStreamsExamples
 
         file.flush();
         file.close();
+
+
+        //
+        // StringBuilder
+        //
+        std::ostringstream oss;
+        oss << "a:" << 1 << ",";
+        oss << "b:" << 2.2;
+
+        // str() puts everything together and gives a string
+        string text = oss.str();
+        cout << text << " ";
     }
 }

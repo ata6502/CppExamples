@@ -30,7 +30,7 @@
 int main()
 {
     cout << "*** Arrays ***" << endl;
-    Arrays();
+    ArraysExamples::Test();
     cout << endl << endl;
 
     cout << "*** Auto, Decltype, Typedef (type inference) ***" << endl;

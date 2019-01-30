@@ -51,9 +51,16 @@ namespace FormattingExamples
         cout << std::dec;
     }
 
+    void FormatBoolean()
+    {
+        bool b = true;
+        cout << std::boolalpha << b << " ";
+    }
+
     void Formatting()
     {
         FormatNumbers();
         FormatHexAndDec();
+        FormatBoolean();
     }
 }

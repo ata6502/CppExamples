@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <string>
+#include <chrono>
+#include <random> // mt19937, normal_distribution
 
 using std::cout;
 using std::endl;
@@ -94,12 +96,25 @@ namespace RandExamples
         cout << std::setprecision(10) << "max=" << max << " ";
     }
 
+    void StrongRandomization()
+    {
+        auto seed = std::chrono::system_clock::now()
+            .time_since_epoch().count();
+        std::mt19937 gen(seed); // Mersenne twister
+        std::normal_distribution<float> nd; // normal distribution with the mean 0 and the variance 1
+
+        cout << "Mersenne twister: ";
+        for (size_t i = 1; i < 10; ++i)
+            cout << std::setprecision(2) << nd(gen) << ",";
+    }
+
     void Rand()
     {
         // Start the random generator. It needs to be done once per program run.
-        srand(time(0));
+        srand((unsigned)time(nullptr));
 
         RandomNumbers();
         TestRandFloat();
+        StrongRandomization(); // available in C++ 11+
     }
 }

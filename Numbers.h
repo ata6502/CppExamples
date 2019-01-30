@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iomanip>  // setiosflags, setprecision
 #include <limits>   // numeric_limits
+#include <cmath>    // M_PI, M_E, etc.
 
 using std::cout;
 using std::endl;
@@ -33,6 +34,7 @@ using std::ios;
     log10(x)    logarithm of x (base 10)
     pow(x, y)   x raised to power y
     sqrt(x)     square root of x
+    sin(x)      example: sin(M_PI / 2)
 */
 
 namespace NumbersExamples
@@ -80,6 +82,7 @@ namespace NumbersExamples
 
     void NumericLimits()
     {
+        int maxInt = std::numeric_limits<int>::max();
         float maxFloat = std::numeric_limits<float>::max();
         double maxDouble = std::numeric_limits<double>::max();
         bool isCharSigned = std::numeric_limits<char>::is_signed;
