@@ -6,6 +6,26 @@
 using std::cout;
 using std::endl;
 
+/*
+    There are two ways to write an overloaded operator: 
+
+    - As a member function of a type before the operator and an instance of a type after the operator passed as the function's parameter:
+      - can operate on two MyClass objects: bool MyClass::operator<(MyClass p)
+      - can operate on MyClass object and an object of another type: bool MyClass::operator<(OtherType p)
+      - usage: myObject < something
+
+    - A free function that takes two parameters:
+      - the first - the type that's before the operator
+      - the second - the type that's after the operator
+    
+    When you write a class you should always try to overload operators as member functions.
+
+    The case when you don't own the type before the operator: something < myObject
+    - free function: bool operator<(OtherType something, MyClass p)
+    - access member variables of MyClass through public functions 
+      -or- 
+      declare the free function as a friend - this usage of friend is a good practice
+*/
 namespace OperatorOverloadingExamples
 {
     class Book
@@ -31,6 +51,10 @@ namespace OperatorOverloadingExamples
 
         // A friend function: compares an integer to the price of a book.
         // Effectively, this function extends the int type to allow for comparison to a book.
+        // It could be a free function rather than a friend if we exposed the books's price as 
+        // a public accessor.
+        // Note that this is not a declaration of the function. The following line
+        // specifies that the function is able to access Book's private members.
         friend bool operator<(int price, const Book& book);
 
     private:
@@ -40,6 +64,9 @@ namespace OperatorOverloadingExamples
     };
 
     // The implementation of the friend function.
+    // Note that despite the friend being included in the class's definition
+    // we need to declare it outside of the class. Here, we declare and
+    // define the friend function.
     bool operator<(int price, const Book& book)
     {
         return price < book.m_price;
@@ -50,19 +77,19 @@ namespace OperatorOverloadingExamples
         Book b1 = Book("AAA", "Author1", 100);
         Book b2 = Book("BBB", "Author2", 80);
 
-        // operator<(Book&)
+        // Book::operator<(Book&)
         if (b1 < b2)
             cout << b1.GetTitle() << " is cheaper than " << b2.GetTitle() << ", ";
         else
             cout << b1.GetTitle() << " is more expensive than " << b2.GetTitle() << ", ";
 
-        // operator<(int)
+        // Book::operator<(int)
         if (b2 < 90)
             cout << b2.GetTitle() << " costs less than $90" << ", ";
         else
             cout << b2.GetTitle() << " costs more than $90" << ", ";
 
-        // operator<(int, Book&)
+        // friend operator<(int, Book&)
         if (200 < b1)
             cout << b1.GetTitle() << " costs more than $200" << ", ";
         else
