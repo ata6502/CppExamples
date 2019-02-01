@@ -197,6 +197,9 @@ namespace TemplatesExamples
             double f1 = 3.4, f2 = 2.6;
             cout << "min:" << std::setiosflags(std::ios::fixed) << std::setprecision(3) << Min(f1, f2) << " ";
             cout << "max:" << std::setiosflags(std::ios::fixed) << std::setprecision(3) << Max(f1, f2) << " ";
+
+            // Declare explicitly that you want to return a double.
+            double f3 = Max<double>(33, 2.0);
         }
     }
 
@@ -204,6 +207,13 @@ namespace TemplatesExamples
     //
     // Template Specialization
     //
+    // Used to tell the compiler to generate a template for a particular type.
+    // It may be useful when the type does not implement certain operations
+    // such as > or + which are used in the template.
+    // The first choice is to add a missing operator or a function. If you
+    // do not own the code you can extend the type by creating a free function
+    // for the operator.
+    // The second choice is to specialize the template.
     namespace TemplateSpecialization
     {
         // Specializes a template for a particular type.
@@ -227,8 +237,8 @@ namespace TemplatesExamples
         template<typename T1, typename T2, typename T3>
         Triple<T1, T2, T3> SumProductAverage(const T1& a, const T2& b, const T3& c)
         {
-            return Triple<T1, T2, T3>(a + b + c, a*b*c, (a + b + c) /
-                Triple<T1, T2, T3>::ResultType(3)); // treats 3 as the ResultType which is projected to T1 in Triple which in turn is complex
+            return Triple<T1, T2, T3>(a + b + c, a * b * c, 
+                (a + b + c) / Triple<T1, T2, T3>::ResultType(3)); // treats 3 as the ResultType which is projected to T1 in Triple which in turn is complex
         }
 
         typedef std::complex<double> ComplexDouble;
@@ -243,6 +253,36 @@ namespace TemplatesExamples
             return TripleComplexDouble(res.first, res.second, res.third);
         }
 
+        // Accumulator template
+        template <class T>
+        class Accumulator
+        {
+        public:
+            Accumulator(T start) : m_total(start) { };
+            T operator+=(const T& t) { return m_total += t; };
+            T GetTotal() { return m_total; }
+        private:
+            T m_total;
+        };
+
+        struct Book
+        {
+            string Title;
+            float Price;
+        };
+
+        // Accumulator specialization: tells the compiler how to accumulate books.
+        template <>
+        class Accumulator<Book>
+        {
+        public:
+            Accumulator(float start) : m_total(start) { };
+            float operator+=(const Book& b) { return m_total += b.Price; };
+            float GetTotal() { return m_total; }
+        private:
+            float m_total;
+        };
+
         void Test()
         {
             ComplexDouble a(2, 3), b(3, 4), c(4, 5);
@@ -253,6 +293,14 @@ namespace TemplatesExamples
                 << "Sum:" << res.first
                 << ",Prod:" << res.second
                 << ",Avg:" << res.third << " ";
+
+            Book b1{ "A", 8.0f };
+            Book b2{ "B", 0.8f };
+
+            Accumulator<Book> accum(0.0f);
+            accum += b1;
+            accum += b2;
+            cout << std::setprecision(1) << accum.GetTotal() << " ";
         }
     }
 

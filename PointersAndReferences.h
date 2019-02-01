@@ -21,7 +21,7 @@ namespace PointersAndReferencesExamples
     {
         // a pointer to a character
         int a = 1;
-        int *pa = &a;
+        int* pa = &a;
 
         // a reference
         int b = 2;
@@ -45,29 +45,50 @@ namespace PointersAndReferencesExamples
 
     void ConstPointers()
     {
-        char s[] = "test";
+        // non-const data
+        int i = 0, j = 9;
 
-        char *p1 = s;               // non-const pointer, non-const data
-        const char *p2 = s;         // non-const pointer, const data (a pointer to a constant)
-        char const *p3 = s;         // j.w.
-        char * const p4 = s;        // const pointer, non-const data 
-        const char * const p5 = s;  // const pointer, const data
+        // pointer to a const
+        const int * p1 = &i;       // the same as: int const * p1 = &i;
+        //*p1 = 1;                 // illegal - you can't modify const value
+        p1 = &j;                   // ok
 
-        const int a = 1;            // const data
-        const int *pa1 = &a;        // non-const pointer to const data
-        const int * const pa2 = &a; // const pointer to const data
-        //int * const pa3 = &a;       // const pointer to non-const data - illegal, because the data 'a' is const
+        // const pointer
+        int * const p2 = &i;
+        *p2 = 1;                   // ok
+        //p2 = &j;                 // illegal - you can't modify const pointer
 
-        int b = 1;
-        int * const pb = &b;        // const pointer to non-const data
+        // const pointer to a const
+        const int * const p3 = &i;
+        //*p3 = 1;                 // illegal - you can't modify const value
+        //p3 = &j;                 // illegal - you can't modify const pointer
+
+        // Note that you can modify the value of a variable the 'pointer to a const'
+        // points to but you can't modify the value the pointer contains.
+        j++; // modify the value of a variable the pointer points to (j)
+        cout << *p1 << " ";
+
+        //(*p1)++; // illegal - you can't modify the value the 'pointer to a const' contains
+
+        // const data
+        const int k = 1;
+
+        // non-const pointer to a const
+        const int * p4 = &k;
+
+        // const pointer to a const
+        const int * const p5 = &k; 
+
+        // const pointer to a non-const
+        //int * const p6 = &a;     // illegal - 'k' is const
     }
 
     void PointerDeclarations()
     {
         // a reference to a pointer
         int i = 1;
-        int *pi = &i;
-        int &ri = *pi;
+        int* pi = &i;
+        int& ri = *pi;
         cout << ri << " ";
 
         // a pointer to a reference is illegal
@@ -75,20 +96,20 @@ namespace PointersAndReferencesExamples
         // without using helper classes such as std::reference_wrapper
 
         // create a pointer and initialize it to null
-        Book *book = nullptr;
+        Book* book = nullptr;
 
         // a pointer to a pointer to a character
         char c = 'a';
-        char *pc = &c;
-        char **ppc = &pc;
+        char* pc = &c;
+        char** ppc = &pc;
 
         // initialize two ponters in one line
         int *x, *y; // not int* x, y
 
         // a pointer to an array
         int a[5] = { 1,2,3,4,5 };
-        int *pa1 = a;
-        int *pa2 = &a[0];
+        int* pa1 = a;
+        int* pa2 = &a[0];
 
         // an array of pointers to const objects; *ps[0] = "xxx" causes a compile-time error
         // you can omit the 'const' keyword; it is allowed by the compiler for backward compatibility
@@ -107,23 +128,23 @@ namespace PointersAndReferencesExamples
         // dereference an operation (?:), rather than a single variable
         int m = 1;
         int n = 8;
-        int *pm = &(m > n ? m : n);
+        int* pm = &(m > n ? m : n);
         cout << *pm << " ";
 
         // implicit conversion int --> double using a temporary behind-the-scene variable
         // double& cdr = 1; would not compile
-        const double &cdr = 1;
+        const double& cdr = 1;
     }
 
     // Be suspicious of non-const refrence arguments; if you want the function to modify its arguments, use pointers and returned value instead.
     
     // incr1 has better implementation than incr2 because it accepts a pointer as a parameter. 
-    void incr1(int *p)
+    void incr1(int* p)
     {
         (*p)++; // OK - enforces the calling code to pass a reference
     }
 
-    void incr2(int &p)
+    void incr2(int& p)
     {
         p++; // BAD - modifies the argument without informing a user
     }
@@ -137,11 +158,24 @@ namespace PointersAndReferencesExamples
         cout << c << " ";
     }
 
+    // If you want to pass a reference as well as a literal to a function,
+    // the function argument has to be a const reference.
+    int fun(const int& x)
+    {
+        return x * 2;
+    }
+
+
+
     void PointersAndReferences()
     {
         Basics();
         ConstPointers();
         PointerDeclarations();
         incr();
+
+        int a = 3;
+        fun(a);
+        fun(4);
     }
 }
