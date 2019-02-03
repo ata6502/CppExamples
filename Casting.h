@@ -28,7 +28,8 @@ void Casting()
     // - explicit cast supported by language: float-to-int, int-to-double, int-to-bool, etc.
     // - explicit cast supported by user-defined constructors or conversions
     // - an integer to an enumeration
-    // - a pointer type to another pointer type in the same hierarchy (dynamic_cast is recommended)
+    // - a pointer type to another pointer type in the same hierarchy (although dynamic_cast is recommended)
+    // - compile-time only
 
     int n;
 
@@ -48,6 +49,7 @@ void Casting()
     // - pointer-to-object of one class to pointer-to-object of another class in the same inheritance hierarchy	
     // - reference-to-object of one class to reference-to-object of another class in the same inheritance hierarchy
     // - dynamic_cast is similar to C# 'is' operation
+    // - you can use dynamic_cast only on a class with a virtual function
     //
     // If the cast doesn't make sense, dynamic_cast returns a nullptr (for the pointer version) or throws a bad_cast 
     // exception (for the reference version).

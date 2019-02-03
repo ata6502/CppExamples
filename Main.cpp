@@ -42,7 +42,7 @@ int main()
     cout << endl << endl;
 
     cout << "*** Classes ***" << endl;
-    Classes();
+    ClassesExamples::Test();
     cout << endl << endl;
 
     cout << "*** Containers ***" << endl;

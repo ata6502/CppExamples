@@ -8,6 +8,19 @@ using std::cout;
 using std::endl;
 using std::string;
 
+/*
+    shared_ptr
+    - reference counted
+    - non-intrusive
+    - works well in containers
+
+    unique_ptr
+    - non-copyable
+    - you can use std::move to move values in and out of unique_ptr
+    - works well in containers
+
+    weak_ptr
+*/
 namespace SmartPointersExamples
 {
     //
@@ -107,12 +120,17 @@ namespace SmartPointersExamples
         // The person's address does not get destroyed together with the person because it is 
         // a shared_ptr
         std::shared_ptr<Address> address;
+
         {
             Person person("BBB");
             address = person.GetAddress(); // here, the shared_ptr's reference counter is increased 
                                            // which prevents the address from being destroyed when 
                                            // the person goes out of scope
         }
+
+        // You can decrement the counter of a shared pointer and possibly delete it
+        // by using the method reset()
+
         address->ToString();
     }
 }
