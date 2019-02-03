@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 #include <set>
-#include <algorithm> // for_each
+#include <algorithm> // for_each, find_if, sort, etc.
 #include <numeric> // std::accumulate
 
 using std::cout;
@@ -19,6 +19,8 @@ using std::set;
 /*
     <vector>
     - Keeps elements in a continuous block of memory.
+    - Grows as needed when new items are added which can cause a lot of element copying. Solution: pre-allocate memory when you create a vector container.
+    - You can keep smart pointers in your vector (copying pointers is cheap).
 
     <map>
     - Keeps elements sorted to speed up searches.
@@ -44,6 +46,11 @@ using std::set;
 
     <multimap>
     - A map that can have multiple values as a key.
+
+    Sorting and searching
+    - Implemented as free functions.
+    - The free functions take iterators to a collection as parameters.
+    - Examples: for_each, find_if
 */
 
 namespace ContainerExamples
@@ -117,7 +124,7 @@ namespace ContainerExamples
             cout << *it;
         cout << " ";
 
-        // for_each algorithm with a lambda expression; it could be a function name instead of lambda
+        // for_each algorithm with a lambda expression; you can specify a function name instead of lambda
         for_each(vec.begin(), vec.end(), [](int i) { cout << i; });
         cout << " ";
 
@@ -156,12 +163,23 @@ namespace ContainerExamples
         PrintElements(vec);
     }
 
+    class A 
+    { 
+    public:
+        A() { cout << "A "; }
+        ~A() { cout << "~A "; }
+    };
+
     void VectorContainer()
     {
         vector<float> values{ 1, 2, 3 }; // values automatically converted to float
-        values.push_back(4.5f);
         values.push_back(8);
-        values.pop_back(); // removes 8
+        values.push_back(4.5f);
+        values.pop_back(); // removes 4.5f
+
+        // You can access elements of a vector using []. 
+        // [] does not provide range checking.
+        cout << values[3] << " "; // 8
 
         // std::vector performs range checking when you use at()
         // if an index is out of range, an exception is thrown
@@ -173,7 +191,14 @@ namespace ContainerExamples
         {
             cout << "\"" << exc.what() << "\" ";
         }
-    }
+
+        vector<A> v;
+        A a1; // A()
+        A a2; // A()
+
+        v.push_back(a1); // use the A's copy ctor to copy a1 to a temp object that is inserted to the vector
+        v.push_back(a2); // ~A(); we need a bigger vector; the temp object that holds a1 in the vetctor is destroyed and then a1 is copied again to the vector; then, the copy ctor is called to insert the a2 object to the vector
+    } // ~A() ~A() - a1 and a2 destr; ~A() ~A() temp objects in the vector destr
 
     void SetContainer()
     {
@@ -217,7 +242,7 @@ namespace ContainerExamples
         }
 
         // Show the keys and values. Note that the pairs are sorted by the key.
-        for (auto p : histogram) // p is an std::pair
+        for (const auto& p : histogram) // p is an std::pair
             cout << p.first << ":" << p.second << " ";
 
 
@@ -240,16 +265,16 @@ namespace ContainerExamples
         books.insert(p);
 
         // Iterate through the entire map.
-        for (auto p : books)
-            cout << p.first << p.second.Title << p.second.Author << " ";
+        for (const auto& b : books)
+            cout << b.first << b.second.Title << b.second.Author << " ";
 
         // Find an element using the find function.
         // The find function returns an iterator to a found element.
         auto b1 = books.find(2);
         cout << "Found1:" << b1->first << b1->second.Title << b1->second.Author << " ";
 
-        // Obtain an element using [].
-        auto b2 = books[1];
+        // Obtain an element using [] rather than the find() function.
+        auto b2 = books[2];
         cout << "Found2:" << b2.Id << b2.Title << b2.Author << " ";
     }
 
@@ -368,6 +393,14 @@ namespace ContainerExamples
         for (auto i : v)
             cout << i;
         cout << " ";
+
+        // Find all odd elements. Output: 1335 (sorted because we called std::sort).
+        auto odd = find_if(vec.begin(), vec.end(), [](int n) { return n % 2; });
+        while (odd != vec.end())
+        {
+            cout << *odd;
+            odd = find_if(++odd, vec.end(), [](int n) { return n % 2; }); // ++odd is the next iterator
+        }
     }
 
     void Vector2D()

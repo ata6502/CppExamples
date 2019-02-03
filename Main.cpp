@@ -106,7 +106,7 @@ int main()
     cout << endl << endl;
 
     cout << "*** Strings ***" << endl;
-    StringsExamples::Strings();
+    StringsExamples::Test();
     cout << endl << endl;
 
     cout << "*** Templates ***" << endl;
