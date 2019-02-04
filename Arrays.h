@@ -23,7 +23,7 @@ namespace ArraysExamples
         // - sizeof(int) is the same as sizeof(a1[0])
         // - std::size() returns the number of elements (C++17)
         int b[] = { 1, 2, 3, 4, 5 };
-        cout << sizeof(b) / sizeof(int) << " "; // 5
+        cout << sizeof(b) / sizeof(int) << " "; // 5; this method of determining the array size is applicable only to locally allocated arrays
         cout << std::size(b) << " "; // 5
     }
 
@@ -58,25 +58,18 @@ namespace ArraysExamples
         cout << Sum(numbers1) << " " << Sum(numbers2) << " ";
     }
 
-
-    void Test()
+    // std::count
+    void StdCount()
     {
-        DeclarationsAndInitializations();
-        ArraySize();
-        StdArray();
-        StdArraySum();
-
-        //
-        // std::count
-        //
         // Count how many 3s are in a sub-array.
         // &c[9] is an element located one-beyond the range.
         int c[] = { 1,3,3,4,3,3,7,3,3,   3,2,3,5,4,2,3,4,2 };
         cout << std::count(&c[0], &c[9], 3) << " "; // there are six 3s in the subarray c[0..8]
+    }
 
-        //
-        // Multi-dimensional arrays
-        //
+    // Multi-dimensional arrays
+    void MultiDimensionalArrays()
+    {
         // Array[how_many_elements][the_length_of_element]
         int d[3][6]; // 3 elements each the length of 6
 
@@ -99,14 +92,40 @@ namespace ArraysExamples
 
         // Modify a multidimensional array.
         e[0][1] = 8;
+    }
 
-        //
-        // Copy a char array i.e., a C-style string
-        //
-        char dst[20];
-        char src[] = "abcdefg";
-        for (int i = 0; (dst[i] = src[i]) != '\0'; i++)
-            ;
-        cout << dst << " ";
+    void CStyleArrays()
+    {
+        // Create and initialize an array locally.
+        int a[3];
+        a[0] = 0;
+        a[1] = 1;
+        *(a + 2) = 2; // initialize an element of an array using the pointer notation
+        int a_size = sizeof(a) / sizeof(a[0]); // the number of elements in a
+
+        // Create and initialze an array using an initializer list.
+        float b[] = { 1.0,2.0,3.0 };
+
+        // Allocate an array on the free store.
+        int* c = new int[4];
+        c[0] = 0;
+        c[1] = 1;
+        c[2] = 2;
+        *(c + 3) = 3;
+        int c_size = sizeof(c) / sizeof(c[0]); // c_size does NOT include the number of elements in c because sizeof(c) returns the pointer size, not the total byte size of the array
+        // ...
+        delete[] c;
+    }
+
+
+    void Test()
+    {
+        DeclarationsAndInitializations();
+        ArraySize();
+        StdArray();
+        StdArraySum();
+        StdCount();
+        MultiDimensionalArrays();
+        CStyleArrays();
     }
 }

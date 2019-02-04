@@ -134,13 +134,13 @@ void Typedef()
     // a function pointer type PFUN that points to a global function that accepts an int and returns an int
     typedef int(*PFUN) (int n);
     PFUN action;
-    action = someFunction;
+    action = someFunction; // not that we don't use the & operator to get the address of the function someFunction
 
-    // a function pointer type MFUN that points to a member function of a class MyClass
+    // a function pointer type MFUN that points to a member function of a class SomeClass
     typedef int (SomeClass::* MFUN) ();
     SomeClass obj;
     MFUN action2;
-    action2 = &SomeClass::someMemberFunction;
+    action2 = &SomeClass::someMemberFunction; // set the value of the function pointer
     int n = (obj.*action2)(); // deference the function pointer
 }
 

@@ -20,9 +20,9 @@ using std::string;
     - Examples:
         []     - captures nothing (no variables from the enclosing scope are captured)
         [i]    - captures i by value (makes a copy of i)
-        [&j]   - captures j by reference (changes are reflected in the actual variable; dangling reference may be an issue (?)
-        [=]    - captures all variables needed by lambda by value (copies the variables)
-        [&]    - captures all variables needed by lambda by reference
+        [&j]   - captures j by reference (changes are reflected in the actual variable; dangling reference may be an issue when the original variable j goes out of scope
+        [=]    - captures all variables that are needed in lambda by value (copies the variables)
+        [&]    - captures all variables that are needed in lambda by reference
         [=, &x, &y] - captures by value by default, except variables x and y, which are captured by reference
         [&, x] - captures by reference by default, except variable x, which is captured by value
         [&x, &x] - illegal because identifiers cannot be repeated
@@ -35,6 +35,10 @@ using std::string;
     std::function is commonly used with lambda. It's similar to C#'s Func and Action delegate.
     Example: A wrapper for a function that returns a double and takes two integers as parameters:
     function<double(int, int)> wrapper;
+
+    By default, the captured variables are const. Use the mutable keyword if you need to modify the variables:
+    - If a variable is captured by value, the local copy will be changed.
+    - If a variable is captured by reference, the referenced variable will be changed.
 */
 
 namespace LambdaExamples
@@ -85,6 +89,8 @@ namespace LambdaExamples
 
         // Specify the return type explicitly. We need to specify the return type
         // because this lambda has multiple returns.
+        // std::transform transforms a collection into another collection.
+        // std::back_inserter inserts items at the back of a collection.
         std::transform(v.begin(), v.end(), std::back_inserter(dv),
             [](int n) -> double
         {
@@ -122,7 +128,7 @@ namespace LambdaExamples
         // Capture variables x and y by value by specifying [=]. 
         // Inside the lambda, we have local copies of x and y.
         // Specify 'mutable' to remove constness from the variables x and y.
-        // The variable r (the vector's element) is passed by reference.
+        // The variable r (the vector's element 1,2,3,4) is passed by reference.
         std::for_each(v.begin(), v.end(), [=](int& r) mutable
         {
             const int old = r;
@@ -131,7 +137,7 @@ namespace LambdaExamples
             r *= 2;
 
             // 'mutable' allows the following lines to compile. Normally, variables captured
-            // by values (here x and y) are const but here we have local copies of x and y.
+            // by values (here x and y) are const but here the local copies of x and y are mutable.
             x = y;
             y = old;
 
@@ -139,9 +145,27 @@ namespace LambdaExamples
         });
 
         // Output: 4 7 11 15
-        // Keep in mind that the variables x and y are captured in lambda.
         for (double d : v)
             cout << d << " ";
+
+        // x and y are unchanged because lambda modified copies of x and y.
+        cout << x << " " << y << " ";
+
+        // Output: 012
+        vector<int> vec1;
+        int n = 0;
+        std::generate_n(std::back_inserter(vec1), 3, [n]() mutable { return n++; });
+        for (auto i : vec1)
+            cout << i;
+        cout << "-" << n << " ";
+
+        // The same output: 012
+        vector<int> vec2;
+        n = 0;
+        std::generate_n(std::back_inserter(vec2), 3, [&n] { return n++; });
+        for (auto i : vec2)
+            cout << i;
+        cout << "-" << n << " ";
     }
 
     std::function<int(void)> ReturnLambda(int x)

@@ -96,6 +96,7 @@ namespace StringsExamples
         printf_s(" ");
     }
 
+    // C-style string is a an array char[]
     void CStyleStrings()
     {
         // A variable of type 'const char[]'
@@ -105,7 +106,7 @@ namespace StringsExamples
 
         // Conversion from char[] to char* (we lose the array size).
         char str[] = "B "; // str and &str[0] are equivalent
-        char * pstr = str;
+        char* pstr = str;
 
         SaySomething(pstr);
 
@@ -115,14 +116,31 @@ namespace StringsExamples
         printf_s("%d ", strlen(pstr)); // strlen(char*)
 
         // Equality of C-style strings.
-        const char * s1 = "AAA";
-        const char * s2 = "AAA";
+        const char* s1 = "AAA";
+        const char* s2 = "AAA";
 
         // Compare values (the same).
         if (s1 == s2) cout << "TheSame ";
 
         // Compare references or pointers (different).
         if (&s1 != &s2) cout << "Different ";
+
+        // Copy a C-style string. 
+        // You can also use strcpy but remember about the null terminator.
+        char dst[20];
+        char src[] = "abcde"; // memory content: 'a' 'b' 'c' 'd' 'e' \0
+        for (int i = 0; (dst[i] = src[i]) != '\0'; i++) // \0 is a null terminator
+            ;
+        cout << dst << " ";
+
+        size_t len = strlen(src); // len=5 but remember that there is the 6th element at the end of src - the \0
+
+        // Copy from std::string to a C-style string - DOES NOT WORK.
+        //std::string t("hi");
+        //char* s = new char[t.length() + 1]; // t.length() == a huge number
+        //strcpy_s(s, t.size(), t.c_str()); // t.size() == 2, not the size in bytes
+        //cout << s << " ";
+        //delete[] s;
     }
 
     void Test()
