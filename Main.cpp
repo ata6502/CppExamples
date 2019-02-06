@@ -27,6 +27,10 @@
 //
 // The purpose of this application is to provide examples of C++ and STL features.
 //
+// Simple rules:
+// - Use local scope (stack semantics) as much as you can.
+// - If you need to use the free store, use smart pointers.
+//
 int main()
 {
     cout << "*** Arrays ***" << endl;
@@ -102,7 +106,7 @@ int main()
     cout << endl << endl;
 
     cout << "*** Smart Pointers ***" << endl;
-    SmartPointersExamples::SmartPointers();
+    SmartPointersExamples::Test();
     cout << endl << endl;
 
     cout << "*** Strings ***" << endl;
