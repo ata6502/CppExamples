@@ -17,26 +17,41 @@ using std::map;
 using std::set;
 
 /*
+    *** Measure performance to ensure you are using the right collection ***
+
+    Write your code to make switching containers easy:
+    - auto
+    - begin() and end() global functions
+    - algorithms
+
     <vector>
-    - Keeps elements in a continuous block of memory.
-    - Grows as needed when new items are added which can cause a lot of element copying. Solution: pre-allocate memory when you create a vector container.
+    - Keeps elements in a continuous block of memory. This gives you great performance for both iterating and random access.
+    - Grows as needed when new items are added which can cause a lot of element copying. 
+      Solution: ***pre-allocate memory when you create a vector container***. It also initializes all vector elements to 0.
     - You can keep smart pointers in your vector (copying pointers is cheap).
 
     <map>
     - Keeps elements sorted to speed up searches.
+    - Does not allow two values with the same key.
     - Provides the [] operator to add or access elements.
     - Provides a pair<> template to add elements.
     - Also called an associative array or a dictionary.
 
     <list>
     - A doubly-linked list.
-    - faster than <vector> for adding elements.
-    - slower than <vector> for accessing elements.
+    - Not a random access container. Requires traversing.
+    - In general, faster than <vector> for adding elements.
+    - In general, slower than <vector> for accessing elements.
+      ... but you need to measure and compare performance of vector vs. list
+    - Elements are not copied when a new element is added.
+    - In order to insert an element into a list the element position has to be found. This influences performance.
 
     <queue>, <deque>
     - FIFO
     - push/pop from one or both ends
-    - priority-queue
+
+    <priority_queue>
+    - Bumps up a value to the front.
 
     <set>
     - Does not need to reorganize itself whenever elements are added or removed.
@@ -45,12 +60,24 @@ using std::set;
     - Functions: union, intersection, difference.
 
     <multimap>
-    - A map that can have multiple values as a key.
+    - A map that can have multiple values with the same key i.e., it allows collisions
+
+    <unordered_map>
+    - Quicker addition of elements than the map.
 
     Sorting and searching
     - Implemented as free functions.
     - The free functions take iterators to a collection as parameters.
     - Examples: for_each, find_if
+
+    Types of iterators:
+    https://docs.microsoft.com/en-us/cpp/standard-library/iterator
+    https://docs.microsoft.com/en-us/cpp/standard-library/iterators
+    - Output: forward moving, may store but not retrieve values, provided by ostream and inserter.
+    - Input: forward moving, may retrieve but not store values, provided by istream.
+    - Forward: forward moving, may store and retrieve values.
+    - Bidirectional: forward and backward moving, may store and retrieve values, provided by list, set, multiset, map, and multimap.
+    - Random access: elements accessed in any order, may store and retrieve values, provided by vector, deque, string, and array.
 */
 
 namespace ContainerExamples
@@ -94,7 +121,7 @@ namespace ContainerExamples
             cout << vec[i];
         cout << " ";
 
-        // iterator - using global functions begin() and end()
+        // Use global functions begin() and end()
         // - begin(vec) returns the first element in vec
         // - end(vec) returns the position after the last element in vec
         // - ++it increments the iterator
@@ -103,23 +130,24 @@ namespace ContainerExamples
             cout << *it;
         cout << " ";
 
-        // iterator - as above but more efficient; it determines the end iterator
-        // only once.
+        // As above but more efficient. It determines the end iterator only once.
         for (auto it = begin(vec), _end = end(vec); it != _end; ++it)
             cout << *it;
         cout << " ";
 
-        // iterator - using member iterator methods begin() and end()
+        // Use member iterator methods begin() and end()
+        // This is an old school and less flexible than using the global functions
+        // as some containers may not have the begin() and end() method defined.
         for (auto it = vec.begin(), _end = vec.end(); it != _end; ++it)
             cout << *it;
         cout << " ";
 
-        // iterator - using const member iterator methods cbegin() and cend()
+        // Use const member iterator methods cbegin() and cend()
         for (auto it = vec.cbegin(), _end = vec.cend(); it != _end; ++it)
             cout << *it;
         cout << " ";
 
-        // reverse iterator - rbegin() points to the last element
+        // Use the reverse iterator. rbegin() points to the last element
         for (auto it = vec.rbegin(); it != vec.rend(); ++it)
             cout << *it;
         cout << " ";
@@ -197,7 +225,7 @@ namespace ContainerExamples
         A a2; // A()
 
         v.push_back(a1); // use the A's copy ctor to copy a1 to a temp object that is inserted to the vector
-        v.push_back(a2); // ~A(); we need a bigger vector; the temp object that holds a1 in the vetctor is destroyed and then a1 is copied again to the vector; then, the copy ctor is called to insert the a2 object to the vector
+        v.push_back(a2); // ~A(); we need a bigger vector; the temp object that holds a1 in the vector is destroyed and then a1 is copied again to the vector; then, the copy ctor is called to insert the a2 object to the vector
     } // ~A() ~A() - a1 and a2 destr; ~A() ~A() temp objects in the vector destr
 
     void SetContainer()
@@ -292,6 +320,9 @@ namespace ContainerExamples
     void ContainerAlgorithms()
     {
         vector<int> vec = { 3,4,1,3,2,5 };
+
+        // Copy all elements of a vector to another vector.
+        auto nv = vec;
 
         // Sort a container in-place.
         sort(begin(vec), end(vec));
@@ -401,6 +432,32 @@ namespace ContainerExamples
             cout << *odd;
             odd = find_if(++odd, vec.end(), [](int n) { return n % 2; }); // ++odd is the next iterator
         }
+
+        // Populate a vector with five values: 0,1,2,3,4
+        vector<int> vv;
+        int i = 0;
+        std::generate_n(std::back_inserter(vv), 5, [&]() { return i++; });
+    }
+
+    void RemovingElements()
+    {
+        vector<int> v = { 3,4,1,3,2,5 };
+
+        auto v1 = v;
+
+        // Remove all 3's using the remove_if algorithm.
+        auto new_end = std::remove_if(begin(v1), end(v1), [](int elem) { return (elem == 3); });
+
+        // At this point v1 still has 6 elements: 4,1,2,5,2,5
+        // The 2,5 at the end are the old elements before erasing 3's.
+
+        v1.erase(new_end, end(v1));
+        // After calling erase, v1 contains 4 elements: 4,1,2,5
+
+        auto v2 = v;
+
+        // More compact - in a single line.
+        v2.erase(std::remove_if(begin(v2), end(v2), [](int elem) { return (elem == 3); }), end(v2));
     }
 
     void Vector2D()
@@ -433,6 +490,7 @@ namespace ContainerExamples
         SetContainer();
         MapContainer();
         ContainerAlgorithms();
+        RemovingElements();
         Vector2D();
     }
 }

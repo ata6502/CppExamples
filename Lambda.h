@@ -16,7 +16,9 @@ using std::string;
 
     Use an explicit capture block for lambda expressions:
     - Avoid using [&] and [=].
+      ??? Kate Gregory says: use [&] to avoid unnecessary copying.
     - By default, captured variables are const.
+    - When you use [&] or [=] only variables used in lambda are captured.
     - Examples:
         []     - captures nothing (no variables from the enclosing scope are captured)
         [i]    - captures i by value (makes a copy of i)
@@ -63,7 +65,7 @@ namespace LambdaExamples
         // Simple lambda.
         vector<int> v = { 1, 2, 3 };
         std::for_each(v.begin(), v.end(),
-            [](int i) { cout << i; });
+            [](int i) { cout << i; }); // lambda is handed each element of the vector: 1,2,3
         cout << " ";
 
         // Define a lambda expression without return type and without any parameters. 
@@ -90,7 +92,7 @@ namespace LambdaExamples
         // Specify the return type explicitly. We need to specify the return type
         // because this lambda has multiple returns.
         // std::transform transforms a collection into another collection.
-        // std::back_inserter inserts items at the back of a collection.
+        // std::back_inserter inserts transfomed items at the back of a collection. To insert transfomed items at the beginning of the collection, use begin(dv) instead.
         std::transform(v.begin(), v.end(), std::back_inserter(dv),
             [](int n) -> double
         {
