@@ -86,7 +86,7 @@ int main()
     cout << endl << endl;
 
     cout << "*** Move Semantics ***" << endl;
-    MoveSemanticsExamples::MoveSemantics();
+    MoveSemanticsExamples::Test();
     cout << endl << endl;
 
     cout << "*** Operator overloading ***" << endl;

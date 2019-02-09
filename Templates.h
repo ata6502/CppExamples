@@ -19,6 +19,16 @@ using std::string;
     number of type parameters.
 
     Local and unnamed types can be used as template arguments.
+
+     T::value_type returns:
+    - int if T is vector<int>
+    - string if T is vector<string>
+    - Resource if T is vector<Resource> etc.
+    It's an implied constraint. It's up to the programmer to pass the correct type as T. 
+    In the following example, T has to have the value_type member which ctor has to accept 
+    a string. For example, std::string has the value_type member and it can be constructed 
+    from a string.
+    T::value_type res("entry");
 */
 namespace TemplatesExamples
 {
