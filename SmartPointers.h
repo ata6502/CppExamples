@@ -52,6 +52,8 @@ using std::string;
 
     3. To allow shared access to an object on the free store. The object does not have a single owner.
        - Lifetime can be complicated to manage.
+
+    Smart pointers have operator overloads to bool. You still can write if (p) { ... }
 */
 namespace SmartPointersExamples
 {
@@ -237,5 +239,18 @@ namespace SmartPointersExamples
         }
 
         pAddress->ToString();
+
+        //
+        // nullptr - type safety
+        //
+        // You can write if(pi) and if(!pi) also with smart pointers. 
+        int i = 2;
+        int* pi = nullptr;
+        if (!pi) // conversion to bool
+            pi = &i;
+        if (pi) // conversion to bool
+        {
+
+        }
     }
 }

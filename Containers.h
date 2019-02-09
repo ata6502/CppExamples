@@ -333,8 +333,8 @@ namespace ContainerExamples
         cout << " ";
 
         // Count how many 3s are in container.
-        auto n = count(begin(vec), end(vec), 3);
-        cout << n << " "; // 2
+        auto cnt = count(begin(vec), end(vec), 3);
+        cout << cnt << " "; // 2
 
         // Obtain unique elements.
         vector<int> vec_copy;

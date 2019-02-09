@@ -110,14 +110,13 @@ namespace ClassesExamples
     }
 
 
-
     namespace ClassConstants
     {
         class TestClass
         {
         public:
             // constants have to be declared as static 
-            const static int a = 1;
+            static const int a = 1; // usage TestClass::a
 
             // a static member
             static int b;
@@ -126,7 +125,6 @@ namespace ClassesExamples
         // Static members have to be initialized outside of the class definition.
         int TestClass::b = 2;
     }
-
 
 
     namespace ComplexExamples
@@ -324,7 +322,6 @@ namespace ClassesExamples
             obj.ShowFormatted();
         }
     }
-
 
 
     namespace SlicingProblem
