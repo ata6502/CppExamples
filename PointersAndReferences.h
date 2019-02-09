@@ -103,8 +103,11 @@ namespace PointersAndReferencesExamples
         char* pc = &c;
         char** ppc = &pc;
 
+#pragma warning(push)
+#pragma warning(disable : 4101)
         // initialize two ponters in one line
         int *x, *y; // not int* x, y
+#pragma warning(pop)
 
         // a pointer to an array
         int a[5] = { 1,2,3,4,5 };

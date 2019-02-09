@@ -66,7 +66,7 @@ namespace ExceptionsExamples
             throw std::domain_error("error");
 
         }
-        catch (std::exception& exc)
+        catch (std::exception&)
         {
             cout << "deallocation ";
         }

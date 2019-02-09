@@ -27,10 +27,14 @@ namespace InitializationExamples
     {
         // An initializer list forces value initialization: even local variables 
         // of fundamental data types are initialized to zero or nullptr.
-        int i;      // i has undefined value
         int j{};    // j is initialized by 0
-        int* p;     // p has undefined value
         int* q{};   // q is initialized by nullptr
+
+#pragma warning(push)
+#pragma warning(disable : 4101)
+        int i;      // i has undefined value
+        int* p;     // p has undefined value
+#pragma warning(pop)
     }
 
     void NarrowingInitialization()
@@ -38,8 +42,11 @@ namespace InitializationExamples
         // Narrowing initializations are the initializations that reduce precision or 
         // where the supplied value gets modified.
         // Narrowing initializations are not possible with uniform initialization.
+#pragma warning(push)
+#pragma warning(disable : 4244)
         int x1(5.3);        // OK, but x1 becomes 5
         int x2 = 5.3;       // OK, but x2 becomes 5
+#pragma warning(pop)
         //int x3{ 5.0 };    // ERROR: narrowing
         //int x4 = { 5.3 }; // ERROR: narrowing
         char c1{ 7 };       // OK: even though 7 is an int, this is not narrowing; if a value can be represented exactly as the target type, the conversion is not narrowing

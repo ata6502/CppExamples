@@ -80,12 +80,12 @@ namespace ArraysExamples
         // Row major order - fast.
         for (int i = 0; i < 3; ++i)
             for (int j = 0; j < 6; ++j)
-                d[i][j] = 1.0f;
+                d[i][j] = 1;
 
         // Column major order - slow.
         for (int j = 0; j < 6; ++j)
             for (int i = 0; i < 3; ++i)
-                d[i][j] = 1.0f;
+                d[i][j] = 1;
 
         // Initialize a multidimensional array.
         int e[2][2]{ { 1, 0 }, { 0, 1 } };

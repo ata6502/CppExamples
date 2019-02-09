@@ -23,6 +23,7 @@
 
 #include "Recursion\RecursionTest.h"
 #include "Applications\Histogram.h"
+#include "Patterns\Account.h"
 
 //
 // The purpose of this application is to provide examples of C++ and STL features.
@@ -119,6 +120,7 @@ int main()
 
     // RecursionTest();
     // Applications::Histogram();
+    Patterns::pImplTest();
 
     return 0;
 }

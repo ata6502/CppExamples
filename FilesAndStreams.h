@@ -20,8 +20,8 @@ using std::vector;
 
 namespace FilesAndStreamsExamples
 {
-    const string FILENAME = "test.txt";
-    const string ANOTHERFILE = "test2.txt";
+    const string FILENAME = "test.dat";
+    const string ANOTHERFILE = "test2.dat";
 
     void FilesAndStreams()
     {

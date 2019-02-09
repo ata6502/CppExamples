@@ -97,7 +97,7 @@ namespace ClassesExamples
                 // We know this cast will fail because person is of type Person, not Employee&.
                 Employee& x = dynamic_cast<Employee&>(person);
             }
-            catch (const std::bad_cast& exc)
+            catch (const std::bad_cast&)
             {
                 cout << "CastError ";
             }

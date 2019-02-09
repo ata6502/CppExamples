@@ -43,9 +43,21 @@
     </ClInclude>
     <ClInclude Include="MoveSemantics.h" />
     <ClInclude Include="SmartPointers.h" />
+    <ClInclude Include="Patterns\Account.h">
+      <Filter>Patterns</Filter>
+    </ClInclude>
+    <ClInclude Include="Patterns\AccountImpl.h">
+      <Filter>Patterns</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Patterns\Account.cpp">
+      <Filter>Patterns</Filter>
+    </ClCompile>
+    <ClCompile Include="Patterns\AccountImpl.cpp">
+      <Filter>Patterns</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Recursion">
@@ -54,5 +66,13 @@
     <Filter Include="Applications">
       <UniqueIdentifier>{10e8d7fc-4584-483c-918f-eb2e8b196168}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Patterns">
+      <UniqueIdentifier>{56dae3fc-2854-4adc-8a28-3d57c477e7a7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Patterns\Patterns.txt">
+      <Filter>Patterns</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -36,6 +36,8 @@
     <ClInclude Include="MoveSemantics.h" />
     <ClInclude Include="Numbers.h" />
     <ClInclude Include="OperatorOverloading.h" />
+    <ClInclude Include="Patterns\Account.h" />
+    <ClInclude Include="Patterns\AccountImpl.h" />
     <ClInclude Include="PointersAndReferences.h" />
     <ClInclude Include="Rand.h" />
     <ClInclude Include="Recursion\CalculateFactorial.h" />
@@ -50,6 +52,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Patterns\Account.cpp" />
+    <ClCompile Include="Patterns\AccountImpl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Patterns\Patterns.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
