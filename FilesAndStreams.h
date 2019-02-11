@@ -31,9 +31,9 @@ namespace FilesAndStreamsExamples
         std::ofstream file;
         file.open(FILENAME, std::ios::out); 
 
-        file << "B\nD\nA\nB\nC" << endl; // ??? does endl flush the stream?
+        file << "B\nD\nA\nB\nC" << endl; // endl flushes the buffer
 
-        file.flush();
+        file.flush(); // not really needed
         file.close();
 
 
