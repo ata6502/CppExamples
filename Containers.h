@@ -18,6 +18,7 @@ using std::set;
 
 /*
     *** Measure performance to ensure you are using the right collection ***
+    *** Reserve storage in advance using the reserve method ***
 
     Write your code to make switching containers easy:
     - auto
@@ -345,9 +346,18 @@ namespace ContainerExamples
             cout << n; // 1 2 3 4 5
         cout << " ";
 
-        // Accumulate values.
-        float sum = accumulate(vec.begin(), vec.end(), 0.0f);
+        // Accumulate numers.
+        float sum = std::accumulate(begin(vec), end(vec), 0.0f);
         cout << "sum:" << sum << " "; // 1+2+3+3+4+5 = 18
+
+        // Accumulate strings.
+        vector<string> sv{ "a", "b", "c" };
+        string abc = std::accumulate(begin(sv), end(sv), string(">")); // the 3rd arg is a starting value
+        cout << "abc:" << abc << " ";
+
+        // Accumulate strings with separators.
+        string abc2 = std::accumulate(begin(sv), end(sv), string(">"), [](string a, string b) { return a + "," + b; }); // PRB: inserts a comma at the beginning
+        cout << "abc:" << abc2 << " ";
 
         // Find an element that fulfills a given predicate (a lambda).
         // find_if returns an iterator to the found element.
