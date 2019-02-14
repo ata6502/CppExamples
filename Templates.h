@@ -11,16 +11,28 @@ using std::endl;
 using std::string;
 
 /*
-    In C++ the template arguments don't have to be type names. 
-    They can be variable names, function names, and constant 
-    expressions as well.
+    Template arguments:
+    - don't have to be type names
+    - can be variable names, function names, and constant expressions
+    - local and unnamed types can be used as template arguments
 
-    Variadic templates allow templates to take an arbitrary 
-    number of type parameters.
+    Variadic templates (C++11):
+    - allow templates to take an arbitrary number of type arguments
+    - perform type computation at compile-time (template meta-programming)
+    - generate type structure for classes like tuple
+    - perform argument forwarding between functions
+    - the paramter pack has to appear as the last on the parameter list
+    - there are two operations supported on the parameter pack:
+      - pack expansion
+      - getting the number of type parameters
+    - you can recursively iterate over a list by using templates to separate
+      the first element from the rest
 
-    Local and unnamed types can be used as template arguments.
 
-     T::value_type returns:
+    Template aliases (C++11):
+    - similar to typedefs with partially bound template arguments
+
+    T::value_type returns:
     - int if T is vector<int>
     - string if T is vector<string>
     - Resource if T is vector<Resource> etc.
@@ -29,6 +41,10 @@ using std::string;
     a string. For example, std::string has the value_type member and it can be constructed 
     from a string.
     T::value_type res("entry");
+
+    - extern templates
+    - default values for function template parameters
+    - arbitrary expressions are allowed in template deduction contexts
 */
 namespace TemplatesExamples
 {
@@ -320,9 +336,9 @@ namespace TemplatesExamples
     //
     namespace VariadicTemplates
     {
-        // Specialization in case when there is only one argument .
+        // Specialization in case when there is only one argument.
         template<typename T>
-        T adder(T v) 
+        T adder(T v)
         {
             return v; // just return the argument
         }
@@ -340,8 +356,80 @@ namespace TemplatesExamples
             cout << std::setprecision(1) << adder(1, 2.2, 3, 4) << " ";
             cout << adder(string("a"), string("b"), string("c")) << " ";
         }
-    }
 
+        // The CSVPrinter variadic class template can handle any number of columns
+        // It is able to check in compile-time that it is supplied with correct 
+        // data types and in the right order.
+        // In the following example, the ellipsis indicate that the argument Columns
+        // is the **template parameter pack**.
+        // You can use 'class' instead of 'typename', there is no difference for the compiler.
+        template<typename Stream, typename... Columns>
+        class CSVPrinter
+        {
+        public:
+            template<typename... Headers>
+            CSVPrinter(Stream& stream, const Headers&... headers) :
+                m_stream(stream), m_headers({ string(headers)... })
+            {
+                static_assert(sizeof...(Headers) == sizeof...(Columns),
+                    "Number of headers must match number of columns");
+            }
+
+            void OutputHeaders() const
+            {
+                std::for_each(begin(m_headers), end(m_headers) - 1,
+                    [=](const string& header) { WriteColumn(header, SEP); });
+                WriteColumn(m_headers.back(), " ");
+            }
+
+            // The ellipisis indicate **function parameter pack**.
+            void OutputLine(const Columns&... columns)
+            {
+                // Pack expansion
+                // ??? the following line does not compile
+                //WriteLine(Validate(columns)...) { }
+            }
+
+        private:
+            Stream& m_stream;
+            std::array<string, sizeof...(Columns)> m_headers;
+            // rest of implementation
+            const string SEP{ "," };
+
+            template<typename Value, typename... Values>
+            void WriteLine(const Value& val, const Values&... values) const
+            {
+                WriteColumn(val, SEP);
+                WriteLine(values...);
+            }
+
+            template<typename Value>
+            void WriteLine(const Value &val) const
+            {
+                WriteColumn(val, "\n");
+            }
+
+            template<typename T>
+            const T& Validate(const T& val)
+            {
+                // this method is for illustration so it does nothing
+                return val;
+            }
+
+            template<typename T>
+            void WriteColumn(const T& val, const string& terminator) const
+            {
+                // If T and U name the same type (including const/volatile qualifications), 
+                // std::is_same provides the member constant value equal to true. Otherwise 
+                // value is false.
+                if (std::is_same<typename std::remove_const<T>::type, string>::value)
+                    m_stream << "\"" << val << "\"";
+                else
+                    m_stream << val;
+                m_stream << terminator;
+            }
+        };
+    }
 
     //
     // Template Metaprogramming
@@ -376,6 +464,6 @@ namespace TemplatesExamples
         TemplateClasses::Test();
         TemplateFunctions::Test();
         TemplateSpecialization::Test();
-        VariadicTemplates::Test();
+        //VariadicTemplates::Test();
     }
 }
