@@ -49,6 +49,7 @@
     <ClInclude Include="Patterns\AccountImpl.h">
       <Filter>Patterns</Filter>
     </ClInclude>
+    <ClInclude Include="Diagnostics.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />

@@ -26,6 +26,7 @@
     <ClInclude Include="Classes.h" />
     <ClInclude Include="Containers.h" />
     <ClInclude Include="Conversion.h" />
+    <ClInclude Include="Diagnostics.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="FilesAndStreams.h" />

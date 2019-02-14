@@ -1,10 +1,14 @@
 
+#include <windows.h> // used in some usage demonstrations
+#undef max // undefine the max macro because it interferes with std::numeric_limits<int>::max()
+
 #include "Arrays.h"
 #include "AutoDecltypeTypedef.h"
 #include "Casting.h"
 #include "Classes.h"
 #include "Containers.h"
 #include "Conversion.h"
+#include "Diagnostics.h"
 #include "Enums.h"
 #include "Exceptions.h"
 #include "FilesAndStreams.h"
@@ -39,7 +43,9 @@ int main()
     cout << endl << endl;
 
     cout << "*** Auto, Decltype, Typedef (type inference) ***" << endl;
-    Auto(); Decltype(); Typedef();
+    AutoExamples::Test();
+    DecltypeExamples::Test(); 
+    TypedefExamples::Test();
     cout << endl << endl;
 
     cout << "*** Casting ***" << endl;
@@ -56,6 +62,10 @@ int main()
 
     cout << "*** Conversion ***" << endl;
     ConversionExamples::Conversion();
+    cout << endl << endl;
+
+    cout << "*** Diagnostics ***" << endl;
+    Diagnostics::Test();
     cout << endl << endl;
 
     cout << "*** Enums ***" << endl;
@@ -83,7 +93,7 @@ int main()
     //cout << endl << endl;
 
     cout << "*** Lambda ***" << endl;
-    LambdaExamples::Lambda();
+    LambdaExamples::Test();
     cout << endl << endl;
 
     cout << "*** Move Semantics ***" << endl;
@@ -120,7 +130,7 @@ int main()
 
     // RecursionTest();
     // Applications::Histogram();
-    Patterns::pImplTest();
+    // Patterns::pImplTest();
 
     return 0;
 }
