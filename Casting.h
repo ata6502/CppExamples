@@ -8,7 +8,8 @@ using std::endl;
 // Used with dynamic_cast 
 class Shape { public: virtual void Draw() { } };
 class Circle : public Shape { public: void Draw() { cout << "Circle "; } };
-class Rectangle : public Shape { public: void Draw() { cout << "Rectangle "; } };
+class Rect : public Shape { public: void Draw() { cout << "Rectangle "; } };
+
 // Draw the shape only if it is a circle.
 void DrawOnlyCircles(Shape * shape)
 {
@@ -63,7 +64,7 @@ void Casting()
     // will perform the casting even if they are erroneous.
 
     Circle circle1;
-    Rectangle rectangle1;
+    Rect rectangle1;
     Circle circle2;
 
     DrawOnlyCircles(&circle1);
