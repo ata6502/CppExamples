@@ -50,6 +50,7 @@
       <Filter>Patterns</Filter>
     </ClInclude>
     <ClInclude Include="Diagnostics.h" />
+    <ClInclude Include="SmartClasses.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
