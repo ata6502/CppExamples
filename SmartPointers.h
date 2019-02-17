@@ -43,8 +43,20 @@ using std::string;
     - if an object is in a shared_ptr, give access to it through a weak_ptr
     - shared_ptr as well as unique_ptr provides the usual set of equallity and relational operators
     
+    shared_ptr holds two pointers:
+    - one to the object being managed
+    - another one to the a control block
+    
+    The control block is a data structure that holds:
+    - a strong ref count (strong use_count)
+    - a weak ref count (weak use_count)
+    - an optional deleter
+    
     weak_ptr
-    - originates from a shared_ptr to give access to the pointed object
+    - originates from a shared_ptr and gives access to the pointed object
+    - solves the problem of circular references in various data structures and object models
+    - use it when you need to refer to an object managed by shared_ptr without taking a strong reference
+    - shared_ptr along with weak_ptr provide a lightweight form of garbage collection
 
     When to use a pointer or a smart pointer:
     1. To represent UML composition (has-a) as a class's member variable. Lifetime of the variable is tied to the class.
@@ -250,7 +262,7 @@ namespace SmartPointersExamples
     //
     // unique_ptr deleter
     //
-    namespace UniquePtrDeleterExample
+    namespace UniquePtrDeleterExamples
     {
         // The unique_ptr class template provides a template parameter called a deleter. 
         // The deleter can be a function or function object. It deletes the object owned 
@@ -416,10 +428,96 @@ namespace SmartPointersExamples
         }
     }
 
+
+    //
+    // weak_ptr
+    //
+    namespace WeakPtrExamples
+    {
+        void AssignSharePtr()
+        {
+            auto sp = std::make_shared<int>(123);
+
+            // Define an empty weak_ptr. We can assign it later a shared_ptr.
+            auto wp = std::weak_ptr<int>{};
+
+            // A usage pattern: 
+            // when we have a shared_ptr in a data structure, we can then assign it to 
+            // a weak_ptr in some other data structure to avoid a reference loop. 
+            wp = sp;
+        }
+
+        void InitWeakPtr()
+        {
+            auto sp = std::make_shared<int>(123);
+
+            // Initialize a weak_ptr with the shared_ptr.
+            auto wp = std::weak_ptr<int>{ sp };
+        }
+
+        // convert the weak_ptr into a shared_ptr
+
+        void WeakPtrMembers()
+        {
+            auto sp = std::make_shared<int>(123);
+            auto wp = std::weak_ptr<int>{ sp };
+
+            // Determine whether there is any shared_ptr pointing to a managed object using the expired() method.
+            // The weak_ptr is not expired since there is an outstanding shared_ptr.
+            ASSERT(!wp.expired());
+
+            // Get the strong reference use_count.
+            ASSERT(wp.use_count() == 1);
+
+            // Produce a new shared_ptr by locking the weak_ptr.
+            if (auto locked = wp.lock()) // locked: [2 strong refs, 1 weak ref]
+            {
+                cout << "locked:" << *locked << " "; // 123
+
+                // It's safe now to use the object being pointed to.
+                // ...
+            }
+
+            // Reset the original shared_ptr.
+            sp = nullptr; // sp is empty
+            
+            // At this point, the weak_ptr is expired but it still holds a weak reference.
+            ASSERT(wp.expired());
+
+            // Similarly, the use_count is now 0.
+            ASSERT(wp.use_count() == 0);
+
+            // It's still safe to lock the weak_ptr but this time the lock method returns an empty 
+            // shared_ptr and the if condition fails. In such case we should reset the weak_ptr. 
+            if (auto locked = wp.lock()) // fails to convert weak_ptr to shared_ptr
+            {
+                cout << "locked:" << *locked << " "; // not executed
+            }
+            else
+            {
+                // Reset the weak_ptr. The reason you might want to do this is because the weak_ptr,
+                // once initialized with or assigned a shared_ptr, keeps the control block in memory.
+                // The managed object is still destroyed, but the memory  allocation may linger until 
+                // outstanding weak_ptr release their weak references to it. 
+                wp.reset(); // wp is empty
+            }
+        }
+
+        void Test()
+        {
+            AssignSharePtr();
+            InitWeakPtr();
+            WeakPtrMembers();
+        }
+    }
+
+
+
     void Test()
     {
         UniquePtrExamples::Test();
-        UniquePtrDeleterExample::Test();
+        UniquePtrDeleterExamples::Test();
         SharedPtrExamples::Test();
+        WeakPtrExamples::Test();
     }
 }
