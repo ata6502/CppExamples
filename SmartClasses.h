@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility> // std::move
+
 #include "Diagnostics.h"
 
 /*
@@ -51,6 +53,30 @@ namespace SmartClassesExamples
         explicit unique_handle(pointer value = Traits::invalid()) noexcept
             : m_value{ value }
         {
+        }
+
+        // The move ctor. Move operations take rvalue references. Also, move operations mustn't throw
+        // an exception. We call the release method to implement our move ctor: we intialize the member
+        // variable m_value with what was returned or yielded by the other unique handle. In that way,
+        // we're effectively moving ownership of the handle from one unique_handle to another as part 
+        // of construction. 
+        unique_handle(unique_handle&& other) noexcept
+            : m_value{ other.release() }
+        {
+        }
+
+        // The move assignment operator. 
+        unique_handle& operator=(unique_handle&& other) noexcept
+        {
+            // Prevent the object from moving some value onto itself.
+            if (this != &other)
+            {
+                // Move the handle from the other unique_handle using the reset method
+                // to ensure that any existing handle is first closed.
+                reset(other.release());
+            }
+
+            return *this;
         }
 
         // Destr closes the handle by calling the close() method. That's why the close() method
@@ -150,28 +176,8 @@ namespace SmartClassesExamples
     // Define a null handle.
     typedef unique_handle<null_handle_traits> null_handle;
 
-    void InitHandleToNull()
+    void InitHandle()
     {
-        // Initialize a raw handle.
-        auto raw = HANDLE{ nullptr };
-
-        // TODO: Use move semantics.
-        /*
-        // Initialize a null_handle. The default ctor accepts the pointer type.
-        auto h = null_handle{ raw };
-
-        // Determine whether the handle is valid using the explicit Boolean conversion operator.
-        if (h)
-        {
-            // ... not executed because the unique_handle is invalid
-        }
-        */
-    }
-
-    void InitHandleToValue()
-    {
-        // TODO: Use move semantics.
-        /*
         // Keep a handle returned from CreateEvent in a unique_handle. 
         auto event = null_handle
         {
@@ -186,13 +192,10 @@ namespace SmartClassesExamples
         {
             VERIFY(SetEvent(event.get())); // grab the raw handle using the get method
         }
-        */
     } // the unique_handle destr closes the handle
 
     void ReleaseHandle()
     {
-        // TODO: Use move semantics.
-        /*
         auto event = null_handle{ CreateEvent(nullptr, true, false, nullptr) };
 
         // A potentially dangerous way of transfering the ownership.
@@ -200,16 +203,13 @@ namespace SmartClassesExamples
 
         //...
 
-        // Close the handle ourselves because we own the handle.
+        // We need to close the handle ourselves because we own the handle.
         VERIFY(CloseHandle(danger));
-        */
 
     } // the unique_handle destr is no longer responsible for the handle
 
     void ResetHandle()
     {
-        // TODO: Use move sematics.
-        /*
         auto event = null_handle{ CreateEvent(nullptr, true, false, nullptr) };
 
         // Replace the event object with a new object. 
@@ -217,18 +217,42 @@ namespace SmartClassesExamples
         {
             cout << "'New handle is valid' ";
         }
-        */
 
         // You could also just close the handle without replacing it with a new object.
         //event.reset();
 
     } // the unique_handle destr closes the handle of the new event object
 
+    // There's only one unique_handle that owns the handle at any given moment and 
+    // only one of the destructors closes the handle. 
+    void MoveHandle()
+    {
+        auto event = null_handle{ CreateEvent(nullptr, true, false, nullptr) };
+
+        // event is initially valid.
+        ASSERT(event);
+
+        // Turn the event object into an rvalue by passing the event to the move function.
+        auto other = null_handle{ std::move(event) };
+
+        
+        // At this point, the event is no longer valid since the other unique handle has taken over.
+        ASSERT(!event);
+        ASSERT(other);
+
+        // Move the handle back to the original unique_handle.
+        event = std::move(other);
+
+        // The event is valid again and the other handle is not valid.
+        ASSERT(event);
+        ASSERT(!other);
+    }
+
     void Test()
     {
-        InitHandleToNull();
-        InitHandleToValue();
+        InitHandle();
         ReleaseHandle();
         ResetHandle();
+        MoveHandle();
     }
 }

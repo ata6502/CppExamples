@@ -19,7 +19,7 @@ using std::string;
     Avoid unnecassary copying by defining a move ctor and a move assignment operator in your class.
 
     You can write a variaty of functions that take rvalue reference:
-    - Pass by value: is a temp is passed to a function, it can be moved, not copied.
+    - Pass by value: if a temp is passed to a function, it can be moved, not copied.
     - Return by value: a local variable is about to go out of scope - a great candidate for moving.
     - Moving a unique_ptr into and out of a collection.
     Vector performs well because it implements move semantics i.e., it moves its elements rather then copying them.
@@ -44,8 +44,8 @@ namespace MoveSemanticsExamples
     {
         // get() is an rvalue
         // x is an rvalue reference
-        // rvalue is something that goes away; it's something you can "steal" from
-        // In x = a + b the expression a+b is an rvalue because at the moment we have
+        // rvalue is something that goes away:
+        // in x = a + b the expression a+b is an rvalue because at the moment we have
         // the value, the expression goes away.
         int&& x = get();
         cout << x << " ";
@@ -80,13 +80,12 @@ namespace MoveSemanticsExamples
         auto swap = [](int& x, int& y)
         {
             // PRB: We copy x to tmp and then y to x and then tmp to y.
-            // There are too many copy operations. Also, we duplicate 
-            // the amount of memory we need.
-            // We don't want to copy x to tmp, we want to move the memory
-            // of x to tmp. We don't care what happens to x after the move
-            // because x is overridden in the next statement x = y.
-            // The same applies to next statements: we don't want to perform
-            // a copy, we want to move memory.
+            // We use tmp as a temporary storage which we delete immediately
+            // after copying. We don't want to copy x to tmp, we want to move 
+            // the memory of x to tmp. We don't care what happens to x after 
+            // the move because x is overridden in the next statement x = y.
+            // The same applies to the next statement y = tmp: we don't want 
+            // to perform a copy, we want to move memory.
             int tmp{ x };
             x = y;
             y = tmp;
@@ -135,13 +134,16 @@ namespace MoveSemanticsExamples
         // The reason is that when we copy we leave the original untouched but when we move, we want
         // to modify the original.
         // After executing this ctor, the other r won't have m_name anymore.
-        Resource(Resource&& r) : m_name(std::move(r.m_name)) { cout << "mc" << m_name << ","; }
+        Resource(Resource&& r) 
+            : m_name(std::move(r.m_name)) 
+        { 
+            cout << "mc" << m_name << ","; 
+        }
 
         // move assignment operator; accepts Resource rvalue reference
         Resource& operator=(Resource&& r)
         {
-            // Check if we don't do the self-assignment. We need to chek it because std::move 
-            // moves the m_name from r to here.
+            // Check if we don't do the self-assignment.
             if (this != &r)
             {
                 cout << "mo" << m_name << ",";
