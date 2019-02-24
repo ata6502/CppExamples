@@ -3,16 +3,19 @@
 #include <iostream> // std::ostream
 #include <string>
 #include <vector>
+#include <list>
 #include <map>
 #include <set>
 #include <algorithm> // for_each, find_if, sort, etc.
 #include <numeric> // std::accumulate
+#include "Diagnostics.h"
 
 using std::cout;
 using std::endl;
 using std::ostream;
 using std::string;
 using std::vector;
+using std::list;
 using std::map;
 using std::set;
 
@@ -25,22 +28,51 @@ using std::set;
     - begin() and end() global functions
     - algorithms
 
-    <vector>
-    - Keeps elements in a continuous block of memory. This gives you great performance for both iterating and random access.
+    Basic requirements for an object to be an element inside a standard container:
+    - Copyable and/or moveable
+    - Swappable
+    - Comparable (optional)
+
+    Types of iterators:
+    https://docs.microsoft.com/en-us/cpp/standard-library/iterator
+    https://docs.microsoft.com/en-us/cpp/standard-library/iterators
+    - Output: forward moving, may store but not retrieve values, provided by ostream and inserter.
+    - Input: forward moving, may retrieve but not store values, provided by istream.
+    - Forward: forward moving, may store and retrieve values.
+    - Bidirectional: forward and backward moving, may store and retrieve values, provided by list, set, multiset, map, and multimap.
+    - Random access: elements accessed in any order, may store and retrieve values, provided by vector, deque, string, and array.
+
+    Iterators are pointer-like abstractions. They minimize the dependencies between application code, algorithms, and containers.
+    begin() and end() represent a half open range:
+    - begin() points to the first element in the sequence
+    - end() points to the last plus one element in the sequence
+
+    Sorting and searching
+    - Implemented as free functions.
+    - The free functions take iterators to a collection as parameters.
+    - Examples: for_each, find_if
+
+
+    Sequence containers
+    -------------------
+    <vector> (sequence container)
+    - Keeps elements in a continuous block of memory. 
+    - Performs well for both iterating and random access.
     - Grows as needed when new items are added which can cause a lot of element copying. 
       Solution: ***pre-allocate memory when you create a vector container***. It also initializes all vector elements to 0.
     - You can keep smart pointers in your vector (copying pointers is cheap).
+    - Compatible with C's memory model. You can pass a vector to a C-style API and it's binary layout will be compatible with the C-style array.
 
-    <map>
+    <map> (associative container)
     - Keeps elements sorted to speed up searches.
     - Does not allow two values with the same key.
     - Provides the [] operator to add or access elements.
     - Provides a pair<> template to add elements.
     - Also called an associative array or a dictionary.
 
-    <list>
+    <list> (sequence container)
     - A doubly-linked list.
-    - Not a random access container. Requires traversing.
+    - Subscripting or random access is not provided. The list requires traversing.
     - In general, faster than <vector> for adding elements.
     - In general, slower than <vector> for accessing elements.
       ... but you need to measure and compare performance of vector vs. list
@@ -54,31 +86,22 @@ using std::set;
     <priority_queue>
     - Bumps up a value to the front.
 
-    <set>
-    - Does not need to reorganize itself whenever elements are added or removed.
-      It means you can keep iterators going over a set, even when adding/removing
-      elements.
-    - Functions: union, intersection, difference.
 
-    <multimap>
-    - A map that can have multiple values with the same key i.e., it allows collisions
+    Associative containers (provide lookup based on a key)
+    ----------------------
+    
+    The following containers maintain an ordered of elements based on a comparison function typically less than:
+    set<K>
+    map<K, V>                   provides a container of key value pairs
+    multiset<K>                 allows multiple elements with the same key i.e., it allows collisions; lookup based on a given key may result in 0, 1, or more elements
+    multimap<K, V>              allows multiple elements with the same key
 
-    <unordered_map>
-    - Quicker addition of elements than the map.
-
-    Sorting and searching
-    - Implemented as free functions.
-    - The free functions take iterators to a collection as parameters.
-    - Examples: for_each, find_if
-
-    Types of iterators:
-    https://docs.microsoft.com/en-us/cpp/standard-library/iterator
-    https://docs.microsoft.com/en-us/cpp/standard-library/iterators
-    - Output: forward moving, may store but not retrieve values, provided by ostream and inserter.
-    - Input: forward moving, may retrieve but not store values, provided by istream.
-    - Forward: forward moving, may store and retrieve values.
-    - Bidirectional: forward and backward moving, may store and retrieve values, provided by list, set, multiset, map, and multimap.
-    - Random access: elements accessed in any order, may store and retrieve values, provided by vector, deque, string, and array.
+    The 'unordered' prefix is misleading. The following containers are hash containers. 
+    The hash functions do not provide any particular ordering. This tends to provide faster lookup performance.
+    unordered_set<K>
+    unordered_map<K, V>
+    unordered_multiset<K>
+    unordered_multimap<K, V>
 */
 
 namespace ContainerExamples
@@ -90,10 +113,11 @@ namespace ContainerExamples
     // }
     void ContainerIteration()
     {
+        // A vector of ints.
         vector<int> vec = { 1,2,3 };
 
-        // range-based for (foreach)
-        for (auto& n : vec)
+        // range-based for (foreach) - the simplest way to iterate over the elements of a standard container
+        for (auto n : vec)
             cout << n;
         cout << " ";
 
@@ -148,13 +172,13 @@ namespace ContainerExamples
             cout << *it;
         cout << " ";
 
-        // Use the reverse iterator. rbegin() points to the last element
-        for (auto it = vec.rbegin(); it != vec.rend(); ++it)
+        // Use the reverse iterator. rbegin() points to the last element, rend() points to the one before first.
+        for (auto it = std::rbegin(vec); it != std::rend(vec); ++it)
             cout << *it;
         cout << " ";
 
         // for_each algorithm with a lambda expression; you can specify a function name instead of lambda
-        for_each(vec.begin(), vec.end(), [](int i) { cout << i; });
+        for_each(begin(vec), end(vec), [](int i) { cout << i; });
         cout << " ";
 
         // Iterate over an initializer list..
@@ -201,6 +225,49 @@ namespace ContainerExamples
 
     void VectorContainer()
     {
+        // Create an empty vector.
+        auto v1 = vector<int>{}; // invoke the default ctor
+
+        // Check if the vector is empty.
+        ASSERT(v1.empty());
+
+        // Create a vector and initialize it with some element values.
+        auto v2 = vector<int>{ 1,2,3 }; // invoke a param ctor
+
+        // The size method returns the number of elements in the container.
+        ASSERT(v2.size() == 3);
+
+        // Create and initialize the vector with a sequence defined by a pair of iterators.
+        // The sequence can be a C-style array, another vector, or another container type, such as a list.
+        // Use the entire range from v2 to initialize the new vector.
+        auto v3 = vector<int>{ begin(v2), end(v2) };
+        ASSERT(v3.size() == 3);
+
+        // Create and initialize the vector with a narrowed down sequence.
+        auto v4 = vector<int>{ begin(v2)+1, end(v2)-1 };
+        ASSERT(v4.size() == 1);
+        ASSERT(v4[0] == 2);
+
+        // Create a vector of 10 elements, where each element has the same value of 123. 
+        auto v5 = vector<int>(10, 123);
+        ASSERT(v5.size() == 10);
+      
+        auto v = vector<int>{ 1,2,3 };
+
+        // Add an element using emplace_back.
+        // emplace_back is analogous to the push_back method, but while push_back copies or moves the provided value into the container, 
+        // emplace_back constructs the element in place by forwarding the arguments directly. emplace_back is a variadic function template.
+        // It tends to be more efficient than push_back. 
+        v.emplace_back(4);
+
+        // Use the emplace method to insert an element anywhere in the container, although that is not as efficient for vector containers. 
+        v.emplace(begin(v), 8); // insert a new value at the beginning of the sequence
+      
+        // 8,1,2,3,4
+        for (auto i : v)
+            cout << i;
+        cout << " ";
+
         vector<float> values{ 1, 2, 3 }; // values automatically converted to float
         values.push_back(8);
         values.push_back(4.5f);
@@ -221,13 +288,128 @@ namespace ContainerExamples
             cout << "\"" << exc.what() << "\" ";
         }
 
-        vector<A> v;
+        vector<A> a;
         A a1; // A()
         A a2; // A()
 
-        v.push_back(a1); // use the A's copy ctor to copy a1 to a temp object that is inserted to the vector
-        v.push_back(a2); // ~A(); we need a bigger vector; the temp object that holds a1 in the vector is destroyed and then a1 is copied again to the vector; then, the copy ctor is called to insert the a2 object to the vector
+        a.push_back(a1); // use the A's copy ctor to copy a1 to a temp object that is inserted to the vector
+        a.push_back(a2); // ~A(); we need a bigger vector; the temp object that holds a1 in the vector is destroyed and then a1 is copied again to the vector; then, the copy ctor is called to insert the a2 object to the vector
     } // ~A() ~A() - a1 and a2 destr; ~A() ~A() temp objects in the vector destr
+
+    void ListContainer()
+    {
+        auto c = list<int>{}; // default ctor called
+
+        ASSERT(c.empty());
+        ASSERT(c.size() == 0);
+
+        // Initialize the list with some values.
+        c = list<int>{ 1, 2, 3, 4, 5 };
+
+        ASSERT(!c.empty());
+        ASSERT(c.size() == 5);
+
+        // Initialize the list with a sequence defined by a pair of iterators.
+        c = list<int>{ begin(c), end(c) };
+
+        ASSERT(!c.empty());
+        ASSERT(c.size() == 5);
+
+        // The iterators provided by the list are bidirectional iterators, not random access 
+        // iterators as is the case of vector. Bidirectional iterators allow you to move backward 
+        // and forward by incrementing and decrementing.
+        c = list<int>{ ++begin(c), --end(c) };
+
+        ASSERT(c.size() == 3);
+
+        // Use random access iterators provided by a vector to initialize a list.
+        auto v = vector<int>{ 1, 2, 3 };
+        c = list<int>{ begin(v) + 1, end(v) - 1 }; // initialize the list with the middle element in the vector
+
+        ASSERT(c.size() == 1);
+
+        // Access the first element in the list with the front method which returns a reference to the first element.
+        ASSERT(c.front() == 2);
+
+        // Create a list of 10 elements. Each element will have the element's default value. 
+        c = list<int>(10);
+        ASSERT(c.size() == 10);
+
+        // Create a list of 10 integers with a specific value.
+        c = list<int>(10, 123);
+        ASSERT(c.size() == 10);
+
+        c = list<int>{ 1, 2, 3, 4, 5 };
+
+        // The list container provides constant time operations for inserting and deleting elements.
+
+        // emplace_back inserts an element at the end of the list.
+        c.emplace_back(6);
+
+        // emplace_front inserts an element at the beginning of the list.
+        c.emplace_front(0);
+
+        // emplace inserts an element at a specific position given an iterator before which the new element will be constructed
+        // i.e., the new element is always inserted before the given iterator.
+        c.emplace(begin(c), -1);    // the same as emplace_front
+        c.emplace(end(c), 7);       // the same as emplace_back
+
+        for (auto e : c)
+            cout << e;
+        cout << " ";
+
+        // Remove a single element or a range of elements given one or two iterators respectively.
+        c.erase(begin(c));          // remove the first element
+
+        // Remove the first element.
+        c.pop_front();
+
+        // Remove the last element.
+        c.erase(--end(c));
+
+        // Remove the last element.
+        c.pop_back();
+
+        ASSERT(c.size() == 5); // c = {1,2,3,4,5}
+
+        // Remove all but the first and last elements. This erases the half-open range.
+        c.erase(++begin(c), --end(c)); // c = {1,5}
+
+        ASSERT(c.size() == 2);
+        ASSERT(c.front() == 1);
+        ASSERT(c.back() == 5);
+
+        // Insert a sequence defined using an initializer list.
+        c.insert(++begin(c), { 2, 3, 4 });
+
+        // In case of lists, iterators remain valid across reverse, sort, and other such operations. 
+        auto pos = ++begin(c);      // get an iterator to the list's second element
+        ASSERT(*pos == 2);          // the value of the second element is 2
+
+        // Reverse the order of the elements.
+        c.reverse();
+
+        // After reversing the pos iterator still points to the same element, 
+        // even though the element is now in a different position in the sequence. 
+        ASSERT(*pos == 2);
+
+        // Sort the elements. By default, sort uses the less than as its sort operator, 
+        // but you can provide your own comparison function. 
+        c.sort();
+
+        // After sorting the pos iterator still points to the same element.
+        ASSERT(*pos == 2);
+
+        // Remove all odd numbers from the list.
+        c.remove_if([](int value)
+        {
+            return value & 1;
+        });
+
+        for (auto e : c)
+            cout << e;
+        cout << " ";
+    }
 
     void SetContainer()
     {
@@ -321,6 +503,7 @@ namespace ContainerExamples
     void ContainerAlgorithms()
     {
         vector<int> vec = { 3,4,1,3,2,5 };
+        int n = 0;
 
         // Copy all elements of a vector to another vector.
         auto nv = vec;
@@ -443,10 +626,15 @@ namespace ContainerExamples
             odd = find_if(++odd, vec.end(), [](int n) { return n % 2; }); // ++odd is the next iterator
         }
 
-        // Populate a vector with five values: 0,1,2,3,4
-        vector<int> vv;
-        int i = 0;
-        std::generate_n(std::back_inserter(vv), 5, [&]() { return i++; });
+        // Populate a vector with five values using std::generate
+        v = vector<int>(5);
+        n = 1;
+        std::generate(begin(v), end(v), [&n] { return n++; }); // v = {1,2,3,4,5}
+        
+        // Insert five values at the end of a vector using std::generate_n
+        v = vector<int>(5);
+        n = 1;
+        std::generate_n(std::back_inserter(v), 5, [&]() { return n++; }); // v = {0,0,0,0,0,1,2,3,4,5}
     }
 
     void RemovingElements()
@@ -497,6 +685,7 @@ namespace ContainerExamples
         ContainerIteration();
         ContainerIterationUsingGenericFunction();
         VectorContainer();
+        ListContainer();
         SetContainer();
         MapContainer();
         ContainerAlgorithms();
