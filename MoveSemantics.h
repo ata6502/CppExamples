@@ -114,68 +114,164 @@ namespace MoveSemanticsExamples
     class Resource
     {
     public:
-        // ctor
-        Resource(string name) : m_name(name) { cout << "c" << m_name << ","; }
-
-        // copy ctor
-        Resource(const Resource& r) : m_name(r.m_name) { cout << "cc" << m_name << ","; }
-
-        // assignment operator
-        Resource& operator=(const Resource& r)
+        // default constructor
+        Resource() : m_name{ "" }
         {
-            cout << "co" << m_name << ",";
-            // We don't need to care about self-assignment because we just copy the name.
-            m_name = r.GetName();
-            return *this;
+            cout << "dc,";
         }
 
-        // move ctor; accepts Resource rvalue reference
-        // IMPORTANT: move ctor (unlike copy ctor) does not have 'const' specified in its parameter.
-        // The reason is that when we copy we leave the original untouched but when we move, we want
-        // to modify the original.
-        // After executing this ctor, the other r won't have m_name anymore.
-        Resource(Resource&& r) 
-            : m_name(std::move(r.m_name)) 
+        // explicit named (aka ordering) constructor
+        Resource(string name) : m_name{ name }
         { 
+            cout << "nc" << m_name << ","; 
+        }
+
+        // copy constructor
+        Resource(Resource const & other) : m_name{ other.m_name } 
+        { 
+            cout << "cc" << m_name << ","; 
+        }
+
+        // move constructor
+        // - accepts Resource rvalue reference
+        // - does not have 'const' specified in its parameter because we want to modify the original
+        // - after executing this ctor, other.m_name is an empty string
+        Resource(Resource&& other) 
+            : m_name(std::move(other.m_name)) 
+        {
             cout << "mc" << m_name << ","; 
         }
 
-        // move assignment operator; accepts Resource rvalue reference
-        Resource& operator=(Resource&& r)
+        ~Resource()
         {
-            // Check if we don't do the self-assignment.
-            if (this != &r)
+            cout << "d" << m_name << ",";
+        }
+
+        // copy assignment operator
+        Resource& operator=(const Resource& other)
+        {
+            cout << "co" << m_name << ",";
+            m_name = other.m_name; // no need to care about self-assignment because we just copy the name
+            return *this;
+        }
+
+        // move assignment operator
+        Resource& operator=(Resource&& other)
+        {
+            // Check for self-assignment.
+            if (this != &other)
             {
-                cout << "mo" << m_name << ",";
-                m_name = std::move(r.m_name);
-                r.m_name.clear(); // clear out the old value; just to be on the safe side
+                cout << "mo" << other.m_name << ",";
+                m_name = std::move(other.m_name);
+                other.m_name.clear(); // clear the old value; not required but just to be on the safe side
             }
             return *this;
         }
-        string GetName() const { return m_name; }
+
+        void swap(Resource& other)
+        {
+            cout << "sw" << m_name << other.m_name << ",";
+            std::swap(m_name, other.m_name);
+        }
+
     private:
         string m_name;
     };
 
-    void MoveCtor()
+    // Allows the standard algorithms to find the Resource's swap function.
+    void swap(Resource& left, Resource& right)
     {
-        vector<Resource> v;
+        left.swap(right);
+    }
 
-        Resource r("A");            // ctor
-        v.push_back(r);             // copy ctor; r is not moveable because it has its own independent life outside of the vector
+    // Illustrates how user-defined types behave with vector and list.
+    void MovementWithContainers()
+    {
+        {
+            auto c = list<Resource>{};
+            c.emplace_back();       // default ctor
+            c.clear();              // destr
+            cout << " ";
+        }
 
-        // Resource("B") is a temp - the rvalue
-        v.push_back(Resource("B")); // ctor
-        
-        // Increase the size of the vector and move all elements:
-        // move B
-        // ??? copy A - why not move ???
-        // It looks like the Resource once inserted to the vector is not moveable, why ???
+        {
+            auto c = list<Resource>{};
+            c.emplace_back("A");    // named ctor
+            c.clear();              // destr
+            cout << " ";
+        }
 
-        std::for_each(begin(v), end(v),
-            [](Resource r) { } // copy ctor is used here because we don't want to get rid of the original object
-        );
+        {
+            // push_back allocates some storage for the Resource inside the container. 
+            // The state of the Resource is then moved from the first rvalue to the Resource 
+            // within the container. The first Resource whose state was moved away still exists 
+            // and is quickly destroyed. 
 
+            // push_back doesn't depend on move semantics. If the type being contained doesn't 
+            // have a move constructor it will attempt to copy the object.
+
+            // If the Resource class did not define a move ctor:
+
+            // push_back would use the copy ctor and create a new object copying or moving the value of its arguments.
+            // c.push_back(Resource{ "B" }); // ncB (named ctor), ccB (copy ctor), dB (destr)
+
+            // emplace_back would avoid the temporary object and construct the element in place.
+            // The argument is forwarded to the Resource's named ctor inside the container.
+            // c.emplace_back("B"); // ncB (named ctor)
+
+            auto c = list<Resource>{};
+            c.emplace_back("B"); // named ctor, move ctor, destr of the empty temporary that has been moved
+            c.clear();              // destr of B
+            cout << " ";
+        }
+
+        {
+            auto c = list<Resource>{};
+            c.emplace_back("A");    // ncA
+            c.emplace_back("B");    // ncB
+            c.emplace_back("C");    // ncC
+            c.emplace_back("D");    // ncD
+            c.emplace_back("E");    // ncE
+            cout << " ";
+
+            // Use the list's reverse method.
+            c.reverse();            // the list container knows how to reverse the order of its elements without having to move, copy, or swap them
+        } // dE,dD,dC,dB,dA
+        cout << " ";
+
+        // ??? Why the copy ctor is preferred rather than the copy ctor?
+
+        // When copy ctor is defined on Resource:
+        {
+            auto c = vector<Resource>{};
+            c.emplace_back("A");    // ncA
+            c.emplace_back("B");    // ncB,ccA,dA
+            c.emplace_back("C");    // ncC,ccA,ccB,dA,dB
+            c.emplace_back("D");    // ncD,ccA,ccB,ccC,dA,dB,dC
+            c.emplace_back("E");    // ncE,ccA,ccB,ccC,ccD,dA,dB,dC,dD
+            cout << " ";
+
+            // Use the standard reverse algorithm.
+            std::reverse(std::begin(c), std::end(c)); // swAE,swBD   
+            
+            // If swap was not defined: mcA,moE,moA,d,mcB,moD,moB,d
+            // the reverse algorithm would have to use the generic swap algorithm. For every swap it needs to create a temporary.
+        } // dA,dB,dC,dD,dE
+        cout << " ";
+
+        // When copy ctor is not defined on Resource:
+        {
+            auto c = vector<Resource>{};
+            c.emplace_back("A");    // ncA
+            c.emplace_back("B");    // ncB,mcA,d
+            c.emplace_back("C");    // ncC,mcA,mcB,d,d
+            c.emplace_back("D");    // ncD,mcA,mcB,mcC,d,d,d
+            c.emplace_back("E");    // ncE,mcA,mcB,mcC,mcD,d,d,d,d
+            cout << " ";
+
+            std::reverse(std::begin(c), std::end(c)); // swAE,swBD
+
+        } // dA,dB,dC,dD,dE
         cout << " ";
     }
 
@@ -183,6 +279,6 @@ namespace MoveSemanticsExamples
     {
         RValue();
         Swapping();
-        MoveCtor();
+        MovementWithContainers();
     }
 }
