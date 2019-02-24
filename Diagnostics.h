@@ -207,7 +207,7 @@ namespace Diagnostics
     // In Debug builds, we construct the Tracer object passing two arguments to its ctor.
     // In Release builds, the __noop intrinsic specifies that no code should be generated.
     #ifdef _DEBUG
-    #define TRACE Tracer(__FILE__, __LINE__)
+    #define TRACE Diagnostics::Tracer(__FILE__, __LINE__)
     #else
     #define TRACE __noop
     #endif
