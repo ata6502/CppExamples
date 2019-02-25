@@ -6,6 +6,7 @@
 #include <list>
 #include <map>
 #include <set>
+#include <unordered_map>
 #include <algorithm> // for_each, find_if, sort, etc.
 #include <numeric> // std::accumulate
 #include "Diagnostics.h"
@@ -18,6 +19,8 @@ using std::vector;
 using std::list;
 using std::map;
 using std::set;
+using std::multimap;
+using std::unordered_map;
 
 /*
     *** Measure performance to ensure you are using the right collection ***
@@ -90,19 +93,103 @@ using std::set;
     Associative containers (provide lookup based on a key)
     ----------------------
     
-    The following containers maintain an ordered of elements based on a comparison function typically less than:
-    set<K>
-    map<K, V>                   provides a container of key value pairs
-    multiset<K>                 allows multiple elements with the same key i.e., it allows collisions; lookup based on a given key may result in 0, 1, or more elements
-    multimap<K, V>              allows multiple elements with the same key
+    Ordered containers:
+    - maintain the ordered of elements based on a comparison function, by default the 'less than' operator
+    - perform a binary search to find elements
 
-    The 'unordered' prefix is misleading. The following containers are hash containers. 
-    The hash functions do not provide any particular ordering. This tends to provide faster lookup performance.
+    set<K>                      an ordered set of unique keys
+    map<K, V>                   an ordered container of key value pairs; it associates keys with values; implemented as a balanced binary tree
+    multiset<K>                 allows multiple elements with the same key i.e., it allows collisions; lookup based on a given key may result in 0, 1, or more elements
+    multimap<K, V>              allows multiple elements with the same key; does not allow subscripting 
+
+    Unordered (hash) containers:
+    - do not provide any particular ordering
+    - tend to provide fast lookup performance
+    - rely on a hash function rather than a comparison function
+    - bacause hashing cannot guarantee uniqueness or equality, hash containers also require an equality function or an operator
+    - also, there is no hash operator or default hash function for types in general
+
     unordered_set<K>
     unordered_map<K, V>
     unordered_multiset<K>
     unordered_multimap<K, V>
 */
+
+// The standard library provides specializations of std::hash and std::equal_to for common types 
+// such as integers and strings. For custom types, we need to define our own hash operator 
+// and an equality operator.
+
+// A good explanation of implementing a custom key for unordered_map:
+// https://stackoverflow.com/questions/17016175/c-unordered-map-using-a-custom-class-type-as-the-key
+
+
+// A custom key type. Used with unordered_map.
+struct FileKey
+{
+    string Name;
+    int Id;
+
+    FileKey(const string& name, int id) :
+        Name{ name }, Id{ id }
+    {
+    }
+
+    // Overload the equality operator for FileKey as a member function.
+    // std::equal_to invokes this equality operator.
+    //bool operator==(FileKey const & fk) const
+    //{
+    //    return Name == fk.Name &&
+    //           Id == fk.Id;
+    //}
+};
+
+// Overload the equality operator for FileKey as a free function.
+// This is the preferred way to add functionality in C++.
+// std::equal_to invokes this equality operator.
+bool operator==(FileKey const & left, FileKey const & right)
+{
+    return left.Name == right.Name &&
+        left.Id == right.Id;
+}
+
+// Specialize the standard hash class template for FileKey. 
+namespace std
+{
+    // We need to provide the specialization in the hash class templates original namespace (std).
+    // The specialization has to fullfill the following requirements:
+    // - two calls to a hash function for the same value must give the same result
+    // - hash functions must produce a size_t value
+    // - uniform distribution should be achieved to avoid different keys producing the same hash value
+    template <>
+    struct std::hash<FileKey>
+    {
+        // Because std::hash is a function object we need to define a call operator.
+        // The standard C++ library provides specializations for common types. We can just on these as building blocks. 
+        // Here, we delegate the hash specialization for strings and integers. We combine the hash values using exclusive-or
+        // to preserve their distribution properties.
+        std::size_t operator()(FileKey const & fk) const
+        {
+            return std::hash<string> {} (fk.Name) ^
+                   std::hash<int> {} (fk.Id);
+        }
+    };
+}
+
+// Define custom begin and end functions. They allows us to use the range-for loop for multimap.
+namespace std
+{
+    template <typename T>
+    auto begin(pair<T, T> const & range) -> T
+    {
+        return range.first;
+    }
+
+    template <typename T>
+    auto end(pair<T, T> const & range) -> T
+    {
+        return range.second;
+    }
+}
 
 namespace ContainerExamples
 {
@@ -413,6 +500,104 @@ namespace ContainerExamples
 
     void SetContainer()
     {
+        // An empty set of integers.
+        auto c = set<int>{}; // default ctor
+
+        // The set's ordering is defined by the less than operator. We can override this or 
+        // provide the 'less than' semantics for our own types. 
+        // std::less is a function object, a class template that calls the 'less than' operator.
+        c = set<int, std::less<int>>{};
+
+        ASSERT(c.empty());
+        ASSERT(c.size() == 0);
+
+        // Initialize the set with a list of values. The values are automatically ordered as they 
+        // get inserted into the containers initializer list constructor
+        c = set<int>{ 1, 2, 4, 5, 3 }; // c = {1,2,3,4,5}
+
+        ASSERT(!c.empty());
+        ASSERT(c.size() == 5);
+
+        // Initialize a vector with sorted elements from the range provided by the map.
+        auto v = vector<int>{ begin(c), end(c) }; // v = {1,2,3,4,5}
+
+        // Copy or move elements into the set container with the insert method.
+        c.insert(0);
+
+        // Construct an element in place with the emplace method. Arguments supplied to the emplace method 
+        // are forwarded to the ctor of an element within the container avoiding any copy or move construction.
+        // Both, insert and emplace return a pair consisting of an iterator pointing to the newly inserted element.
+        auto result = c.emplace(6);
+
+        // If the key already exists, the first member of the pair points to the existing element. 
+        ASSERT(*result.first == 6); // assert that the first member points to an element with a value of 6
+
+        // The second member of the pair indicates whether insertion actually took place.
+        ASSERT(result.second); // assert that the second member is true indicating that an insertion took place
+
+        // Call the emplace again.
+        result = c.emplace(6);
+
+        // The resulting iterator still points to the same element but no insertion took place.
+        ASSERT(*result.first == 6);
+        ASSERT(!result.second);
+
+        // Remove the first element in the ordered range and return an iterator pointing to the element following 
+        // the removed one. 
+        auto next = c.erase(begin(c));
+
+        ASSERT(*next == 1); // assert that an element following the removed one points to the element 1
+
+        // Remove elements by a value matching the element key. This form of erase returns the number of elements removed. 
+        ASSERT(1 == c.erase(6));        // one element removed
+        ASSERT(0 == c.erase(123));      // no elements removed
+
+        // Look for elements using the find method. Find returns an iterator pointing to the element with a given key.
+        auto it = c.find(3);            
+        ASSERT(*it == 3);               // it points to the elements containing 3
+        ASSERT(end(c) == c.find(123));  // if an element is not found, the returned iterator points to the last plus one element in the container
+
+        // Given that the set is ordered, it's useful to partition the range of elements using binary search algorithms:
+        // - upper_bound
+        // - lower_bound
+
+        // upper_bound returns an iterator pointing to the first element that is greater than the given key. 
+        auto upper = c.upper_bound(3);
+        ASSERT(*upper == 4);
+
+        // lower_bound returns an iterator pointing to the first element that is not less than the given key.
+        auto lower = c.lower_bound(3);
+        ASSERT(*lower == 3);
+
+        // equal_range combines upper_bound and lower_bound searches into one.
+        // It returns a pair of iterators:
+        // - the first iterator is equivalent to the one returned by the lower_bound method
+        // - the second iterator is equivalent to the one returned by the upper_bound method
+        auto range = c.equal_range(3);
+        ASSERT(range.first == lower);
+        ASSERT(range.second == upper);
+
+        // Given the lower and upper range markers, we can partition the set and print it out.
+        // Notice that the loops skip the search key (in our case 3) as the standard containers 
+        // and algorithms work with sequences defined by a half-open range. 
+
+        // Print out the range up to but not including the lower bound.
+        for (auto it = begin(c); it != lower; ++it)
+            cout << *it; // lower: 12
+        cout << " ";
+
+        // Although the previous and the next loop skip the search key we can still loop in between 
+        // them to print out the sequence consisting of a single element - our search key.
+        // Note that if the search key was not present, we would have here an empty set.
+        for (auto it = lower; it != upper; ++it)
+            cout << *it; // key: 3
+        cout << " ";
+
+        // Print out the range starting with the upper bound, but not including the end.
+        for (auto it = upper; it != end(c); ++it)
+            cout << *it; // upper: 45
+        cout << " ";
+
         string text("to be, or not to be, that is the question");
 
         set<char> letters;
@@ -437,6 +622,72 @@ namespace ContainerExamples
 
     void MapContainer()
     {
+       
+        // A map container that maps integers to doubles.
+        auto d = map<int, double>{};
+
+        ASSERT(d.empty());
+
+        // Initialize a map with a list of key-value pairs. As the pairs are added to the container 
+        // they are automatically sorted. 
+        auto c = map<string, int>
+        {
+            { "A", 1 },
+            { "D", 4 },
+            { "B", 2 },
+            { "C", 3 },
+            { "E", 5 }
+        };
+
+        ASSERT(!c.empty());
+        ASSERT(c.size() == 5);
+
+        // map provides a subscript operation. The subscript is the key rather than an index.
+        // The result is the value of the key-value pair.
+        ASSERT(c["D"] == 4);
+
+        // Use the subscript operator to insert new elements into the map container.
+        // It also takes advantage of copy or move semantics when possible.
+        c["F"] = 6;
+
+        // Keep in mind that the subscript operator ensures that an element with a given key is present. 
+        // In the following case we not only retrieve the value with a given key, but we first insert
+        // an element with that key along with a default value. 
+        auto v = c["G"];
+        ASSERT(v == 0); // 0 is the default value for int
+
+        ASSERT(c.size() == 7);
+
+        // Use the insert method to insert a new element and find out whether a key previously existed. 
+        // Insert also returns an iterator to the newly inserted element. 
+        // If the map already contains the given key then its value is unaffected.
+        auto result = c.insert(std::make_pair("H", 8));
+
+        // Confirm that a new element was inserted.
+        ASSERT(result.second); // true
+
+        // Use the emplace method to insert a new element. With emplace we don't need to 
+        // use the make_pair helper function. 
+        result = c.emplace("I", 9);
+
+        // Find an element with a specific key. If no such element is found, find returns 
+        // an iterator pointing past the end of the container 
+        auto it = c.find("D");
+        ASSERT(it->first == "D");         // the key
+        ASSERT(it->second == 4);      // the value
+
+        // Remove an element when we have an iterator.
+        c.erase(it);
+
+        // Remove an element with a given key. 
+        c.erase("G");
+
+        // A1,B2,C3,E5,F6,H8,I9
+        for (auto& v : c) // use a reference to each element to reduce the amount of coping
+            cout << v.first << v.second << ","; // first is the key; second is the value
+        cout << " ";
+
+
         //
         // Histogram
         //
@@ -454,7 +705,8 @@ namespace ContainerExamples
 
         // Show the keys and values. Note that the pairs are sorted by the key.
         for (const auto& p : histogram) // p is an std::pair
-            cout << p.first << ":" << p.second << " ";
+            cout << p.first << ":" << p.second << ",";
+        cout << " ";
 
 
         //
@@ -487,6 +739,80 @@ namespace ContainerExamples
         // Obtain an element using [] rather than the find() function.
         auto b2 = books[2];
         cout << "Found2:" << b2.Id << b2.Title << b2.Author << " ";
+    }
+
+    void MultimapContainer()
+    {
+        // Initialize a multimap with a few elements.
+        auto c = multimap<string, int>
+        {
+            { "A", 10 },
+            { "B", 21 },
+            { "B", 23 },
+            { "C", 30 }
+        };
+
+        ASSERT(!c.empty());
+        ASSERT(c.size() == 4);
+
+        // Subscripting is not available. We need to use the insert or emplace method. 
+        // Unlike map and set, a new element is always inserted regardless of whether 
+        // the key already exists in the container. 
+        // The result of insert and emplace is an iterator pointing to the newly inserted element. 
+        auto result = c.emplace("B", 22);
+        ASSERT(result->first == "B");
+        ASSERT(result->second == 22);
+
+        // Enumerate the sequence. The sequence is ordered by the key but the order of elements with 
+        // equivalent keys is not ordered and maintains the order of insertion. 
+        for (auto& v : c)
+            // A10,B21,B23,B22,C30
+            cout << v.first << v.second << ","; // first is the key; second is the value
+        cout << " ";
+
+        // We can also get the upper and lower bound or use the equal_range shortcut. 
+        auto range = c.equal_range("B");
+
+        // Show the multiple values of the search key. Use the iterators to iterate over the elements.
+        for (auto it = range.first; it != range.second; ++it)
+            // B21,B23,B22
+            cout << it->first << it->second << ","; // first is the key; second is the value
+        cout << " ";
+
+        // Show the multiple values of the search key. Use the custom begin and end functions
+        // to iterate using the for-range loop.
+        for (auto & v : c.equal_range("B"))
+            cout << v.first << v.second << ","; // first is the key; second is the value
+        cout << " ";
+    }
+
+    void UnorderedMapContainer()
+    {
+        // An empty unordered map.
+        auto c = unordered_map<int, double>{};
+
+        // The above statement is equivalent to the following one.
+        // std::hash<int> and std::equal_to<int> are default template parameters.
+        c = unordered_map<int, double, std::hash<int>, std::equal_to<int>>{};
+
+        // Use the initializer list to insert elements to an unordered_map with a custom key.
+        auto f = unordered_map<FileKey, int>
+        {
+            { { "A", 1 }, 11 },
+            { { "B", 2 }, 22 },
+        };
+
+        // Use the subscript operator to add or update elements.
+        f[{"C", 3}] = 33;
+
+        // Define a key explicitly and then add a new element.
+        auto k = FileKey{ "D", 2 };
+        f[k] = 44;
+
+        // 1-A11,2-B22,2-D44,3-C33
+        for (auto & v : f)
+            cout << v.first.Id << "-" << v.first.Name << v.second << ",";
+        cout << " ";
     }
 
     struct Person
@@ -688,6 +1014,8 @@ namespace ContainerExamples
         ListContainer();
         SetContainer();
         MapContainer();
+        MultimapContainer();
+        UnorderedMapContainer();
         ContainerAlgorithms();
         RemovingElements();
         Vector2D();
