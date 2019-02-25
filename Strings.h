@@ -3,20 +3,134 @@
 #include <iostream>
 #include <string>
 #include <sstream> // ostringstream
+#include <algorithm> // find_if_not
+#include "Diagnostics.h"
 
 using std::cout;
 using std::endl;
+using std::string;
+using std::wstring;
+using std::basic_string;
+
+// string is a typedef for basic_string<char>.
+// basic_string is a container that represents a sequence - the range of characters. 
+// basic string in C++ is mutable, unlike strings in many other languages. 
+
+// Both, basic_string<char> and basic_string<wchar> are platform specific:
+// - if you're using the Visual C++ compiler, char is 8-bits and a wchar is 16-bits
+
+// C++ 11 also introduced explicit and portable 16 and 32-bit typedefs of basic_string, 
+// but basic_string<char> and basic_string<wchar> are sufficient in many cases. 
+
+// Strings are implicitly null terminated and stored continuously. It means that their
+// memory layout is compatible with C-style strings. We can get a pointer to the underlying string. 
+
+// String compares the character sequences not the pointer addresses as would be the case for 
+// a pair of C-style strings.
+
+// String provides begin and end methods returning iterators pointing to the front and 
+// the back of the string, not counting the null terminator. 
+
+// You're free to add helper functions as non-member functions which is the preferred way 
+// to add functionality in C++.
 
 namespace StringsExamples
 {
-    void StringOperations()
+    // A non-member function that removes whitespaces from either end of a string.
+    string Trim(string const & s)
+    {
+        // Find the first non-whitespace character - the front of the substring.
+        // We use the isspace function as a predicate for the algorithm to use.
+        auto front = std::find_if_not(begin(s), end(s), isspace);
+
+        // Find the last whitespace character - to the back of the substring.
+        auto back = std::find_if_not(rbegin(s), rend(s), isspace);
+
+        // The front and back define the half-open range which we can use to define the substring to return. 
+        // back is a reverse iterator pointing to the last whitespace character. We turn it into a regular 
+        // iterator with the base() method returning the iterator's underlying base iterator. 
+        return string{ front, back.base() };
+    }
+
+    void StringBasics()
     {
         // Initialize a variable to an empty string.
-        string s = string();
+        auto s = string(); // or string {};
 
+        // string is a typedef for basic_string<char>
+        s = basic_string<char>{};
+
+        // ... or the wide character version basic_string<wchar>
+        auto ws = wstring{};
+
+        ws = basic_string<wchar_t>{};
+
+        // A character is almost always 1 byte.
+        static_assert(sizeof(string::value_type) == 1, "1 byte");
+
+        // A wide character is 2 bytes.
+        static_assert(sizeof(wstring::value_type) == 2, "2 bytes");
+
+        // Initialize a string with a string literal.
+        s = string{ "hi" };
+
+        ASSERT(!s.empty());
+        ASSERT(s.size() == 2);
+
+        // Get a pointer to the underlying string.
+        cout << s.c_str() << " ";
+
+        // Even when we initialize a string using the initializer list, 
+        // the null terminator is added automatically.
+        s = string{ 'a', 'b', 'c' };
+
+        cout << s.c_str() << " ";
+
+        // Remove all characters from the string.
+        s.clear();
+
+        // The string still needs to present the layout of an empty string rather than an empty container. 
+        ASSERT(s.empty());                      // the string is empty
+        ASSERT(s.size() == 0);                  // the string does not contain any characters
+        ASSERT(strcmp(s.c_str(), "") == 0);     // the string can be passed it to a C-style API which assumes a valid null terminated string
+
+        // Given a string...
+        s = string{ "abcdef" };
+
+        // ...we can obtain a substring.
+        s = string(s, 2, 3); // starting with the 2nd position and spanning 3 characters 
+
+        ASSERT(s == "cde");
+
+        // String provides begin and end methods. Thanks to that we can use the range-for statement 
+        // and enumerate the characters in the sequence.
+        for (auto c : s)
+            cout << c;
+        cout << " ";
+
+        // Concatenate strings.
+        auto a = string{ "A" };
+        auto b = string{ "B" };
+        auto x = a + "@" + b;
+
+        // Find the position of the @ symbol.
+        auto pos = x.find('@');
+
+        // Create a substring using the substr method.
+        // Substr, by default, runs to the end of the source string.
+        auto c = x.substr(pos);
+        ASSERT(c == "@B");
+
+        // Trim whitespaces using a custom function Trim.
+        auto trimmed = Trim(" \t zzz \r\n ");
+        ASSERT(trimmed == "zzz");
+    }
+
+    void StringOperations()
+    {
         // Convert a numerical value to a string.
         double d = 2.8;
-        s = std::to_string(d); // to_string has nine overloads
+        auto s = std::to_string(d); // to_string has nine overloads
         cout << s << " "; // 2.800000
 
         // Access the length of a string.
@@ -142,6 +256,7 @@ namespace StringsExamples
 
     void Test()
     {
+        StringBasics();
         StringOperations();
         ConcatenateValues();
         CharType();
