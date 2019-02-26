@@ -47,6 +47,7 @@
     <ClInclude Include="Recursion\RecursionTest.h" />
     <ClInclude Include="Recursion\ReverseEnumerator.h" />
     <ClInclude Include="Recursion\TowerOfHanoi.h" />
+    <ClInclude Include="RegularExpressions.h" />
     <ClInclude Include="SmartClasses.h" />
     <ClInclude Include="SmartPointers.h" />
     <ClInclude Include="Strings.h" />

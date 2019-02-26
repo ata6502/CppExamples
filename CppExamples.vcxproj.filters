@@ -51,6 +51,7 @@
     </ClInclude>
     <ClInclude Include="Diagnostics.h" />
     <ClInclude Include="SmartClasses.h" />
+    <ClInclude Include="RegularExpressions.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />

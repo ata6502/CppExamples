@@ -21,6 +21,7 @@
 #include "OperatorOverloading.h"
 #include "PointersAndReferences.h"
 #include "Rand.h"
+#include "RegularExpressions.h"
 #include "SmartClasses.h"
 #include "SmartPointers.h"
 #include "Strings.h"
@@ -97,7 +98,7 @@ int main()
     LambdaExamples::Test();
     cout << endl << endl;
 
-    cout << "*** Move Semantics ***" << endl;
+    cout << "*** Move semantics ***" << endl;
     MoveSemanticsExamples::Test();
     cout << endl << endl;
 
@@ -117,11 +118,15 @@ int main()
     RandExamples::Rand();
     cout << endl << endl;
 
-    cout << "*** Smart Classes ***" << endl;
+    cout << "*** Regular expressions ***" << endl;
+    RegularExpressions::Test();
+    cout << endl << endl;
+
+    cout << "*** Smart classes ***" << endl;
     SmartClassesExamples::Test();
     cout << endl << endl;
 
-    cout << "*** Smart Pointers ***" << endl;
+    cout << "*** Smart pointers ***" << endl;
     SmartPointersExamples::Test();
     cout << endl << endl;
 
