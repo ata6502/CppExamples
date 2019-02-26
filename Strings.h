@@ -57,6 +57,9 @@ namespace StringsExamples
         // Initialize a variable to an empty string.
         auto s = string(); // or string {};
 
+        // Intialize a C-style string.
+        auto sc = { "Hello" };
+
         // string is a typedef for basic_string<char>
         s = basic_string<char>{};
 
