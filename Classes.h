@@ -44,7 +44,11 @@ namespace ClassesExamples
         class Person
         {
         public:
-            Person(const string& name) : m_name(name) { }
+            Person(const string& name) : m_name(name) {}
+            Person() : Person(string()) {} // default ctor calling a named ctor
+            // Person() = default; // create a default ctor
+            Person(const Person&) = delete; // remove the default copy ctor i.e., make the class non-copyable
+
             virtual ~Person() { } // declare your destr virtual if there is at least one virtual method in the class
             virtual string GetName() const { return m_name; }
         private:
@@ -54,7 +58,7 @@ namespace ClassesExamples
         class Employee : public Person
         {
         public:
-            Employee(const string& name) : Person(name) { }
+            Employee(const string& name) : Person(name) {}
             // 'override' is optional
             string GetName() const override { return Person::GetName() + "(derived)"; }
         };
