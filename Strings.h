@@ -54,6 +54,13 @@ namespace StringsExamples
 
     void StringBasics()
     {
+        // A raw string literal.
+        auto rs1 = R"(aaa \ bbb " ccc)";
+        auto rs2 = R"***(aaa )" bbb)***"; // you can use any delimiter you want; we used asterisks
+        auto rs3 = R"(preserve
+                      new
+                      lines)"; // preserve\n                      new\n                      lines
+
         // Initialize a variable to an empty string.
         auto s = string(); // or string {};
 
