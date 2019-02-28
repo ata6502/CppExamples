@@ -15,8 +15,6 @@ using std::endl;
 
 namespace PointersAndReferencesExamples
 {
-    class Book { };
-
     void Basics()
     {
         // a pointer to a character
@@ -82,6 +80,8 @@ namespace PointersAndReferencesExamples
         // const pointer to a non-const
         //int * const p6 = &a;     // illegal - 'k' is const
     }
+
+    class Book {};
 
     void PointerDeclarations()
     {
