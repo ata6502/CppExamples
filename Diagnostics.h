@@ -130,7 +130,7 @@ namespace Diagnostics
     // - Sends output to the debugger for display.
     // - Accepts a variable number of arbitrarily typed arguments. This is the C-style approach.
     // - Relies on macros and compiler internals to unpack the arguments.
-    inline auto Trace(wchar_t const * format, ...) -> void
+    inline void Trace(wchar_t const * format, ...)
     {
         va_list args;
         va_start(args, format); // initialize the arguments list (va_list) with the name of the last formal argument, in this case 'format'
@@ -168,11 +168,11 @@ namespace Diagnostics
             m_line{ line }
         { }
 
-        // The function call operator (the function object) two sets of arguments:
+        // The function call operator (the function object) arguments:
         // - the format string 
         // - the variable number of arguments; the Args argument is a parameter pack
         template <typename... Args>
-        auto operator()(wchar_t const * format, Args... args) const -> void
+        void operator()(wchar_t const * format, Args... args) const
         {
             wchar_t buffer[256];
 
