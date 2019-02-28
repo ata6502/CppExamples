@@ -52,10 +52,9 @@ namespace SmartClassesExamples
 
     public:
 
-        // We defined the ctor as explicit to avoid default conversions. By default, a single argument 
+        // We define the ctor as explicit to avoid default conversions. By default, a single argument 
         // ctor acts as an implicit conversion. Implicit operations are dangerous in resource managers 
         // and can often lead to performance problems. 
-        // The default constructed unique_handle starts off empty. 
         explicit unique_handle(pointer value = Traits::invalid()) noexcept
             : m_value{ value }
         {
@@ -92,7 +91,9 @@ namespace SmartClassesExamples
             close();
         }
 
-        // The explicit Boolean conversion operator.
+        // The explicit Boolean conversion operator. Declaring the operator as explicit we avoid
+        // a situation when the compiler converts our pointer to a bool and then to, for example, an integer.
+        // This way, it won't be possible to add an integer to unique_handle.
         explicit operator bool() const noexcept
         {
             // Return true if the handle is valid or false if not.
