@@ -14,9 +14,13 @@ using std::complex;
 
 namespace InitializationExamples
 {
+    class Book {};
+
     void UniformInitialization()
     {
         // Examples of uniform initialization.
+        int a{ 2 }; // the same as int a = 2;
+        Book b{}; // default ctor; the same as Book b;
         int values[]{ 1, 2, 3 };
         vector<int> v{ 2, 3, 5, 7, 11, 13, 17 };
         vector<string> cities{ "Berlin", "New York", "London", "Toronto", "Cairo", "Warsaw" };
@@ -79,7 +83,14 @@ namespace InitializationExamples
     {
     public:
         P(int, int) {};
-        P(std::initializer_list<int>) {};
+        P(std::initializer_list<int> il) 
+        {
+            // il = {77,5,42}
+            auto a = begin(il);
+            auto b = end(il);
+            auto first = *a;    // 77
+            auto last = *(--b); // 42
+        };
     };
 
     // Because of initializer lists, explicit becomes relevant for constructors taking more
