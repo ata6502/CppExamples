@@ -5,10 +5,13 @@
 #include <tuple> // pair, tuple, get
 #include <string>
 #include <complex>
+#include <vector>
 
 using std::cout;
 using std::endl;
 using std::string;
+using std::tuple;
+using std::vector;
 
 /*
     Template arguments:
@@ -19,15 +22,6 @@ using std::string;
     Variadic templates (C++11):
     - allow templates to take an arbitrary number of type arguments
     - perform type computation at compile-time (template meta-programming)
-    - generate type structure for classes like tuple
-    - perform argument forwarding between functions
-    - the paramter pack has to appear as the last on the parameter list
-    - there are two operations supported on the parameter pack:
-      - pack expansion
-      - getting the number of type parameters
-    - you can recursively iterate over a list by using templates to separate
-      the first element from the rest
-
 
     Template aliases (C++11):
     - similar to typedefs with partially bound template arguments
@@ -42,9 +36,9 @@ using std::string;
     from a string.
     T::value_type res("entry");
 
-    - extern templates
-    - default values for function template parameters
-    - arbitrary expressions are allowed in template deduction contexts
+    Default values for function template parameters:
+    Default numerical value: template <typename T, int N=1> T& increment(T& i)
+    Default type value: template <typenameT, typename C = std::less<T>>T FindExtreme(std::vector<T> &v, C c = C())
 */
 namespace TemplatesExamples
 {
@@ -56,6 +50,8 @@ namespace TemplatesExamples
         typedef std::pair<int, int> IntPair;
         typedef std::tuple<int, int, int> Trie; // tuple is a variadic template
 
+
+
         // Return a pair of values: a sum and a product.
         IntPair SumAndProduct(int a, int b)
         {
@@ -66,6 +62,41 @@ namespace TemplatesExamples
         {
             Trie t{ a + b + c, a*b*c, (a + b + c) / 3 };
             return t;
+        }
+
+        void Tuples()
+        {
+            // std::tuple has built-in comparison operators that check whether two tuples are the same or not.
+
+            // Create tuples using uniform initialization.
+            tuple<int, string, double> entry1{ 1, "A", 11.1 };
+            tuple<int, string, double> entry2{}; // use default values for each element: 0, "", 0.0
+
+            // Create tuples using make_tuple.
+            auto entry3 = std::make_tuple(1, "A", 22.0);
+
+            vector<std::tuple<int, std::string, double>> vec
+            { 
+                std::make_tuple(2, "B", 22.2),
+                std::make_tuple(3, "C", 33.3),
+                std::make_tuple(4, "D", 44.4) 
+            };
+
+            // Get the value out of a tuple and/or change it using the template function get<T>()
+            // that takes a tuple instance. The type parameter is a 0-based index of a tuple element
+            // we want to get. The get function returns a reference to the tuple element.
+            std::get<2>(entry1) = 88.8; // 0 is int, 1 is string, 2 is double
+
+            // Insert a tuple at the beginning of a vector.
+            vec.insert(begin(vec), entry1);
+
+            // Iterate over our vector of tuples.
+            for (const auto& v : vec)
+            {
+                std::cout << std::get<1>(v);
+            }
+
+            cout << " ";
         }
 
         void Test()
@@ -81,9 +112,10 @@ namespace TemplatesExamples
                 << "Sum:" << std::get<0>(r2)
                 << ",Prod:" << std::get<1>(r2)
                 << ",Avg:" << std::get<2>(r2) << " ";
+
+            Tuples();
         }
     }
-
 
 
     //
@@ -192,6 +224,18 @@ namespace TemplatesExamples
         {
             for (unsigned int i = 0; i < size; ++i)
                 cout << a[i];
+        }
+
+        template<typename T>
+        void WriteColumn(const T& val, const string& terminator)
+        {
+            // If T and U name the same type (including const/volatile qualifications), 
+            // std::is_same provides the member constant value equal to true. Otherwise 
+            // value is false.
+            if (std::is_same<typename std::remove_const<T>::type, string>::value)
+                cout << "1 ";
+            else
+                cout << "2 ";
         }
 
         void Test()
@@ -334,6 +378,45 @@ namespace TemplatesExamples
     //
     // Variadic Templates
     //
+    /*
+    // variadic class template
+    template <typename... Ts>
+    class Foo { };
+
+    // variadic function template
+    template <typename... Ts>
+    void foo(Ts... vals){ }
+
+    // an example of a variadic template (simplified)
+    template<class _T, class... _Types> inline
+    unique_ptr<_T> make_unique(_Types&&... _Args)
+    {
+        // Construct _T forwarding the parameter pack to the _T's constructor.
+        return (unique_ptr<_T>(new _T(std::forward<_Types>(_Args)...)));
+    }
+
+    The construct Ts... vals is called a parameter pack.
+    You can do the following with the parameter pack:
+    - expand it with the expansion operator ...
+    - pass it to another template or a function
+    - use it in an initializer list
+    - capture it with a lambda
+    - get the number of type parameters using sizeof...(T)
+    The paramter pack has to appear as the last on the parameter list.
+
+    Two approaches to writing a template function or a member function of a templated class:
+    - forwarding - forward the parameter pack to another function e.g., make_share takes parameters and forwards them to a ctor of the object being constructed
+    - recursive templates - involves writing several templates with the same name that take different number of arguments; 
+                            the compiler starts chooses the appropriate template;
+                            if there is no template with the appropriate number of arguments, the compiler chooses the variadic template
+
+    Placement of ... matters. 
+    - echo is a function that takes type parameters Ts with values vs
+    - b is a member function of a class A
+    echo(A<Ts...>::b(vs...));   // in b(vs...), vs are passed as a parameter pack to b i.e., b is called once
+    echo(A<Ts...>::b(vs)...);   // calls b as many times as there are parameters in the parameter pack; example: pass A<int,int> for the 1st value in the parameter pack, pass A<int,int> for the 2nd value in the parameter pack
+    echo(A<Ts>::b(vs)...);      // Ts and vs are expanded in parallel: b is called with the first type in Ts and the first value in vs, etc.; it expands the combination of Ts and vs
+    */
     namespace VariadicTemplates
     {
         // Specialization in case when there is only one argument.
@@ -351,84 +434,67 @@ namespace TemplatesExamples
             return first + adder(args...); // when there are at least two arguments
         }
 
-        void Test()
+        // An example of a recursive variadic template. It uses different versions of the template that 
+        // takes less parameters, until it works its way down to the non-variadic template that just takes 
+        // the two parameters. 
+
+        // A non-variadic function template. It takes rvalues as parameters in order to avoid copying
+        // or forcing the user to create a temporary object just to pass it as a reference.
+        template <class T, class U>
+        bool matches(T&& t, U&& u)
         {
-            cout << std::setprecision(1) << adder(1, 2.2, 3, 4) << " ";
-            cout << adder(string("a"), string("b"), string("c")) << " ";
+            return t == u;
         }
 
-        // The CSVPrinter variadic class template can handle any number of columns
-        // It is able to check in compile-time that it is supplied with correct 
-        // data types and in the right order.
-        // In the following example, the ellipsis indicate that the argument Columns
-        // is the **template parameter pack**.
-        // You can use 'class' instead of 'typename', there is no difference for the compiler.
-        template<typename Stream, typename... Columns>
-        class CSVPrinter
+        // A variadic version of the above function template. It takes at least two parameters T and U.
+        template <class T, class U, class... Ts>
+        bool matches(T&& t, U&& u, Ts&&... vals)
         {
-        public:
-            template<typename... Headers>
-            CSVPrinter(Stream& stream, const Headers&... headers) :
-                m_stream(stream), m_headers({ string(headers)... })
-            {
-                static_assert(sizeof...(Headers) == sizeof...(Columns),
-                    "Number of headers must match number of columns");
-            }
+            // Compare the first parameter with all other parameters one-by-one recursively.
+            // It calls the variadic or non-variadic version depending on the number of parameters
+            // still left to match.
+            return t == u || matches(t, vals...);
+        }
 
-            void OutputHeaders() const
-            {
-                std::for_each(begin(m_headers), end(m_headers) - 1,
-                    [=](const string& header) { WriteColumn(header, SEP); });
-                WriteColumn(m_headers.back(), " ");
-            }
+        void VariadicTemplate()
+        {
+            cout << std::setprecision(1) << adder(1, 2.2, 3, 4) << " ";     // 10 (not 10.2 because the type returned by adder is the same as the type of the first argument)
+            cout << adder(string("a"), string("b"), string("c")) << " ";    // abc
+        }
 
-            // The ellipisis indicate **function parameter pack**.
-            void OutputLine(const Columns&... columns)
-            {
-                // Pack expansion
-                // ??? the following line does not compile
-                //WriteLine(Validate(columns)...) { }
-            }
+        void RecursiveVariadicTemplate()
+        {
+            // Use the non-variadic function template.
+            bool p = matches(1, 2);         // false
+            bool q = matches(1, 2 - 1);     // true
 
-        private:
-            Stream& m_stream;
-            std::array<string, sizeof...(Columns)> m_headers;
-            // rest of implementation
-            const string SEP{ "," };
+            // Use the variadic function template.
 
-            template<typename Value, typename... Values>
-            void WriteLine(const Value& val, const Values&... values) const
-            {
-                WriteColumn(val, SEP);
-                WriteLine(values...);
-            }
+            // #1: t=1 u=2 vals={1}
+            // #2: t=1 u=1 (non-variadic)
+            bool a = matches(1, 2, 1);      // true
 
-            template<typename Value>
-            void WriteLine(const Value &val) const
-            {
-                WriteColumn(val, "\n");
-            }
+            // #1: t=1 u=2 vals={3,4,5}
+            // #2: t=1 u=3 vals={4,5}
+            // #3: t=1 u=4 vals={5}
+            // #4: t=1 u=5 (non-variadic)
+            bool b = matches(1, 2, 3, 4, 5); // false
 
-            template<typename T>
-            const T& Validate(const T& val)
-            {
-                // this method is for illustration so it does nothing
-                return val;
-            }
+            std::string x{ "A" };
+            std::string y{ "B" };
+            std::string z{ "A" };
+            bool t = matches(x,y,z); // true
 
-            template<typename T>
-            void WriteColumn(const T& val, const string& terminator) const
-            {
-                // If T and U name the same type (including const/volatile qualifications), 
-                // std::is_same provides the member constant value equal to true. Otherwise 
-                // value is false.
-                if (std::is_same<typename std::remove_const<T>::type, string>::value)
-                    m_stream << "\"" << val << "\"";
-                else
-                    m_stream << val;
-                m_stream << terminator;
-            }
-        };
+            // 'true' is promoted to an integer. The compiler shows a warning about
+            // mixing int and bool.
+            bool mixing = matches(1, 2.2, 3.3, true); // true
+        }
+
+        void Test()
+        {
+            VariadicTemplate();
+            RecursiveVariadicTemplate();
+        }
     }
 
     //
@@ -457,6 +523,54 @@ namespace TemplatesExamples
         }
     }
 
+    //
+    // Default values for function template parameters
+    //
+    namespace DefaultTemplateParameters
+    {
+        // so here I'm saying I'd like to use standard greater instead of standard less, and I have to also tell it that this will be working with a vector of integers, and that will bring me the minimum. So, let's take a look, it thinks the minimum is 4, and if we take a look at nums, that's true, the minimum is 4. These are not hard templates to write, and enabling there to be a default value actually makes these much easier to use. An increment function that you had to every time say, oh by the way this is an integer, and by the way I'd like to increment it by 1, I don't think you would ever use. And to find Extreme Function that you had to specify the type and the comparer every time, again I don't think you would use. So being able to have defaults makes these templates easier to write, and also easier to use. 
+
+        // The function template Increment works with any type that 
+        // has the += operation.
+        template <typename T, int N = 1> T& Increment(T& i)
+        {
+            i += N; return i;
+        }
+
+        // The second type parameter is a comparer, which by default is the std::less comparer.
+        // The second parameter for the function template FindExtreme c=C() is an instance of the comparer.
+        template <typename T, typename C = std::less<T> >
+        T FindExtreme(std::vector<T>& v, C c = C())
+        {
+            // We dereference an iterator returned from std::max_element.
+            // The value returned is of type T.
+            return *std::max_element(begin(v), end(v), c); // c is the comparer
+        }
+
+        void Test()
+        {
+            std::vector<int> nums{ 6, 2, 3, 4, 5, 1 };
+
+            // Use the default value of 1 for the Increment's second argument.
+            // The compiler figures out that it needs to generate a template for int.
+            for (int& i : nums)
+                i = Increment(i); // nums = {7,3,4,5,6,2}
+
+            // Provide the value of 2 for the Increment's second argument.
+            // This time we need to specify the template type explicitly.
+            for (int& i : nums)
+                i = Increment<int, 2>(i); // nums = {9,5,6,7,8,4}
+
+            // Find the extreme using the std::less comparer.
+            // This finds the maximum.
+            int max = FindExtreme(nums); // 9
+
+            // Find the extreme using the std::greater comparer.
+            // This finds the minimum.
+            int min = FindExtreme<int, std::greater<int>>(nums); // 4
+        }
+    }
+
 
     void Templates()
     {
@@ -464,6 +578,7 @@ namespace TemplatesExamples
         TemplateClasses::Test();
         TemplateFunctions::Test();
         TemplateSpecialization::Test();
-        //VariadicTemplates::Test();
+        VariadicTemplates::Test();
+        DefaultTemplateParameters::Test();
     }
 }
