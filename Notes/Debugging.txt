@@ -1,0 +1,65 @@
+
+Native visualizations
+---------------------
+- Per machine/user, not per project
+- Location: ~user\Documents\Visual Studio 2017\Visualizers
+- Each file controls the visualization of one or more types.
+- Name is fully qualified.
+- DisplayString controls data tip, locals, watch, etc.
+- You can add format specifiers such as x, d, c, s, su, etc.
+- Expand is used when the tip or local is expanded. The Expand element is larger than DisplayString.
+- The first DisplayString that meets a condition is displayed.
+
+Example: Employee.natvis
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010"> 
+  <Type Name="WBS::Employee">
+    <DisplayString>{EmployeeNo} - {EmployeeName}</DisplayString>
+    <DisplayString Condition="IsManager">{EmployeeNo}M - {EmployeeName}</DisplayString>
+    <Expand>
+      <Item Name="Number">EmployeeNumber,x</Item>
+      <Item Name="FullName">EmployeeName</Item>
+    </Expand>
+  </Type>
+</AutoVisualizer>
+
+Create custom views of native objects in the debugger
+https://docs.microsoft.com/en-us/visualstudio/debugger/create-custom-views-of-native-objects?view=vs-2017
+
+Format specifiers for C++ in the Visual Studio debugger
+https://docs.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2017
+
+Tip:
+To have colored XML in .natvis files go to Tools > Test Editor > File Extensions and assign the .natvis 
+extension to the XMT (Text) Editor
+
+
+
+Just My Code
+------------
+- Location: C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Packages\Debugger\Visualizers
+  - default.natjmc and more
+- Collapses call stacks to combine "External Code" into one line i.e., eliminates clutter from the call stack.
+- Makes it easier to navigate a callstack
+- On by default, can be turned off
+- You can control the definition of "External Code" .natjmc files
+
+
+
+Step Into Filtering
+-------------------
+- Use when you are not interested in the code it takes you to.
+- Define what to skip in .natstepfilter files
+- Location: C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Packages\Debugger\Visualizers
+  - default.natstepfiler
+- Custom vocation: ~user\Documents\Visual Studio 2017\Visualizers
+  - Add another .natstepfiler file
+  - Add <Function><Name> element to <StepFilter>
+
+Example: SkipSTD.natstepfilter
+Do not step into, if the function name is in the std namespace.
+<?xml version="1.0" encoding="utf-8"?>
+<StepFilter xmlns="http://schemas.microsoft.com/vstudio/debugger/natstepfilter/2010">
+  <Function><Name>std::.*</Name><Action>NoStepInto</Action></Function>
+</StepFilter>
+

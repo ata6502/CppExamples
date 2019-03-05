@@ -59,7 +59,7 @@ namespace ClassesExamples
         {
         public:
             Employee(const string& name) : Person(name) {}
-            // 'override' is optional
+            // 'override' is optional but it is a good practice to include it
             string GetName() const override { return Person::GetName() + "(derived)"; }
         };
 

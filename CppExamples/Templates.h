@@ -22,6 +22,8 @@ using std::vector;
     Variadic templates (C++11):
     - allow templates to take an arbitrary number of type arguments
     - perform type computation at compile-time (template meta-programming)
+    - an example of a variadic template function: std::make_unique
+    - an example of a variadic template class: std::tuple
 
     Template aliases (C++11):
     - similar to typedefs with partially bound template arguments
@@ -410,7 +412,7 @@ namespace TemplatesExamples
                             the compiler starts chooses the appropriate template;
                             if there is no template with the appropriate number of arguments, the compiler chooses the variadic template
 
-    Placement of ... matters. 
+    Expansion rules: 
     - echo is a function that takes type parameters Ts with values vs
     - b is a member function of a class A
     echo(A<Ts...>::b(vs...));   // in b(vs...), vs are passed as a parameter pack to b i.e., b is called once
@@ -462,6 +464,9 @@ namespace TemplatesExamples
             cout << adder(string("a"), string("b"), string("c")) << " ";    // abc
         }
 
+        //
+        // Recursive variadic template
+        //
         void RecursiveVariadicTemplate()
         {
             // Use the non-variadic function template.
@@ -490,10 +495,84 @@ namespace TemplatesExamples
             bool mixing = matches(1, 2.2, 3.3, true); // true
         }
 
+        //
+        // Expansion rules - the placement of ... matters
+        //
+
+        // The function template echo takes some Ts called vs.
+        template <class... Ts> 
+        void e(Ts... vs)
+        {
+            // Determine and display the number of elements passed.
+            int cnt = sizeof... (Ts);
+            cout << "e:cnt=" << cnt << ",";
+
+            // Declare a vector of integers and pass vs as an initializer list.
+            vector<int> values{ vs... };
+        }
+
+        // The class template A works with types Ts.
+        template<class... Ts>
+        class A
+        {
+        public:
+            // The function b takes a package of Ts. We call the package vs for values.
+            // b is going to be called repeatedly.
+            static int b(Ts... vs)
+            {
+                // Determine and display the number of parameters passed.
+                int cnt = sizeof... (Ts);
+                cout << "b:cnt=" << cnt << ",";
+
+                // Return the number of parameters.
+                return cnt;
+            }
+        };
+
+        template <class... Ts> void DotTest(Ts... vs)
+        {
+            // b called once with 3 parameters.
+            // e called once with a single parameter - the value 3 returned from b.
+            // b:cnt=3,e:cnt=1
+            e(A<Ts...>::b(vs...));
+
+            cout << " ";
+
+            // First, b is called 3 times each with a single parameter.
+            // Next, e is called once with three parameters - the values {1,1,1} returned from b.
+            // b:cnt=1,b:cnt=1,b:cnt=1,e:cnt=3
+            e(A<Ts>::b(vs)...);
+        }
+
+        template <class... Ts> void DotTest2(Ts... vs)
+        {
+            // Ts are not expanded.
+            // vs are expanded.
+            // b called three times, each with one v.
+            // First, A is materialized with 3 parameters. Next, b is called multiple times, each with one of the parameters at a time. 
+            e(A<Ts...>::b(vs)...);
+        }
+
+        void ExpansionRules()
+        {
+            DotTest(8, 'A', true);
+            cout << " ";
+
+            // e(A<Ts...>::b(vs...));   b:cnt=0,e:cnt=1
+            // e(A<Ts>::b(vs)...);      e:cnt=0
+            DotTest();
+
+            // b is not prepared to accept parameters passed to A which are <int,char,bool>
+            // Error C2672: 'TemplatesExamples::VariadicTemplates::e': no matching overloaded function found
+            // Error C2660: 'TemplatesExamples::VariadicTemplates::A<int,char,bool>::b': function does not take 1 arguments
+            //DotTest2(9, 'B', false);
+        }
+
         void Test()
         {
             VariadicTemplate();
             RecursiveVariadicTemplate();
+            ExpansionRules();
         }
     }
 

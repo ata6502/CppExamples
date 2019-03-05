@@ -1,0 +1,127 @@
+#pragma once
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm> // sort, unique_copy
+#include <iomanip> // setprecision
+#include <fstream> // ofstream, ifstream
+#include <sstream> // ostringstream
+
+using std::cout;
+using std::endl;
+using std::string;
+using std::vector;
+
+using std::ifstream;
+using std::ofstream;
+
+/*
+    - The stream insertion operation (<<) is used for concatenating (also called 'chaining' or 'cascading') the input streams.
+    - Streams are not copyable; they should be passed by reference, for example: void AddToBuffer(const std::wostringstream& text) { buffer << text.str(); }
+*/
+
+namespace FilesAndStreamsExamples
+{
+    const string FILENAME = "test.dat";
+    const string ANOTHERFILE = "test2.dat";
+
+    void FilesAndStreams()
+    {
+        // Create a file and write strings to it.
+        {
+            ofstream f;
+            f.open(FILENAME, std::ios::out);
+
+            f << "B\nD\nA\nB\nC";
+
+            // endl flushes the buffer.
+            f << endl;
+        }
+
+        // Read strings from a file.
+        {
+            auto f = ifstream{ FILENAME };
+            if (f)
+            {
+                auto w = string{};
+                while (std::getline(f, w))
+                    cout << w;
+                cout << " ";
+            }
+        }
+
+        // Read strings from a file.
+        {
+            auto f = ifstream{ FILENAME };
+            if (f) // check if the file has been read successfully
+            {
+                auto w = string{};
+                while (f >> w) 
+                    cout << w;
+                cout << " ";
+            }
+        }
+
+
+
+
+
+        // Read strings from the file and put them to a vector.
+        {
+            ifstream f(FILENAME);
+
+            // Define an input iterator for the stream.
+            std::istream_iterator<string> it(f);
+            std::istream_iterator<string> eos;
+
+            // Define a vector and initialize it to the source file.
+            vector<string> v(it, eos);
+
+            // Show the strings.
+            for (auto& s : v)
+                cout << s;
+            cout << " ";
+        }
+
+
+        // Write a vector of strings to a file. (??? it does not work)
+        /*
+        {
+            vector<string> v{ "X", "Y", "X", "X", "Z", "Y" };
+
+            ofstream f(ANOTHERFILE);
+
+            // Define an output iterator for the stream.
+            std::ostream_iterator<string> it(f, "\n");
+
+            // Eliminate duplicates and write the result to a file
+            std::unique_copy(v.begin(), v.end(), it);
+
+            f.flush();
+            f.close();
+        }
+        */
+
+        // Append a float value to a file.
+        {
+            ofstream f;
+            f.open(ANOTHERFILE, std::ios::out | std::ios::app);
+
+            f << std::setiosflags(std::ios::fixed | std::ios::showpoint) << std::setprecision(6) << 7.1182; // 7.118200
+
+            f << endl;
+        }
+
+        // StringBuilder
+        {
+            std::ostringstream oss;
+            oss << "a:" << 1 << ",";
+            oss << "b:" << 2.2;
+
+            // str() puts everything together and gives a string
+            string text = oss.str();
+            cout << text << " ";
+        }
+    }
+}

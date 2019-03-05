@@ -89,13 +89,13 @@ namespace RegularExpressions
 
         // Iterate over a string using a regular expression iterator.
         // We are using the character string version of the iterator.
+        // There is also an sregex_token_iterator.
         for (auto it = std::cregex_iterator{ first, last, r };
             it != std::cregex_iterator{};
             ++it)
         {
-            // Assuming there's a match, we can dereference the iterator to return a match result object.
-            // In this case we're further indexing into the match results to retrieve the first submatch,
-            // the filename.
+            // Dereference the iterator to return a match. In this case we further index into 
+            // the match to retrieve the first submatch, the filename.
             auto& match = (*it)[0];
 
             cout << match.length() << ":" << match << " ";
