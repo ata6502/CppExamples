@@ -12,17 +12,33 @@ using std::string;
 using std::vector;
 using std::map;
 
-//
-// auto
-//
-// - used for deducing a type of an object from its initializer
-// - good for storing lambda expressions
-// - prefer using the assignment syntax to initializing an auto variable
-//   because a type may have an explicit copy ctor. In such a case you
-//   can only use the copy initialization:
-//   int i = 10;
-//   auto a = i; // rather than auto a(i);
-// - don't use auto when type conversion is required
+/*
+    auto
+
+    - used for deducing a type of an object from its initializer
+    - good for storing lambda expressions
+    - prefer using the assignment syntax to initializing an auto variable
+      because a type may have an explicit copy ctor. In such a case you
+      can only use the copy initialization:
+      int i = 10;
+      auto a = i; // rather than auto a(i);
+    - don't use auto when type conversion is required
+
+    auto vs. decltype
+
+    - auto does not deduce a return type that is a reference
+      int i=1;
+      identityAuto(i) = 2; // does not compile; return is not an lvalue
+      ...
+      auto identityAuto(int& x) { return x; } // returns an int, not a reference
+
+    - decltype(auto) preserves reference-ness
+      int i=1;
+      identityDecltype(i) = 2; // ok
+      ...
+      auto identityDecltype(int& x) -> decltype(auto) { return x; } // returns a reference to int
+*/
+
 namespace AutoExamples
 {
     class Book
@@ -109,6 +125,25 @@ namespace AutoExamples
     {
         return x * y;
     }
+
+    // Auto as the funtion return type.
+    auto Add1(int a, int b)
+    {
+        return a + b;
+    }
+
+    // Tell the compiler that we return a value of the returned expression's type.
+    auto Add2(int a, int b) -> decltype(auto)
+    {
+        return a + b;
+    }
+
+    // The same as Add2.
+    decltype(auto) Add3(int a, int b)
+    {
+        return a + b;
+    }
+
 
     void Test()
     {
