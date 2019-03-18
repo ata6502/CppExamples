@@ -65,6 +65,29 @@ namespace LambdaExamples
         cout << " ";
     }
 
+    void GenericLambda()
+    {
+        vector<int> v = { 1, 2, 3 };
+
+        // Generic lambdas accept auto parameters.
+        auto doubleValueGeneric = [](auto z) { return z * 3; };
+        cout << doubleValueGeneric(2) << " "; // 6
+
+        // Generic lambdas are especially useful with other functions when we don't know the exact type of arguments.
+        int oddsCount = std::count_if(begin(v), end(v), [](auto n) { return n % 2 != 0; });
+        cout << oddsCount << " "; // 2
+
+        // Another example of a generic lambda.
+        auto cat = [](auto x, auto y) { return x + y; };
+        cout << cat(1, 2) << " "; // 3
+        cout << cat(string("a"), string("b")) << " "; // ab
+
+        // Displaying values of different types.
+        auto printLine = [](auto item) {cout << item << " "; };
+        printLine(8);
+        printLine("qq");
+    }
+
     void CaptureVariables()
     {
         // Capture a variable by value.
@@ -273,9 +296,33 @@ namespace LambdaExamples
         }
     }
 
+    void CaptureByMove()
+    {
+        auto p1 = std::make_unique<string>("a");
+
+        // ...
+
+        // Hand the unique_pointer somewhere else forever.
+        // We expect item to be a pointer so we could dereference it.
+        auto printLine = [](auto item) { cout << *item << " "; };
+
+        // We need to move the unique_pointer rather than copy it because
+        // unique_pointers do not support copying. After the move, the p1 
+        // pointer is empty.
+        printLine(std::move(p1));
+
+        // Another unique pointer.
+        auto p2 = std::make_unique<string>("b");
+
+        // Capture a pointer by move. Also, alias it as 'item'.
+        auto printLineWithMove = [item = std::move(p2)]() { cout << *item << " "; };
+        printLineWithMove();
+    }
+
     void Test()
     {
         BasicLambda();
+        GenericLambda();
         CaptureVariables();
         SpecifyReturnType();
         ReturnAndSetLambda();
@@ -286,5 +333,6 @@ namespace LambdaExamples
         LambdaNesting();
         EmulateRecursion();
         UndefinedBehaviour();
+        CaptureByMove();
     }
 }
