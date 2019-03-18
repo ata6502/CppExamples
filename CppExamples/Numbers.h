@@ -128,12 +128,37 @@ namespace NumbersExamples
         n1 ^= n2;
     }
 
-    void Numbers()
+    void UserDefinedLiterals()
+    {
+        //
+        // Complex Numbers
+        //
+        using namespace std::complex_literals;
+
+        std::complex<double> a = 1. + 2i;
+
+        // You need to write 1i not just i.
+        auto b = 1i * a; // b = -2 + i
+
+        //
+        // Binary Numbers
+        //
+        int m = 0b001010110; // C++14
+
+        //
+        // Digit Separators
+        //
+        int n1 = 1'000'000; // C++14
+        int n2 = 1'00'0'00'0; // the same as above; the digit separators are ignored
+    }
+
+    void Test()
     {
         Size();
         RoundAndTruncate();
         NumericLimits();
         ShowDecimalDigits();
         SwapNumbers();
+        UserDefinedLiterals();
     }
 }
