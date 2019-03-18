@@ -23,6 +23,14 @@ using std::vector;
         - overflow_error
         - range_error
         - underflow_error
+
+    noexcept specification:
+    - noexcept and noexcept(true) mean "this does not throw"
+    - noexcept(false) means "this might throw"
+    - not checked at compile time
+    - enables faster code, for example a function std::move_if_noexcept() may use it
+    - a rule of thumb: mark code as noexcept and remove it when it's not true
+    - when code is marked as noexcept but throws an exception, the application is aborted
 */
 
 namespace ExceptionsExamples
