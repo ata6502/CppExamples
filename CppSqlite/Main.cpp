@@ -206,8 +206,6 @@ int main()
         conn.Execute("CREATE TABLE Book (Id INT PRIMARY KEY, Title NVARCHAR(100) NOT NULL)");
         conn.Execute("INSERT INTO Book (Id, Title) VALUES (1, 'A'), (2, 'B'), (3, 'C')");
 
-        //The tag line from the SQLite website jokingly says, "Small. Fast. Reliable. - Choose any three. " But this really isn't a joke. SQLite is an amazingly impressive library that's entirely free.Both free in the sense that it's open source, but more importantly and more significantly it's free in the sense that it's in the public domain. In this module we covered the essentials of the SQLite library, revolving around two core objects, namely connections and statements. Although the SQLite library is written entirely in C and provides a rather awkward API, the fact that it's written in C makes it very straightforward to wrap in C++ to produce a most elegant and efficient abstraction.From providing a more natural object - based API, to making sense of the SQLite error - handling model, to reliably and easily dealing with resources and handles, we can rightly add simple to the list of assertions about SQLite.
-
         Statement s;
 
         s.Prepare(conn, "SELECT Id FROM Book WHERE Title = 'B'");
