@@ -1,0 +1,14 @@
+
+
+Parallelism
+===========
+- Many cores doing the same thing in parallel
+- Foot race or swimming race with lanes
+- Getting a task done faster
+
+Concurrency
+===========
+- Many different things being done at the same time, co-ordinated
+- Basketball or hockey game
+- Responsiveness and efficiency
+

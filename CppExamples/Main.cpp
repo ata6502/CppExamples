@@ -112,7 +112,7 @@ int main()
     cout << endl << endl;
 
     cout << "*** Numbers ***" << endl;
-    NumbersExamples::Numbers();
+    NumbersExamples::Test();
     cout << endl << endl;
 
     cout << "*** Pointers & References ***" << endl;
