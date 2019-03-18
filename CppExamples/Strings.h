@@ -54,6 +54,10 @@ namespace StringsExamples
 
     void StringBasics()
     {
+        // Bring the user-defined literal (suffix) "s". It's important to use the correct literals because 
+        // the suffix "s" could mean "seconds" if we used chrono literals.
+        using namespace std::string_literals; 
+
         // A raw string literal.
         auto rs1 = R"(aaa \ bbb " ccc)";
         auto rs2 = R"***(aaa )" bbb)***"; // you can use any delimiter you want; we used asterisks
@@ -63,6 +67,10 @@ namespace StringsExamples
 
         // Initialize a variable to an empty string.
         auto s = string(); // or string {};
+
+        // Initialize a variable to std::string using the user-defined literal "s".
+        // Without the suffix "s", the variable ss would be of type const char*.
+        auto ss = "Hello"s;
 
         // Intialize a C-style string.
         auto sc = { "Hello" };
