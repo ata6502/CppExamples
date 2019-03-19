@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{49723067-1FEE-4A0F-9732-D93EA2FB83E1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>CppParallelPatternsLibrary</RootNamespace>
+    <RootNamespace>CppParallelismAndConcurrency</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
