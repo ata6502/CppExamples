@@ -1,0 +1,97 @@
+
+- SIMD stands for Single Instruction Multiple Data.
+- DirectXMath provides SIMD-friendly C++ types and functions for common linear algebra and graphics math operations.
+- In order to use the DirectXMath #include <DirectXMath.h>. All the implementation is included in the header file; it has no libraries to link against.
+
+
+===================
+Calling conventions
+===================
+
+XMMATRIX XMMatrixTransformation
+(
+    FXMVECTOR ScalingOrigin, 
+    FXMVECTOR ScalingOrientationQuaternion, 
+    FXMVECTOR Scaling, 
+    GXMVECTOR RotationOrigin, 
+    HXMVECTOR RotationQuaternion, 
+    HXMVECTOR Translation
+)
+
+XMMATRIX XMMatrixTransformation2D
+(
+    FXMVECTOR ScalingOrigin, 
+    float     ScalingOrientation, 
+    FXMVECTOR Scaling, 
+    FXMVECTOR RotationOrigin, 
+    float     Rotation, 
+    GXMVECTOR Translation
+)
+
+
+==================
+Links
+==================
+
+Matrix Convention
+https://docs.microsoft.com/en-us/windows/desktop/dxmath/pg-xnamath-getting-started#matrix-convention
+
+Usage Guidelines
+https://docs.microsoft.com/en-us/windows/desktop/dxmath/pg-xnamath-getting-started#type-usage-guidelines
+
+DirectXMath Docs
+https://docs.microsoft.com/en-us/windows/desktop/dxmath/directxmath-portal
+
+DirectXMath Source Code
+https://github.com/Microsoft/DirectXMath
+
+
+==================
+Header files
+==================
+
+Inc\
+    DirectXMath Files (in the DirectX C++ namespace)
+        DirectXMath.h - Core library
+        DirectXPackedVector.h - Load/Store functions and types for working with various compressed GPU formats
+        DirectXColors.h - .NET-style Color defines in sRGB color space
+        DirectXCollision.h - Bounding volume collision library
+
+Extentions\
+    Advanced instruction set variants for guarded codepaths
+        DirectXMathSSE3.h - SSE3
+        DirectXMathBE.h - Supplemental SSE3 (SSSE3)
+        DirectXMathSSE4.h - SSE4.1
+        DirectXMathAVX.h - Advanced Vector Extensions (AVX)
+        DirectXMathAVX2.h - Advanced Vector Extensions 2 (AVX2)
+        DirectXMathF16C.h - Half-precision conversions (F16C)
+        DirectXMathFMA3.h - Fused multiply-accumulate (FMA3)
+        DirectXMathFMA4.h - Fused multiply-accumulate (FMA4)
+
+SHMath\
+    Spherical Harmonics math functions
+        DirectXSH.h - Header for SHMath functions
+        DirectXSH.cpp, DirectXSHD3D11.cpp - Implementation
+
+XDSP\
+    XDSP.h - Digital Signal Processing helper functions
+
+DirectXMath is implemented in the following files:
+
+- DirectXCollision.h
+- DirectXCollision.inl
+- DirectXColors.h
+- DirectXHelpers.h
+- DirectXMath.h
+- DirectXMathConvert.inl
+- DirectXMathMatrix.inl
+- DirectXMathMisc.inl
+- DirectXMathVector.inl
+- DirectXPackedVector.h
+- DirectXPackedVector.inl
+
+
+
+
+
+
