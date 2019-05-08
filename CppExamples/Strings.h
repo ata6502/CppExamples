@@ -64,6 +64,7 @@ namespace StringsExamples
         auto rs3 = R"(preserve
                       new
                       lines)"; // preserve\n                      new\n                      lines
+        auto rs4 = R"(\\aaa\bbb\ccc\f.txt)";
 
         // Initialize a variable to an empty string.
         auto s = string(); // or string {};
