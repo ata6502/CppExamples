@@ -1,5 +1,6 @@
 #pragma once
 
+#include <windows.h> // DWORD, HANDLE, GetLastError, CreateEvent, OutputDebugString
 #include <crtdbg.h> // Microsoft's implementation of CRT; contains _ASSERTE
 //#include <cassert> // contains the C-style assert macro; good for console apps
 
