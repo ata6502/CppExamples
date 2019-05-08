@@ -2,8 +2,8 @@
 #include <string>
 
 #include "sqlite3.h"
-#include "unique_handle.h"
 #include "Diagnostics.h"
+#include "unique_handle.h"
 
 using std::string;
 using namespace KennyKerr; // unique_handle
