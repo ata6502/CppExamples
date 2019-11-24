@@ -11,7 +11,7 @@ using std::string;
 
 /*
     unique_ptr
-    - exlusively owns an object to which it points (provides exclusive ownership semantics)
+    - exclusively owns an object to which it points (provides exclusive ownership semantics)
     - non-copyable (no copy ctor and no copy assignment operator)
     - can be moved (provides move ctor and move assignment); you can use std::move to move an object in and out of unique_ptr to transfer ownership of the object
     - works well in containers
@@ -325,9 +325,6 @@ namespace SmartPointersExamples
                 // We do not call CloseThreadpoolWork explicitly because our unique_ptr takes care of that.
             }
         }
-
-
-
     }
 
 
