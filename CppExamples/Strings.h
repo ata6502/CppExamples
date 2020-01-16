@@ -58,13 +58,14 @@ namespace StringsExamples
         // the suffix "s" could mean "seconds" if we used chrono literals.
         using namespace std::string_literals; 
 
-        // A raw string literal.
+        // Raw string literals.
         auto rs1 = R"(aaa \ bbb " ccc)";
         auto rs2 = R"***(aaa )" bbb)***"; // you can use any delimiter you want; we used asterisks
         auto rs3 = R"(preserve
                       new
                       lines)"; // preserve\n                      new\n                      lines
         auto rs4 = R"(\\aaa\bbb\ccc\f.txt)";
+        auto rs5 = R"(\\.\pipe\)"; // \\\\.\\pipe\\
 
         // Initialize a variable to an empty string.
         auto s = string(); // or string {};
@@ -200,6 +201,21 @@ namespace StringsExamples
         cout << buffer.str();
     }
 
+    // Use stringstream to put values separated by spaces into variables.
+    // Useful when reading command-line parameters.
+    void ReadValues()
+    {
+        string va, vb;
+
+        // A sample string.
+        string commandLine = "a b";
+
+        std::stringstream ss(commandLine);
+        ss >> va >> vb;
+
+        cout << va << vb << " ";
+    }
+
     void CharType()
     {
         // Signed and unsigned char.
@@ -278,6 +294,7 @@ namespace StringsExamples
         StringBasics();
         StringOperations();
         ConcatenateValues();
+        ReadValues();
         CharType();
         CStyleStrings();
     }
