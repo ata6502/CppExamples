@@ -15,6 +15,8 @@ using std::string;
     2. The **copy assignment operator** - used to copy the value from one object to another of the same type.
     3. The **destructor**.
 
+    With the move operation available, we have the rule of five now.
+
     How to distinguish between a copy constructor and a copy assignment:
     - If a new object is being defined, a constructor is called.
     - If no new object is being defined, it is an assignment (no constructor is involved).
@@ -48,6 +50,7 @@ namespace ClassesExamples
             Person() : Person(string()) {} // default ctor calling a named ctor
             // Person() = default; // create a default ctor
             Person(const Person&) = delete; // remove the default copy ctor i.e., make the class non-copyable
+            Person& operator=(Person const&) = delete; // remove the assignment operator
 
             virtual ~Person() { } // declare your destr virtual if there is at least one virtual method in the class
             virtual string GetName() const { return m_name; }
