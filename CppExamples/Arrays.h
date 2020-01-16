@@ -20,7 +20,7 @@ namespace ArraysExamples
 
     void ArraySize()
     {
-        // - sizeof(int) is the same as sizeof(a1[0])
+        // - sizeof(int) is the same as sizeof(b[0])
         // - std::size() returns the number of elements (C++17)
         int b[] = { 1, 2, 3, 4, 5 };
         cout << sizeof(b) / sizeof(int) << " "; // 5; this method of determining the array size is applicable only to locally allocated arrays
