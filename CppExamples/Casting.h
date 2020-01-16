@@ -75,7 +75,8 @@ void Casting()
     //
     // const_cast
     //
-    // const_cast removes constness.
+    // - removes constness
+    // - use with caution in multithreaded code
 
 
     //
