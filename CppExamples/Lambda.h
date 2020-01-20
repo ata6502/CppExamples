@@ -214,6 +214,7 @@ namespace LambdaExamples
     void ExecuteImmediately()
     {
         // The parentheses () at the end of a lambda cause the lambda to execute immediately.
+        // This pattern is called Immediately Invoked Lambda Expression (IILE).
 
         // Define a lambda without return type and without any parameters. 
         [] { cout << "A "; }();
@@ -222,6 +223,10 @@ namespace LambdaExamples
         // The return type can be omitted in this case.
         string result = [](const string& s) -> string { return s; }("Aye!");
         cout << result << " ";
+
+        // You can assign a lambda that executes immediately to a const.
+        int const a = [=]() { return 8; }();
+        cout << a << " ";
     }
 
     void ConvertToFunctionPointer()
