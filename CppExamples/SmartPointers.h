@@ -81,8 +81,8 @@ using std::string;
        you're left with either using raw pointer or shared_ptr. Raw pointer might be fine for scenario where you control 
        the lifetime of the container, but that's not always the case, certainly for concurrent systems. 
 
-    You do not have to use smart pointers for everything. When you use a pointer to just observe, use can use a raw pointer.
-    Smart pointers have operator overloads to bool. You still can write if (p) { ... }
+    You do not have to use smart pointers for everything. When you use a pointer to just observe, use a raw pointer.
+    DO NOT control the object's lifetime through the raw pointer. Also, consider using references rather than pointers.
 */
 namespace SmartPointersExamples
 {
