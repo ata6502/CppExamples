@@ -855,7 +855,7 @@ namespace ContainerExamples
             cout << n; // 1 2 3 4 5
         cout << " ";
 
-        // Accumulate numers.
+        // Add up numbers.
         float sum = std::accumulate(begin(vec), end(vec), 0.0f);
         cout << "sum:" << sum << " "; // 1+2+3+3+4+5 = 18
 
