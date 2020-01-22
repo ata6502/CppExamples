@@ -11,8 +11,8 @@ using std::string;
 
 namespace Applications
 {
-    // PrintHelper outputs histogram data.
-    void PrintHistogramElement(const std::pair<const string, int> r)
+    // PrintHistogram outputs histogram data.
+    void PrintHistogram(const std::pair<const string, int> r)
     {
         cout << r.first << ' ' << r.second << endl;
     }
@@ -46,6 +46,6 @@ namespace Applications
         for_each(ii, eos, [&histogram](string s) { histogram[s]++; });
 
         // Print each element of the histogram.
-        for_each(histogram.begin(), histogram.end(), PrintHistogramElement);
+        for_each(histogram.begin(), histogram.end(), PrintHistogram);
     }
 }

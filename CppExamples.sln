@@ -11,10 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{00DB9630
 		Notes\DirectXMath.txt = Notes\DirectXMath.txt
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppSqlite", "CppSqlite\CppSqlite.vcxproj", "{18FE760E-C1D5-4AD4-8E9A-3BDEA853D56D}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppParallelismAndConcurrency", "CppParallelismAndConcurrency\CppParallelismAndConcurrency.vcxproj", "{49723067-1FEE-4A0F-9732-D93EA2FB83E1}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXMath", "DirectXMath\ConsoleApp.vcxproj", "{BC641C3E-FCBB-4439-A510-10340B8643DF}"
 EndProject
 Global
@@ -33,22 +29,6 @@ Global
 		{370504A1-640F-409F-8E70-C93809704965}.Release|x64.Build.0 = Release|x64
 		{370504A1-640F-409F-8E70-C93809704965}.Release|x86.ActiveCfg = Release|Win32
 		{370504A1-640F-409F-8E70-C93809704965}.Release|x86.Build.0 = Release|Win32
-		{18FE760E-C1D5-4AD4-8E9A-3BDEA853D56D}.Debug|x64.ActiveCfg = Debug|x64
-		{18FE760E-C1D5-4AD4-8E9A-3BDEA853D56D}.Debug|x64.Build.0 = Debug|x64
-		{18FE760E-C1D5-4AD4-8E9A-3BDEA853D56D}.Debug|x86.ActiveCfg = Debug|Win32
-		{18FE760E-C1D5-4AD4-8E9A-3BDEA853D56D}.Debug|x86.Build.0 = Debug|Win32
-		{18FE760E-C1D5-4AD4-8E9A-3BDEA853D56D}.Release|x64.ActiveCfg = Release|x64
-		{18FE760E-C1D5-4AD4-8E9A-3BDEA853D56D}.Release|x64.Build.0 = Release|x64
-		{18FE760E-C1D5-4AD4-8E9A-3BDEA853D56D}.Release|x86.ActiveCfg = Release|Win32
-		{18FE760E-C1D5-4AD4-8E9A-3BDEA853D56D}.Release|x86.Build.0 = Release|Win32
-		{49723067-1FEE-4A0F-9732-D93EA2FB83E1}.Debug|x64.ActiveCfg = Debug|x64
-		{49723067-1FEE-4A0F-9732-D93EA2FB83E1}.Debug|x64.Build.0 = Debug|x64
-		{49723067-1FEE-4A0F-9732-D93EA2FB83E1}.Debug|x86.ActiveCfg = Debug|Win32
-		{49723067-1FEE-4A0F-9732-D93EA2FB83E1}.Debug|x86.Build.0 = Debug|Win32
-		{49723067-1FEE-4A0F-9732-D93EA2FB83E1}.Release|x64.ActiveCfg = Release|x64
-		{49723067-1FEE-4A0F-9732-D93EA2FB83E1}.Release|x64.Build.0 = Release|x64
-		{49723067-1FEE-4A0F-9732-D93EA2FB83E1}.Release|x86.ActiveCfg = Release|Win32
-		{49723067-1FEE-4A0F-9732-D93EA2FB83E1}.Release|x86.Build.0 = Release|Win32
 		{BC641C3E-FCBB-4439-A510-10340B8643DF}.Debug|x64.ActiveCfg = Debug|x64
 		{BC641C3E-FCBB-4439-A510-10340B8643DF}.Debug|x64.Build.0 = Debug|x64
 		{BC641C3E-FCBB-4439-A510-10340B8643DF}.Debug|x86.ActiveCfg = Debug|Win32
