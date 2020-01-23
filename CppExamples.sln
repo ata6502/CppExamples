@@ -7,6 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppExamples", "CppExamples\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{00DB9630-E600-4200-B48D-2481F96606B2}"
 	ProjectSection(SolutionItems) = preProject
+		BestPractices.txt = BestPractices.txt
 		Notes\Debugging.txt = Notes\Debugging.txt
 		Notes\DirectXMath.txt = Notes\DirectXMath.txt
 	EndProjectSection

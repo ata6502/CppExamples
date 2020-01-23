@@ -1,5 +1,7 @@
 #pragma once
 
+#undef max // undefine the max macro because it interferes with std::numeric_limits<int>::max()
+
 #include <iostream>
 #include <iomanip>  // setiosflags, setprecision
 #include <limits>   // numeric_limits

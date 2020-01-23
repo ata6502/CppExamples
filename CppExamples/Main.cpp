@@ -1,7 +1,4 @@
 
-#include <windows.h> // used in some usage demonstrations
-#undef max // undefine the max macro because it interferes with std::numeric_limits<int>::max()
-
 #include "Arrays.h"
 #include "AutoDecltypeTypedef.h"
 #include "Casting.h"
@@ -28,16 +25,8 @@
 #include "Strings.h"
 #include "Templates.h"
 
-#include "Recursion\RecursionTest.h"
-#include "Applications\Histogram.h"
-#include "Patterns\pImpl\Account.h"
-
 //
 // The purpose of this application is to provide examples of C++ and STL features.
-//
-// Simple rules:
-// - Use local scope (stack semantics) as much as you can.
-// - If you need to use the free store, use smart pointers.
 //
 int main()
 {
@@ -46,13 +35,15 @@ int main()
     cout << endl << endl;
 
     cout << "*** Auto, Decltype, Typedef (type inference) ***" << endl;
-    AutoExamples::Test();
-    DecltypeExamples::Test(); 
+    AutoDecltypeExamples::Test();
     TypedefExamples::Test();
     cout << endl << endl;
 
     cout << "*** Casting ***" << endl;
-    Casting();
+    CastingExamples::StaticCast();
+    CastingExamples::DynamicCast();
+    CastingExamples::ConstCast();
+    CastingExamples::ReinterpretCast();
     cout << endl << endl;
 
     cout << "*** Chrono ***" << endl;
@@ -142,10 +133,6 @@ int main()
     cout << "*** Templates ***" << endl;
     TemplatesExamples::Templates();
     cout << endl << endl;
-
-    // RecursionTest();
-    // Applications::Histogram();
-    // Patterns::pImplTest();
 
     return 0;
 }

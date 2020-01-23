@@ -4,95 +4,59 @@
 #include <string>
 #include <map>
 #include <vector>
-#include <utility> // declval
 
 using std::cout;
 using std::endl;
 using std::string;
 using std::vector;
-using std::map;
 
-/*
-    auto
-
-    - used for deducing a type of an object from its initializer
-    - good for storing lambda expressions
-    - prefer using the assignment syntax to initializing an auto variable
-      because a type may have an explicit copy ctor. In such a case you
-      can only use the copy initialization:
-      int i = 10;
-      auto a = i; // rather than auto a(i);
-    - don't use auto when type conversion is required
-
-    auto vs. decltype
-
-    - auto does not deduce a return type that is a reference
-      int i=1;
-      identityAuto(i) = 2; // does not compile; return is not an lvalue
-      ...
-      auto identityAuto(int& x) { return x; } // returns an int, not a reference
-
-    - decltype(auto) preserves reference-ness
-      int i=1;
-      identityDecltype(i) = 2; // ok
-      ...
-      auto identityDecltype(int& x) -> decltype(auto) { return x; } // returns a reference to int
-*/
-
-namespace AutoExamples
+namespace AutoDecltypeExamples
 {
-    class Book
-    {
-    public:
-        Book() : m_title(string()) {}
-        Book(const string& title) : m_title(title) {}
-        string GetTitle() const { return m_title; }
-    private:
-        string m_title;
-    };
-
-    int func(double) { return 10; }
-
+    // auto infers the type of an object from its initializer.
     void InitAuto()
     {
         // Multiple declarations with a single auto keyword.
         auto a = 1.0, b = 2.0, c{ 3.0 };
         auto d = 1.0, *ptra = &a, &refb = b;
-        auto e = a; // assignment; preferred to copy initialization unless the type has an explicit copy ctor
-        auto f(a); // copy initialization; use it when the type has an explicit copy ctor
 
-        // Initialize an object.
-        auto book = Book("A");
-        cout << book.GetTitle() << " ";
+        // Prefer assignment to copy initialization unless the type has an explicit copy ctor.
+        auto e = a; 
 
-        // Add modifiers to auto.
-        map<string, int> indices;
-        auto& ref_indices = indices;
-        auto* ptr_indices = &indices;
-        const auto const_indices = indices;
-        const auto& const_ref_indices = indices;
+        // Use copy initialization when the type has an explicit copy ctor.
+        auto f(a); 
+
+        // auto with modifiers.
+        vector<int> nums = { 1,2,3 };
+        auto& ref_nums = nums;
+        auto* ptr_nums = &nums;
+        const auto const_nums = nums;
+        const auto& const_ref_nums = nums;
     }
 
-    void RemoveSpecifiers()
+    void RemoveQualifiers()
     {
-        // Remove the const specifier.
+        // Remove the const-qualification.
         const vector<int> values;
         auto a = values; // const is removed; type of a is vector<int>
         auto& b = values; // type of b is const vector<int>&
 
-        // Remove the volatile specifier.
+        // Remove the volatile qualifier.
         volatile long clock = 0L;
         auto c = clock; // c is not volatile anymore
     }
 
-    void DecayArraysAndFunctionsToPointers()
+    class Book { };
+
+    int func(double) { return 1; }
+
+    void DecayToPointers()
     {
-        // Turn an array into a pointer.
+        // Decay an array into a pointer.
         Book books[10];
         auto a = books; // type of a is Book*
         auto& b = books; // type of b Book(&)[10] - a reference to the array
 
-        // Turn a function into a pointer.
+        // Decay a function into a pointer.
         auto c = func; // type of c is int(*)(double)
         auto& d = func; // type of d is int(&)(double)
     }
@@ -105,12 +69,12 @@ namespace AutoExamples
         for (std::vector<int>::iterator it = begin(v); it != end(v); ++it)
             *it = 1;
 
-        // with auto
+        // using auto
         for (auto it = begin(v); it != end(v); ++it)
             *it = 2;
     }
 
-    // Using auto with a template.
+    // auto with a template.
     template<typename X, typename Y>
     void DoWork(const X& x, const Y& y)
     {
@@ -118,15 +82,17 @@ namespace AutoExamples
         auto result = x * y;
     }
 
-    // Using auto and decltype.
-    // The return type of a function template is determined by its template arguments
+    // auto with decltype.
+    // The return type of a function template is determined by its template arguments.
+    // This template has the trailing return type declared *after* the parameter list.
+    // Thanks to that we can use x and y in decltype.
     template<typename X, typename Y>
-    auto Multiply(X x, Y y) -> decltype(x * y) // trailing return type; note that it is *after* the paramter list; thanks to that we can use x and y
+    auto Multiply(X x, Y y) -> decltype(x * y) 
     {
         return x * y;
     }
 
-    // Auto as the funtion return type.
+    // auto as the funtion return type.
     auto Add1(int a, int b)
     {
         return a + b;
@@ -144,74 +110,22 @@ namespace AutoExamples
         return a + b;
     }
 
+    auto Identity(int& x) -> decltype(auto) { return x; } // returns a reference to int
+
+    // decltype(auto) preserves reference-ness
+    void PreserveReferenceness()
+    {
+        int i = 1;
+        Identity(i) = 2; // ok - no compiler error
+    }
 
     void Test()
     {
         InitAuto();
-        RemoveSpecifiers();
-        DecayArraysAndFunctionsToPointers();
+        RemoveQualifiers();
+        DecayToPointers();
         IterateWithAuto();
-    }
-}
-
-//
-// decltype
-//
-// - used to infer the type of an expression
-namespace DecltypeExamples
-{
-    // A template for SideEffect.
-    template <int I>
-    struct Num
-    {
-        static const int c = I;
-        decltype(I) _member;
-        Num() : _member(c) {}
-    };
-
-    void GetTypeOfExpression()
-    {
-        int i = 10;
-        cout << typeid(decltype(i + 1.0)).name() << " "; // double
-
-        // decltype may be used in place of type.
-        vector<int> a;
-        decltype(a) b; // decltype(a) instead of vector<int>
-        b.push_back(10);
-        decltype(a)::iterator it = a.end();
-    }
-
-    void SideEffect()
-    {
-        // The comma operator returns the last argument. It means that var is the same type as i.
-        // However, the compiler still needs to instantiate the Num template to make sure 
-        // the expression is valid. The template instantiation is a side effect.
-        int i;
-        decltype(Num<1>::c, i) var = i;
-    }
-
-    class A { private: A(); };
-
-    void DeclvalExample()
-    {
-        // The expression passed to decltype has to be valid. For example, when a class has a 
-        // private ctor, the following expression doesn't compile because A() is private:
-        // typeid(decltype(A())).name()
-        // In such situations, we can use the declval template:
-        cout << typeid(decltype(std::declval<A>())).name() << " "; // output: class DecltypeExamples::A
-
-        // decltype is useful when you want to deduce a type without defining an initialized variable.
-        // It's used in generic programming. The following example shows the usage of dectype but most
-        // likely you won't use it in this context.
-        int i = 1;
-        decltype(i) j = 8; // j is of type int
-    }
-
-    void Test()
-    {
-        GetTypeOfExpression();
-        SideEffect();
-        DeclvalExample();
+        PreserveReferenceness();
     }
 }
 
@@ -220,9 +134,8 @@ namespace DecltypeExamples
 //
 namespace TypedefExamples
 {
-
-    class SomeClass { public: int someMemberFunction() { return 0; } };
-    int someFunction(int n) { return 0; }
+    class SomeClass { public: int SomeMemberFunction() { return 0; } };
+    int SomeFunction(int n) { return 0; }
 
     void Test()
     {
@@ -237,14 +150,14 @@ namespace TypedefExamples
 
         // a function pointer type PFUN that points to a global function that accepts an int and returns an int
         typedef int(*PFUN) (int n);
-        PFUN action;
-        action = someFunction; // note that we don't use the & operator to get the address of the function someFunction
+        PFUN action1;
+        action1 = SomeFunction; // note that we don't use the & operator to get the address of the function SomeFunction
 
         // a function pointer type MFUN that points to a member function of a class SomeClass
         typedef int (SomeClass::* MFUN) ();
         SomeClass obj;
         MFUN action2;
-        action2 = &SomeClass::someMemberFunction; // set the value of the function pointer
+        action2 = &SomeClass::SomeMemberFunction; // set the value of the function pointer
         int n = (obj.*action2)(); // deference the function pointer
     }
 }
