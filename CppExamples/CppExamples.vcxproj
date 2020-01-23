@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Applications\Histogram.h" />
     <ClInclude Include="Arrays.h" />
     <ClInclude Include="AutoDecltypeTypedef.h" />
     <ClInclude Include="Casting.h" />
@@ -29,6 +28,15 @@
     <ClInclude Include="Conversion.h" />
     <ClInclude Include="Diagnostics.h" />
     <ClInclude Include="Enums.h" />
+    <ClInclude Include="Examples\Histogram.h" />
+    <ClInclude Include="Examples\pImpl\Account.h" />
+    <ClInclude Include="Examples\pImpl\AccountImpl.h" />
+    <ClInclude Include="Examples\Recursion\CalculateFactorial.h" />
+    <ClInclude Include="Examples\Recursion\CalculatePower.h" />
+    <ClInclude Include="Examples\Recursion\GreatestCommonDivisor.h" />
+    <ClInclude Include="Examples\Recursion\RecursionTest.h" />
+    <ClInclude Include="Examples\Recursion\ReverseEnumerator.h" />
+    <ClInclude Include="Examples\Recursion\TowerOfHanoi.h" />
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="FilesAndStreams.h" />
     <ClInclude Include="Formatting.h" />
@@ -38,16 +46,8 @@
     <ClInclude Include="MoveSemantics.h" />
     <ClInclude Include="Numbers.h" />
     <ClInclude Include="OperatorOverloading.h" />
-    <ClInclude Include="Patterns\pImpl\Account.h" />
-    <ClInclude Include="Patterns\pImpl\AccountImpl.h" />
     <ClInclude Include="PointersAndReferences.h" />
     <ClInclude Include="Rand.h" />
-    <ClInclude Include="Recursion\CalculateFactorial.h" />
-    <ClInclude Include="Recursion\CalculatePower.h" />
-    <ClInclude Include="Recursion\GreatestCommonDivisor.h" />
-    <ClInclude Include="Recursion\RecursionTest.h" />
-    <ClInclude Include="Recursion\ReverseEnumerator.h" />
-    <ClInclude Include="Recursion\TowerOfHanoi.h" />
     <ClInclude Include="RegularExpressions.h" />
     <ClInclude Include="SmartClasses.h" />
     <ClInclude Include="SmartPointers.h" />
@@ -55,12 +55,12 @@
     <ClInclude Include="Templates.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Examples\pImpl\Account.cpp" />
+    <ClCompile Include="Examples\pImpl\AccountImpl.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Patterns\pImpl\Account.cpp" />
-    <ClCompile Include="Patterns\pImpl\AccountImpl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Patterns\pImpl.txt" />
+    <Text Include="Examples\pImpl\pImpl.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

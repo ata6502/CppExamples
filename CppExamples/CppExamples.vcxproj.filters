@@ -18,64 +18,64 @@
     <ClInclude Include="Numbers.h" />
     <ClInclude Include="OperatorOverloading.h" />
     <ClInclude Include="PointersAndReferences.h" />
-    <ClInclude Include="Recursion\RecursionTest.h">
-      <Filter>Examples\Recursion</Filter>
-    </ClInclude>
-    <ClInclude Include="Recursion\ReverseEnumerator.h">
-      <Filter>Examples\Recursion</Filter>
-    </ClInclude>
-    <ClInclude Include="Recursion\CalculatePower.h">
-      <Filter>Examples\Recursion</Filter>
-    </ClInclude>
-    <ClInclude Include="Recursion\CalculateFactorial.h">
-      <Filter>Examples\Recursion</Filter>
-    </ClInclude>
-    <ClInclude Include="Recursion\GreatestCommonDivisor.h">
-      <Filter>Examples\Recursion</Filter>
-    </ClInclude>
-    <ClInclude Include="Recursion\TowerOfHanoi.h">
-      <Filter>Examples\Recursion</Filter>
-    </ClInclude>
     <ClInclude Include="Strings.h" />
     <ClInclude Include="Templates.h" />
-    <ClInclude Include="Applications\Histogram.h">
-      <Filter>Examples</Filter>
-    </ClInclude>
     <ClInclude Include="MoveSemantics.h" />
     <ClInclude Include="SmartPointers.h" />
     <ClInclude Include="Diagnostics.h" />
     <ClInclude Include="SmartClasses.h" />
     <ClInclude Include="RegularExpressions.h" />
-    <ClInclude Include="Patterns\pImpl\Account.h">
-      <Filter>Examples\pImpl</Filter>
-    </ClInclude>
-    <ClInclude Include="Patterns\pImpl\AccountImpl.h">
-      <Filter>Examples\pImpl</Filter>
-    </ClInclude>
     <ClInclude Include="Chrono.h" />
+    <ClInclude Include="Examples\Histogram.h">
+      <Filter>Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="Examples\Recursion\CalculateFactorial.h">
+      <Filter>Examples\Recursion</Filter>
+    </ClInclude>
+    <ClInclude Include="Examples\Recursion\CalculatePower.h">
+      <Filter>Examples\Recursion</Filter>
+    </ClInclude>
+    <ClInclude Include="Examples\Recursion\GreatestCommonDivisor.h">
+      <Filter>Examples\Recursion</Filter>
+    </ClInclude>
+    <ClInclude Include="Examples\Recursion\RecursionTest.h">
+      <Filter>Examples\Recursion</Filter>
+    </ClInclude>
+    <ClInclude Include="Examples\Recursion\ReverseEnumerator.h">
+      <Filter>Examples\Recursion</Filter>
+    </ClInclude>
+    <ClInclude Include="Examples\Recursion\TowerOfHanoi.h">
+      <Filter>Examples\Recursion</Filter>
+    </ClInclude>
+    <ClInclude Include="Examples\pImpl\Account.h">
+      <Filter>Examples\pImpl</Filter>
+    </ClInclude>
+    <ClInclude Include="Examples\pImpl\AccountImpl.h">
+      <Filter>Examples\pImpl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Patterns\pImpl\Account.cpp">
+    <ClCompile Include="Examples\pImpl\Account.cpp">
       <Filter>Examples\pImpl</Filter>
     </ClCompile>
-    <ClCompile Include="Patterns\pImpl\AccountImpl.cpp">
+    <ClCompile Include="Examples\pImpl\AccountImpl.cpp">
       <Filter>Examples\pImpl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Examples">
-      <UniqueIdentifier>{10e8d7fc-4584-483c-918f-eb2e8b196168}</UniqueIdentifier>
+      <UniqueIdentifier>{ba4a9090-4f9b-4163-97b4-6e58362e8443}</UniqueIdentifier>
     </Filter>
     <Filter Include="Examples\pImpl">
-      <UniqueIdentifier>{df9c16e2-4dda-464c-913a-28d79f240555}</UniqueIdentifier>
+      <UniqueIdentifier>{7267709e-d7e3-4fdd-b009-b7e909e87834}</UniqueIdentifier>
     </Filter>
     <Filter Include="Examples\Recursion">
-      <UniqueIdentifier>{dfe07a4f-73a2-4cfd-9f5b-832b459397c8}</UniqueIdentifier>
+      <UniqueIdentifier>{b0b58da0-c2bc-4dfc-9b41-b04097c4c009}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Patterns\pImpl.txt">
+    <Text Include="Examples\pImpl\pImpl.txt">
       <Filter>Examples\pImpl</Filter>
     </Text>
   </ItemGroup>
