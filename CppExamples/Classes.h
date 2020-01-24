@@ -22,7 +22,7 @@ using std::string;
     - If no new object is being defined, it is an assignment (no constructor is involved).
 
     Friend functions are ordinary global functions but they have access to all members (including private and protected) of a class.
-    The prototype of a friend function (or a whole definition) has to be included in the class definition.
+    The prototype of a friend function (or the entire definition) has to be included in the class definition.
     Friend functions are not members of the class.
 
     - Make use of accessors when they exist, even within the class.
@@ -32,13 +32,11 @@ using std::string;
       - When the function is non-virtual - the base class implementation is called.
     - The same rules of polymorphism and inheritance apply to smart pointers.
 
-    Slicing: If you copy objects, slicing can occur
-    - Copy a derived object into a base object - extra memeber variables fall away
-    - Can't copy a base object into a derived object
-    - Same rules apply when passing a parameter to a function by value: a copy is made, slicing will happen
-      - That't why it's important to pass parameters to a function using references or pointers to avoid slicing
+    When you copy objects, **slicing** may occur:
+    - When you assign a derived class object to a base object, additional member variables of the derived class object are sliced off to form the base class object.
+    - Same rules apply when passing a parameter to a function by value: a copy is made, slicing will happen.
+    - That't why it's important to pass parameters to a function using references or pointers to avoid slicing.
 */
-
 namespace ClassesExamples
 {
     namespace PersonExamples
@@ -46,8 +44,8 @@ namespace ClassesExamples
         class Person
         {
         public:
-            Person(const string& name) : m_name(name) {}
-            Person() : Person(string()) {} // default ctor calling a named ctor
+            Person(const string& name) : m_name(name) { }
+            Person() : Person(string()) { } // default ctor calls a named ctor
             // Person() = default; // create a default ctor
             Person(const Person&) = delete; // remove the default copy ctor i.e., make the class non-copyable
             Person& operator=(Person const&) = delete; // remove the assignment operator
@@ -134,7 +132,7 @@ namespace ClassesExamples
     }
 
 
-    namespace ComplexExamples
+    namespace ComplexNumbers
     {
         class Complex
         {
@@ -217,7 +215,7 @@ namespace ClassesExamples
         void Test()
         {
             // Note: We are not using a custom output operator << because it would require an additional
-            // call to the copy ctor. This would make the calls unclear.
+            // call to the copy ctor. This would mess up the output.
 
             Complex z; // invoke the default ctor
             cout << "z=(" << z.Re() << ", " << z.Im() << ") ";
@@ -275,7 +273,7 @@ namespace ClassesExamples
     }
 
 
-    namespace MutableMemberExamples
+    namespace MutableMembers
     {
         class MutableMember
         {
@@ -361,7 +359,7 @@ namespace ClassesExamples
             Base b1 = d; // copy m_a but not m_b because m_b does not exist in Base
             cout << b1.Get() << " "; // 11 - Slicing: q.Get calls the Base's version of Get
 
-            // A solution to keep polymorphism: use pointers and references.
+            // A solution to retain polymorphic behaviour: use pointers and references.
             Base* b2 = &d;
             cout << b2->Get() << " "; // 22
 
@@ -375,9 +373,9 @@ namespace ClassesExamples
     void Test()
     {
         PersonExamples::Test();
-        ComplexExamples::Test();
+        ComplexNumbers::Test();
         ObjectLifecycle::Test();
-        MutableMemberExamples::Test();
+        MutableMembers::Test();
         SlicingProblem::Test();
     }
 }

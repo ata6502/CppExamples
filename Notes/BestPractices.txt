@@ -1,3 +1,9 @@
 
+MEMORY MANAGEMENT
 - Use local scope (stack semantics) as much as you can.
 - If you need to use the free store, use smart pointers.
+
+COLLECTIONS
+- Measure performance to ensure you are using the right collection.
+- Reserve storage in advance using the reserve method.
+

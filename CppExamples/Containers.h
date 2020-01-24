@@ -23,15 +23,7 @@ using std::multimap;
 using std::unordered_map;
 
 /*
-    *** Measure performance to ensure you are using the right collection ***
-    *** Reserve storage in advance using the reserve method ***
-
-    Write your code to make switching containers easy:
-    - auto
-    - begin() and end() global functions
-    - algorithms
-
-    Basic requirements for an object to be an element inside a standard container:
+    Basic requirements for an object to be an element of a standard container:
     - Copyable and/or moveable
     - Swappable
     - Comparable (optional)
@@ -55,19 +47,17 @@ using std::unordered_map;
     - The free functions take iterators to a collection as parameters.
     - Examples: for_each, find_if
 
-
-    Sequence containers
-    -------------------
     <vector> (sequence container)
     - Keeps elements in a continuous block of memory. 
     - Performs well for both iterating and random access.
     - Grows as needed when new items are added which can cause a lot of element copying. 
-      Solution: ***pre-allocate memory when you create a vector container***. It also initializes all vector elements to 0.
-    - You can keep smart pointers in your vector (copying pointers is cheap).
-    - Compatible with C's memory model. You can pass a vector to a C-style API and it's binary layout will be compatible with the C-style array.
+      Solution: pre-allocate memory when you create a vector container. It also initializes all vector elements to 0.
+    - Good for storing smart pointers - copying pointers is cheap.
+    - Compatible with C's memory model. You can pass a vector to a C-style API as it's binary layout is compatible with a C-style array.
 
     <map> (associative container)
-    - Keeps elements sorted to speed up searches.
+    - Associative containers provide lookup based on a key.
+    - Associative containers keep elements sorted to speed up searches.
     - Does not allow two values with the same key.
     - Provides the [] operator to add or access elements.
     - Provides a pair<> template to add elements.
@@ -76,6 +66,7 @@ using std::unordered_map;
     <list> (sequence container)
     - A doubly-linked list.
     - Subscripting or random access is not provided. The list requires traversing.
+    - Provides constant time operations for inserting and deleting elements.
     - In general, faster than <vector> for adding elements.
     - In general, slower than <vector> for accessing elements.
       ... but you need to measure and compare performance of vector vs. list
@@ -89,39 +80,44 @@ using std::unordered_map;
     <priority_queue>
     - Bumps up a value to the front.
 
+    set<K> (associative container)
+    - An ordered set of unique keys.
+    - Maintains the order of elements based on a comparison function, by default the 'less than' operator.
+    - Performs a binary search to find elements.
 
-    Associative containers (provide lookup based on a key)
-    ----------------------
-    
-    Ordered containers:
-    - maintain the ordered of elements based on a comparison function, by default the 'less than' operator
-    - perform a binary search to find elements
+    map<K, V> (associative container)
+    - An ordered container of key value pairs.
+    - Associates keys with values.
+    - Implemented as a balanced binary tree.
 
-    set<K>                      an ordered set of unique keys
-    map<K, V>                   an ordered container of key value pairs; it associates keys with values; implemented as a balanced binary tree
-    multiset<K>                 allows multiple elements with the same key i.e., it allows collisions; lookup based on a given key may result in 0, 1, or more elements
-    multimap<K, V>              allows multiple elements with the same key; does not allow subscripting 
+    multiset<K> (associative container)
+    - An ordered set of unique keys.
+    - Allows multiple elements with the same key i.e., it allows collisions
+    - Lookup based on a given key may result in 0, 1, or more elements.
+
+    multimap<K, V>
+    - An ordered container of key value pairs.
+    - Allows multiple elements with the same key.
+    - Does not allow subscripting.
 
     Unordered (hash) containers:
     - do not provide any particular ordering
     - tend to provide fast lookup performance
     - rely on a hash function rather than a comparison function
     - bacause hashing cannot guarantee uniqueness or equality, hash containers also require an equality function or an operator
-    - also, there is no hash operator or default hash function for types in general
+    - in general, there is no hash operator or default hash function for types
 
     unordered_set<K>
     unordered_map<K, V>
     unordered_multiset<K>
     unordered_multimap<K, V>
-*/
 
-// The standard library provides specializations of std::hash and std::equal_to for common types 
-// such as integers and strings. For custom types, we need to define our own hash operator 
-// and an equality operator.
+    The standard library provides specializations of std::hash and std::equal_to for common types 
+    such as integers and strings. For custom types, we need to define our own hash operator and an equality operator.
 
-// A good explanation of implementing a custom key for unordered_map:
-// https://stackoverflow.com/questions/17016175/c-unordered-map-using-a-custom-class-type-as-the-key
-
+    A good explanation of implementing a custom key for unordered_map:
+    https://stackoverflow.com/questions/17016175/c-unordered-map-using-a-custom-class-type-as-the-key
+ */
 
 // A custom key type. Used with unordered_map.
 struct FileKey
@@ -155,7 +151,7 @@ bool operator==(FileKey const & left, FileKey const & right)
 // Specialize the standard hash class template for FileKey. 
 namespace std
 {
-    // We need to provide the specialization in the hash class templates original namespace (std).
+    // We need to provide the specialization in the hash class template's original namespace (std).
     // The specialization has to fullfill the following requirements:
     // - two calls to a hash function for the same value must give the same result
     // - hash functions must produce a size_t value
@@ -175,7 +171,7 @@ namespace std
     };
 }
 
-// Define custom begin and end functions. They allows us to use the range-for loop for multimap.
+// Define custom begin and end functions. They allow us to use the range-for loop for multimaps.
 namespace std
 {
     template <typename T>
@@ -193,7 +189,7 @@ namespace std
 
 namespace ContainerExamples
 {
-    // The range-based for loop iterates over elements of a given range, array, or collection.
+    // The range-based for loop iterates over elements of a given range, an array, or a collection.
     // for (declaration : collection)
     // {
     //     statement
@@ -208,27 +204,25 @@ namespace ContainerExamples
             cout << n;
         cout << " ";
 
-        // To avoid calling the copy constructor and the destructor for each element, 
-        // you should usually declare the current element to be a constant reference.
+        // Declare the current element to be a constant reference to avoid calling the copy constructor 
+        // and the destructor for each element.
         for (const auto& n : vec)
             cout << n;
         cout << " ";
 
-        // If you need to modify an element in a range-for loop, use a reference as 
-        // the element variable.
+        // If you need to modify an element in a range-for loop, use a reference as the element variable.
         for (int& n : vec)
             ++n;
         for (int n : vec)
             cout << n;
         cout << " ";
 
-        // Multiply each element of a vector by 3.
-        // Declaring n as a reference is important because otherwise the statements in the body of the
-        // for loop act on a local copy of the elements in the vector (which sometimes also might be useful).
+        // Multiply each element of a vector by 2. Declaring n as a reference is important because otherwise 
+        // the statements in the body of the for loop would act on local copies of the elements in the vector.
         for (auto& n : vec)
             n *= 2;
 
-        // for loop
+        // "Classic" for loop.
         for (unsigned int i = 0; i < vec.size(); ++i)
             cout << vec[i];
         cout << " ";
@@ -242,13 +236,13 @@ namespace ContainerExamples
             cout << *it;
         cout << " ";
 
-        // As above but more efficient. It determines the end iterator only once.
+        // Determine the end iterator only once.
         for (auto it = begin(vec), _end = end(vec); it != _end; ++it)
             cout << *it;
         cout << " ";
 
-        // Use member iterator methods begin() and end()
-        // This is an old school and less flexible than using the global functions
+        // Use member iterator methods begin() and end().
+        // This is old school and less flexible than using the global functions
         // as some containers may not have the begin() and end() method defined.
         for (auto it = vec.begin(), _end = vec.end(); it != _end; ++it)
             cout << *it;
@@ -264,11 +258,11 @@ namespace ContainerExamples
             cout << *it;
         cout << " ";
 
-        // for_each algorithm with a lambda expression; you can specify a function name instead of lambda
+        // for_each algorithm with a lambda expression. You can specify a function name instead of lambda.
         for_each(begin(vec), end(vec), [](int i) { cout << i; });
         cout << " ";
 
-        // Iterate over an initializer list..
+        // Iterate over an initializer list.
         for (int i : { 1, 2, 3 })
             cout << i;
         cout << " ";
@@ -278,13 +272,13 @@ namespace ContainerExamples
         int sum = 0; // the sum of all elements
         for (int x : array)
             sum += x;
-        for (auto elem : { sum, sum * 2, sum * 4 }) // print some multiples of sum
+        for (auto elem : { sum, sum * 2, sum * 4 }) // print multiples of sum
             cout << elem << ",";
         cout << " ";
     }
 
     // Used in ContainerIterationUsingGenericFunction().
-    // A generic function to print all elements of a collection. 
+    // PrintElements is a generic function to print all elements of a collection. 
     // To avoid calling the copy constructor and the destructor for each element, 
     // declare the current element to be a constant reference.
     template <typename T>
@@ -303,6 +297,12 @@ namespace ContainerExamples
         PrintElements(vec);
     }
 
+    void assert(bool condition)
+    {
+        if (!condition)
+            cout << "ERROR ";
+    }
+
     class A 
     { 
     public:
@@ -316,38 +316,38 @@ namespace ContainerExamples
         auto v1 = vector<int>{}; // invoke the default ctor
 
         // Check if the vector is empty.
-        ASSERT(v1.empty());
+        assert(v1.empty());
 
-        // Create a vector and initialize it with some element values.
+        // Create a vector and initialize it with some values.
         auto v2 = vector<int>{ 1,2,3 }; // invoke a param ctor
 
         // The size method returns the number of elements in the container.
-        ASSERT(v2.size() == 3);
+        assert(v2.size() == 3);
 
         // Create and initialize the vector with a sequence defined by a pair of iterators.
         // The sequence can be a C-style array, another vector, or another container type, such as a list.
         // Use the entire range from v2 to initialize the new vector.
         auto v3 = vector<int>{ begin(v2), end(v2) };
-        ASSERT(v3.size() == 3);
+        assert(v3.size() == 3);
 
         // Create and initialize the vector with a narrowed down sequence.
         auto v4 = vector<int>{ begin(v2)+1, end(v2)-1 };
-        ASSERT(v4.size() == 1);
-        ASSERT(v4[0] == 2);
+        assert(v4.size() == 1);
+        assert(v4[0] == 2);
 
         // Create a vector of 10 elements, where each element has the same value of 123. 
         auto v5 = vector<int>(10, 123);
-        ASSERT(v5.size() == 10);
+        assert(v5.size() == 10);
       
         auto v = vector<int>{ 1,2,3 };
 
         // Add an element using emplace_back.
-        // emplace_back is analogous to the push_back method, but while push_back copies or moves the provided value into the container, 
+        // emplace_back is analogous to the push_back method, but while push_back copies or moves the value into the container, 
         // emplace_back constructs the element in place by forwarding the arguments directly. emplace_back is a variadic function template.
         // It tends to be more efficient than push_back. 
         v.emplace_back(4);
 
-        // Use the emplace method to insert an element anywhere in the container, although that is not as efficient for vector containers. 
+        // Use the emplace method to insert an element anywhere in the container. emplace is not efficient for vector containers. 
         v.emplace(begin(v), 8); // insert a new value at the beginning of the sequence
       
         // 8,1,2,3,4
@@ -355,7 +355,7 @@ namespace ContainerExamples
             cout << i;
         cout << " ";
 
-        vector<float> values{ 1, 2, 3 }; // values automatically converted to float
+        vector<float> values{ 1, 2, 3 }; // values are automatically converted to float
         values.push_back(8);
         values.push_back(4.5f);
         values.pop_back(); // removes 4.5f
@@ -365,7 +365,7 @@ namespace ContainerExamples
         cout << values[3] << " "; // 8
 
         // std::vector performs range checking when you use at()
-        // if an index is out of range, an exception is thrown
+        // If an index is out of range, an exception is thrown.
         try 
         {
             float u = values.at(5); // index 5 is out of range
@@ -379,56 +379,58 @@ namespace ContainerExamples
         A a1; // A()
         A a2; // A()
 
-        a.push_back(a1); // use the A's copy ctor to copy a1 to a temp object that is inserted to the vector
-        a.push_back(a2); // ~A(); we need a bigger vector; the temp object that holds a1 in the vector is destroyed and then a1 is copied again to the vector; then, the copy ctor is called to insert the a2 object to the vector
-    } // ~A() ~A() - a1 and a2 destr; ~A() ~A() temp objects in the vector destr
+        // Use the A's copy ctor to copy a1 to a temp object that is inserted to the vector.
+        a.push_back(a1); // A()
+
+        // We need a bigger vector. The temp object that holds a1 in the vector is destroyed 
+        // and a1 is copied again to the vector. Then, the copy ctor is called to insert a2 to the vector.
+        a.push_back(a2); // ~A(); 
+
+    } // ~A() ~A() a1 and a2 destr; ~A() ~A() temp objects in the vector destr
 
     void ListContainer()
     {
         auto c = list<int>{}; // default ctor called
 
-        ASSERT(c.empty());
-        ASSERT(c.size() == 0);
+        assert(c.empty());
+        assert(c.size() == 0);
 
         // Initialize the list with some values.
         c = list<int>{ 1, 2, 3, 4, 5 };
 
-        ASSERT(!c.empty());
-        ASSERT(c.size() == 5);
+        assert(!c.empty());
+        assert(c.size() == 5);
 
         // Initialize the list with a sequence defined by a pair of iterators.
         c = list<int>{ begin(c), end(c) };
 
-        ASSERT(!c.empty());
-        ASSERT(c.size() == 5);
+        assert(!c.empty());
+        assert(c.size() == 5);
 
-        // The iterators provided by the list are bidirectional iterators, not random access 
-        // iterators as is the case of vector. Bidirectional iterators allow you to move backward 
-        // and forward by incrementing and decrementing.
+        // The iterators provided by the list are bidirectional, not random access.
+        // Bidirectional iterators allow you to move backward and forward.
         c = list<int>{ ++begin(c), --end(c) };
 
-        ASSERT(c.size() == 3);
+        assert(c.size() == 3);
 
         // Use random access iterators provided by a vector to initialize a list.
         auto v = vector<int>{ 1, 2, 3 };
-        c = list<int>{ begin(v) + 1, end(v) - 1 }; // initialize the list with the middle element in the vector
+        c = list<int>{ begin(v) + 1, end(v) - 1 }; // initialize the list with the vector's middle element
 
-        ASSERT(c.size() == 1);
+        assert(c.size() == 1);
 
         // Access the first element in the list with the front method which returns a reference to the first element.
-        ASSERT(c.front() == 2);
+        assert(c.front() == 2);
 
         // Create a list of 10 elements. Each element will have the element's default value. 
         c = list<int>(10);
-        ASSERT(c.size() == 10);
+        assert(c.size() == 10);
 
         // Create a list of 10 integers with a specific value.
         c = list<int>(10, 123);
-        ASSERT(c.size() == 10);
+        assert(c.size() == 10);
 
         c = list<int>{ 1, 2, 3, 4, 5 };
-
-        // The list container provides constant time operations for inserting and deleting elements.
 
         // emplace_back inserts an element at the end of the list.
         c.emplace_back(6);
@@ -436,7 +438,7 @@ namespace ContainerExamples
         // emplace_front inserts an element at the beginning of the list.
         c.emplace_front(0);
 
-        // emplace inserts an element at a specific position given an iterator before which the new element will be constructed
+        // emplace inserts an element at a specific position given an iterator before which the new element should be constructed
         // i.e., the new element is always inserted before the given iterator.
         c.emplace(begin(c), -1);    // the same as emplace_front
         c.emplace(end(c), 7);       // the same as emplace_back
@@ -446,7 +448,9 @@ namespace ContainerExamples
         cout << " ";
 
         // Remove a single element or a range of elements given one or two iterators respectively.
-        c.erase(begin(c));          // remove the first element
+
+        // Remove the first element.
+        c.erase(begin(c));
 
         // Remove the first element.
         c.pop_front();
@@ -457,35 +461,35 @@ namespace ContainerExamples
         // Remove the last element.
         c.pop_back();
 
-        ASSERT(c.size() == 5); // c = {1,2,3,4,5}
+        assert(c.size() == 5); // c = {1,2,3,4,5}
 
-        // Remove all but the first and last elements. This erases the half-open range.
+        // Remove all but the first and last element. This erases the half-open range.
         c.erase(++begin(c), --end(c)); // c = {1,5}
 
-        ASSERT(c.size() == 2);
-        ASSERT(c.front() == 1);
-        ASSERT(c.back() == 5);
+        assert(c.size() == 2);
+        assert(c.front() == 1);
+        assert(c.back() == 5);
 
         // Insert a sequence defined using an initializer list.
         c.insert(++begin(c), { 2, 3, 4 });
 
-        // In case of lists, iterators remain valid across reverse, sort, and other such operations. 
+        // In case of lists, iterators remain valid across reverse, sort, and other operations. 
         auto pos = ++begin(c);      // get an iterator to the list's second element
-        ASSERT(*pos == 2);          // the value of the second element is 2
+        assert(*pos == 2);          // the value of the second element is 2
 
         // Reverse the order of the elements.
         c.reverse();
 
         // After reversing the pos iterator still points to the same element, 
         // even though the element is now in a different position in the sequence. 
-        ASSERT(*pos == 2);
+        assert(*pos == 2);
 
         // Sort the elements. By default, sort uses the less than as its sort operator, 
         // but you can provide your own comparison function. 
         c.sort();
 
         // After sorting the pos iterator still points to the same element.
-        ASSERT(*pos == 2);
+        assert(*pos == 2);
 
         // Remove all odd numbers from the list.
         c.remove_if([](int value)
@@ -508,20 +512,17 @@ namespace ContainerExamples
         // std::less is a function object, a class template that calls the 'less than' operator.
         c = set<int, std::less<int>>{};
 
-        ASSERT(c.empty());
-        ASSERT(c.size() == 0);
+        assert(c.empty());
+        assert(c.size() == 0);
 
         // Initialize the set with a list of values. The values are automatically ordered as they 
-        // get inserted into the containers initializer list constructor
+        // get inserted into the containers initializer list constructor.
         c = set<int>{ 1, 2, 4, 5, 3 }; // c = {1,2,3,4,5}
 
-        ASSERT(!c.empty());
-        ASSERT(c.size() == 5);
+        assert(!c.empty());
+        assert(c.size() == 5);
 
-        // Initialize a vector with sorted elements from the range provided by the map.
-        auto v = vector<int>{ begin(c), end(c) }; // v = {1,2,3,4,5}
-
-        // Copy or move elements into the set container with the insert method.
+        // Copy or move elements into the set container.
         c.insert(0);
 
         // Construct an element in place with the emplace method. Arguments supplied to the emplace method 
@@ -530,32 +531,32 @@ namespace ContainerExamples
         auto result = c.emplace(6);
 
         // If the key already exists, the first member of the pair points to the existing element. 
-        ASSERT(*result.first == 6); // assert that the first member points to an element with a value of 6
+        assert(*result.first == 6); // assert that the first member points to an element with a value of 6
 
         // The second member of the pair indicates whether insertion actually took place.
-        ASSERT(result.second); // assert that the second member is true indicating that an insertion took place
+        assert(result.second); // assert that the second member is true indicating that an insertion took place
 
         // Call the emplace again.
         result = c.emplace(6);
 
         // The resulting iterator still points to the same element but no insertion took place.
-        ASSERT(*result.first == 6);
-        ASSERT(!result.second);
+        assert(*result.first == 6);
+        assert(!result.second);
 
-        // Remove the first element in the ordered range and return an iterator pointing to the element following 
+        // Remove the first element and return an iterator pointing to the element following 
         // the removed one. 
         auto next = c.erase(begin(c));
 
-        ASSERT(*next == 1); // assert that an element following the removed one points to the element 1
+        assert(*next == 1); // assert that an element following the removed one points to the element 1
 
         // Remove elements by a value matching the element key. This form of erase returns the number of elements removed. 
-        ASSERT(1 == c.erase(6));        // one element removed
-        ASSERT(0 == c.erase(123));      // no elements removed
+        assert(1 == c.erase(6));        // one element removed
+        assert(0 == c.erase(123));      // no elements removed
 
         // Look for elements using the find method. Find returns an iterator pointing to the element with a given key.
         auto it = c.find(3);            
-        ASSERT(*it == 3);               // it points to the elements containing 3
-        ASSERT(end(c) == c.find(123));  // if an element is not found, the returned iterator points to the last plus one element in the container
+        assert(*it == 3);               // it points to the element containing 3
+        assert(end(c) == c.find(123));  // if an element is not found, the returned iterator points to the last plus one element in the container
 
         // Given that the set is ordered, it's useful to partition the range of elements using binary search algorithms:
         // - upper_bound
@@ -563,19 +564,19 @@ namespace ContainerExamples
 
         // upper_bound returns an iterator pointing to the first element that is greater than the given key. 
         auto upper = c.upper_bound(3);
-        ASSERT(*upper == 4);
+        assert(*upper == 4);
 
         // lower_bound returns an iterator pointing to the first element that is not less than the given key.
         auto lower = c.lower_bound(3);
-        ASSERT(*lower == 3);
+        assert(*lower == 3);
 
         // equal_range combines upper_bound and lower_bound searches into one.
         // It returns a pair of iterators:
         // - the first iterator is equivalent to the one returned by the lower_bound method
         // - the second iterator is equivalent to the one returned by the upper_bound method
         auto range = c.equal_range(3);
-        ASSERT(range.first == lower);
-        ASSERT(range.second == upper);
+        assert(range.first == lower);
+        assert(range.second == upper);
 
         // Given the lower and upper range markers, we can partition the set and print it out.
         // Notice that the loops skip the search key (in our case 3) as the standard containers 
@@ -583,7 +584,7 @@ namespace ContainerExamples
 
         // Print out the range up to but not including the lower bound.
         for (auto it = begin(c); it != lower; ++it)
-            cout << *it; // lower: 12
+            cout << *it; // 1,2
         cout << " ";
 
         // Although the previous and the next loop skip the search key we can still loop in between 
@@ -595,7 +596,7 @@ namespace ContainerExamples
 
         // Print out the range starting with the upper bound, but not including the end.
         for (auto it = upper; it != end(c); ++it)
-            cout << *it; // upper: 45
+            cout << *it; // 4,5
         cout << " ";
 
         string text("to be, or not to be, that is the question");
@@ -607,7 +608,7 @@ namespace ContainerExamples
                 letters.insert(c);
         }
 
-        // output: abehinoqrstu - a sorted list (? this is a set, not list) of letters
+        // output: abehinoqrstu
         for (char c : letters)
             cout << c;
         cout << " ";
@@ -622,11 +623,10 @@ namespace ContainerExamples
 
     void MapContainer()
     {
-       
         // A map container that maps integers to doubles.
         auto d = map<int, double>{};
 
-        ASSERT(d.empty());
+        assert(d.empty());
 
         // Initialize a map with a list of key-value pairs. As the pairs are added to the container 
         // they are automatically sorted. 
@@ -639,24 +639,24 @@ namespace ContainerExamples
             { "E", 5 }
         };
 
-        ASSERT(!c.empty());
-        ASSERT(c.size() == 5);
+        assert(!c.empty());
+        assert(c.size() == 5);
 
         // map provides a subscript operation. The subscript is the key rather than an index.
-        // The result is the value of the key-value pair.
-        ASSERT(c["D"] == 4);
+        // The result is the key-value pair.
+        assert(c["D"] == 4);
 
         // Use the subscript operator to insert new elements into the map container.
         // It also takes advantage of copy or move semantics when possible.
         c["F"] = 6;
 
         // Keep in mind that the subscript operator ensures that an element with a given key is present. 
-        // In the following case we not only retrieve the value with a given key, but we first insert
-        // an element with that key along with a default value. 
+        // In the following case we first insert an element together with its default value. Then, we
+        // retrieve the value. 
         auto v = c["G"];
-        ASSERT(v == 0); // 0 is the default value for int
+        assert(v == 0); // 0 is the default value for int
 
-        ASSERT(c.size() == 7);
+        assert(c.size() == 7);
 
         // Use the insert method to insert a new element and find out whether a key previously existed. 
         // Insert also returns an iterator to the newly inserted element. 
@@ -664,26 +664,26 @@ namespace ContainerExamples
         auto result = c.insert(std::make_pair("H", 8));
 
         // Confirm that a new element was inserted.
-        ASSERT(result.second); // true
+        assert(result.second); // true
 
         // Use the emplace method to insert a new element. With emplace we don't need to 
         // use the make_pair helper function. 
         result = c.emplace("I", 9);
 
-        // Find an element with a specific key. If no such element is found, find returns 
+        // Find an element with a specific key. If no such element exists, find returns 
         // an iterator pointing past the end of the container 
         auto it = c.find("D");
-        ASSERT(it->first == "D");         // the key
-        ASSERT(it->second == 4);      // the value
+        assert(it->first == "D");     // the key
+        assert(it->second == 4);      // the value
 
-        // Remove an element when we have an iterator.
+        // Remove an element providing an iterator.
         c.erase(it);
 
         // Remove an element with a given key. 
         c.erase("G");
 
         // A1,B2,C3,E5,F6,H8,I9
-        for (auto& v : c) // use a reference to each element to reduce the amount of coping
+        for (auto& v : c)
             cout << v.first << v.second << ","; // first is the key; second is the value
         cout << " ";
 
@@ -700,7 +700,7 @@ namespace ContainerExamples
         for (char c : text)
         {
             if (isalpha(c)) 
-                histogram[c]++; // if the values of c does not exist, it will be added to the histogram and initialized with the default value
+                histogram[c]++; // if the value of c does not exist, it is added to the histogram and initialized with the default value
         }
 
         // Show the keys and values. Note that the pairs are sorted by the key.
@@ -710,7 +710,7 @@ namespace ContainerExamples
 
 
         //
-        // Add elements, iterate over map, find an element, get an element
+        // Add elements, iterate, find an element, get an element.
         //
         auto book1 = Book{ 1, "X", "A" };
         auto book2 = Book{ 3, "Z", "C" };
@@ -732,7 +732,7 @@ namespace ContainerExamples
             cout << b.first << b.second.Title << b.second.Author << " ";
 
         // Find an element using the find function.
-        // The find function returns an iterator to a found element.
+        // The find function returns an iterator to the found element.
         auto b1 = books.find(2);
         cout << "Found1:" << b1->first << b1->second.Title << b1->second.Author << " ";
 
@@ -752,16 +752,16 @@ namespace ContainerExamples
             { "C", 30 }
         };
 
-        ASSERT(!c.empty());
-        ASSERT(c.size() == 4);
+        assert(!c.empty());
+        assert(c.size() == 4);
 
         // Subscripting is not available. We need to use the insert or emplace method. 
         // Unlike map and set, a new element is always inserted regardless of whether 
         // the key already exists in the container. 
         // The result of insert and emplace is an iterator pointing to the newly inserted element. 
         auto result = c.emplace("B", 22);
-        ASSERT(result->first == "B");
-        ASSERT(result->second == 22);
+        assert(result->first == "B");
+        assert(result->second == 22);
 
         // Enumerate the sequence. The sequence is ordered by the key but the order of elements with 
         // equivalent keys is not ordered and maintains the order of insertion. 
@@ -842,7 +842,7 @@ namespace ContainerExamples
             cout << n; // 1 2 3 3 4 5
         cout << " ";
 
-        // Count how many 3s are in container.
+        // Count how many 3s are in a container.
         auto cnt = count(begin(vec), end(vec), 3);
         cout << cnt << " "; // 2
 
@@ -879,16 +879,16 @@ namespace ContainerExamples
 
         vector<Person> people{ { "A", 1 }, { "B", 3 }, { "C", 5 } };
 
-        auto printAllPeople = [&people]()
+        auto PrintAllPeople = [&people]()
         {
             // for_each takes iterators and applies a function to each element
             std::for_each(begin(people), end(people),
                 [](const Person& p) { cout << p; });
         };
 
-        printAllPeople();
+        PrintAllPeople();
 
-        // max_element returns an iterator
+        // max_element returns an iterator.
         auto oldestPerson_it = std::max_element(
             people.begin(),
             people.end(),
@@ -922,18 +922,18 @@ namespace ContainerExamples
             people.end(),
             [](const Person& p) { return p.Name == "C"; },
             x);
-        printAllPeople();
+        PrintAllPeople();
 
         // Sort by age (ascending)
-        // In descending order: replace a.Age < b.Age with a.Age > b.Age
+        // For descending order, replace a.Age < b.Age with a.Age > b.Age
         std::sort(
             people.begin(), 
             people.end(),
             [](const Person& a, const Person& b) { return a.Age < b.Age; });
-        printAllPeople();
+        PrintAllPeople();
 
-        // Run permutations until all combinations are exhausted. In such a case,
-        // next_permutation will return false.
+        // Run permutations until all combinations are exhausted. In such case,
+        // next_permutation returns false.
         vector<int> v{ 1, 2, 3, 4 };
         std::next_permutation(v.begin(), v.end());
         for (auto i : v) 

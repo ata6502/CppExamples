@@ -13,7 +13,7 @@ using std::chrono::duration;
 using std::chrono::milliseconds;
 
 /*
-    The chrono library provides a selection of clocks with different tick rates.
+    The chrono library provides clocks with different tick rates.
 */
 namespace ChronoExamples
 {
@@ -30,7 +30,7 @@ namespace ChronoExamples
         return duration_cast<duration<float>>(TimeNow() - start).count();
     }
 
-    // Calculates the Fibonacci number using the very slow recursive approach.
+    // Calculates the Fibonacci number using a very slow recursive approach.
     long SlowFunction(unsigned n)
     {
         if (n < 2)
