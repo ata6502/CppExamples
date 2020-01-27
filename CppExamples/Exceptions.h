@@ -9,10 +9,6 @@ using std::endl;
 using std::vector;
 
 /*
-    Good practice:
-    - *** Catch exceptions by reference ***. Otherwise, slicing may occur. This applies to the exceptions that are in the exception hierarchy.
-    - Catch more specific exceptions first. For example, catch std::out_of_range before catching std::exception.
-
     Common exception-derived classes. They differ only by their names:
     - logic_error
         - invalid_argument
@@ -37,7 +33,7 @@ namespace ExceptionsExamples
 {
     class Book { };
 
-    void Exceptions()
+    void Test()
     {
         // Throw and catch an exception.
         try
@@ -64,9 +60,9 @@ namespace ExceptionsExamples
         }
 
 
-        // When you use RAII pattern such as smart pointers, there is no need 
-        // for the finally block.The reason is that the pointers are allocated 
-        // on a stack and deallocated when control is transferred to the catch block.
+        // Use the RAII pattern such as smart pointers. We don't need explicitly to
+        // release any resources because the smart pointer is allocated on a stack 
+        // and deallocated when control is transferred to the catch block.
         try
         {
             auto x = std::make_shared<Book>(); // allocation

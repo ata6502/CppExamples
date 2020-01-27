@@ -29,7 +29,7 @@ namespace InitializationExamples
 
     void ValueInitialization()
     {
-        // An initializer list forces value initialization: even local variables 
+        // An initializer list forces value initialization. Even local variables 
         // of fundamental data types are initialized to zero or nullptr.
         int j{};    // j is initialized by 0
         int* q{};   // q is initialized by nullptr
@@ -43,9 +43,7 @@ namespace InitializationExamples
 
     void NarrowingInitialization()
     {
-        // Narrowing initializations are the initializations that reduce precision or 
-        // where the supplied value gets modified.
-        // Narrowing initializations are not possible with uniform initialization.
+        // Narrowing initialization reduces precision. It is not applicable to uniform initialization.
 #pragma warning(push)
 #pragma warning(disable : 4244)
         int x1(5.3);        // OK, but x1 becomes 5
@@ -59,7 +57,7 @@ namespace InitializationExamples
         //std::vector<int> v2{ 1, 2.3, 4, 5.6 }; // ERROR: narrowing doubles to ints
     }
 
-    // Used in PassInitializerList()
+    // Used in InitializerListAsFunctionArgument()
     void print(std::initializer_list<int> vals)
     {
         for (auto p = vals.begin(); p != vals.end(); ++p)
@@ -78,7 +76,7 @@ namespace InitializationExamples
     // A class with two constructors:
     // - one ctor for a specific number of arguments 
     // - another ctor for an initializer list
-    // the version with the initializer list is preferred
+    // The version with the initializer list is preferred.
     class P
     {
     public:
@@ -93,9 +91,8 @@ namespace InitializationExamples
         };
     };
 
-    // Because of initializer lists, explicit becomes relevant for constructors taking more
-    // than one argument. You can disable automatic type conversions from multiple values, 
-    // which is also used when an initialization uses the = syntax.
+    // Because of initializer lists, 'explicit' becomes relevant for constructors taking more
+    // than one argument.
     class R
     {
     public:
@@ -105,27 +102,27 @@ namespace InitializationExamples
 
     void fr(const R&) {}
 
-    // The class template std::initializer_list<> supports the concept of *initializer lists* 
+    // The class template std::initializer_list<> supports the concept of initializer lists 
     // for user-defined types.
     void InitializerListAndUserDefinedTypes()
     {
         // The version with the initializer list is preferred.
-        P p1(77, 5);       // calls P::P(int,int)
-        P p2{ 77,5 };      // calls P::P(initializer_list)
-        P p3{ 77,5,42 };   // calls P::P(initializer_list)
-        P p4 = { 77,5 };   // calls P::P(initializer_list)
+        P p1(77, 5);          // calls P::P(int,int)
+        P p2{ 77,5 };         // calls P::P(initializer_list)
+        P p3{ 77,5,42 };      // calls P::P(initializer_list)
+        P p4 = { 77,5 };      // calls P::P(initializer_list)
 
         // Disable automatic type conversions.
-        R r1(77, 5); // OK
-        R r2{ 77,5 }; // OK
-        R r3{ 77,5,42 }; // OK
-        R r4 = { 77,5 }; // OK (implicit type conversion allowed)
+        R r1(77, 5);          // OK
+        R r2{ 77,5 };         // OK
+        R r3{ 77,5,42 };      // OK
+        R r4 = { 77,5 };      // OK (implicit type conversion allowed)
         //R r5 = { 77,5,42 }; // ERROR due to explicit (no implicit type conversion allowed)
 
-        fr({ 47,11 }); // OK, implicit conversion of {47,11} into R
-        //fr({ 47,11,3 }); // ERROR due to explicit
-        fr(R{ 47,11 }); // OK, explicit conversion of {47,11} into R
-        fr(R{ 47,11,3 }); // OK, explicit conversion of {47,11,3} into R
+        fr({ 47,11 });        // OK, implicit conversion of {47,11} into R
+        //fr({ 47,11,3 });    // ERROR due to explicit
+        fr(R{ 47,11 });       // OK, explicit conversion of {47,11} into R
+        fr(R{ 47,11,3 });     // OK, explicit conversion of {47,11,3} into R
     }
 
     void Initialization()

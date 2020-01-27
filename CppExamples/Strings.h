@@ -189,7 +189,7 @@ namespace StringsExamples
         cout << s << " ";
     }
 
-    // Use StringStream to keep concatenated values.
+    // Use StringStream to store concatenated values.
     void ConcatenateValues()
     {
         // A buffer that will hold a string stream.
@@ -204,6 +204,17 @@ namespace StringsExamples
             << 3.56789 << " ";
 
         cout << buffer.str();
+    }
+
+    void StringBuilder()
+    {
+        std::ostringstream oss;
+        oss << "a:" << 1 << ",";
+        oss << "b:" << 2.2;
+
+        // str() puts everything together and gives a string
+        string text = oss.str();
+        cout << text << " ";
     }
 
     // Use stringstream to put values separated by spaces into variables.
@@ -299,6 +310,7 @@ namespace StringsExamples
         StringBasics();
         StringOperations();
         ConcatenateValues();
+        StringBuilder();
         ReadValues();
         CharType();
         CStyleStrings();

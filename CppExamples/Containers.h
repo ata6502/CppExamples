@@ -1005,7 +1005,7 @@ namespace ContainerExamples
         }
     }
 
-    void Containers()
+    void Test()
     {
         ContainerIteration();
         ContainerIterationUsingGenericFunction();

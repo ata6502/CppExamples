@@ -37,7 +37,7 @@ namespace ConversionExamples
         return n;
     }
 
-    void Conversion()
+    void Test()
     {
         cout << CovertDoubleToString(273.1458) << " ";                            // 273.146
         cout << ConvertStringToDouble("273.1458") << " ";                         // 273.15

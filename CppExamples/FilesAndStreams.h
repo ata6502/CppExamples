@@ -21,12 +21,11 @@ using std::ofstream;
     - Streams are not copyable; they should be passed by reference, for example: void AddToBuffer(const std::wostringstream& text) { buffer << text.str(); }
 */
 
-namespace FilesAndStreamsExamples
+namespace FileAndStreamExamples
 {
     const string FILENAME = "test.dat";
-    const string ANOTHERFILE = "test2.dat";
 
-    void FilesAndStreams()
+    void Test()
     {
         // Create a file and write strings to it.
         {
@@ -63,11 +62,7 @@ namespace FilesAndStreamsExamples
             }
         }
 
-
-
-
-
-        // Read strings from the file and put them to a vector.
+        // Read strings from a file and put them to a vector.
         {
             ifstream f(FILENAME);
 
@@ -84,44 +79,14 @@ namespace FilesAndStreamsExamples
             cout << " ";
         }
 
-
-        // Write a vector of strings to a file. (??? it does not work)
-        /*
-        {
-            vector<string> v{ "X", "Y", "X", "X", "Z", "Y" };
-
-            ofstream f(ANOTHERFILE);
-
-            // Define an output iterator for the stream.
-            std::ostream_iterator<string> it(f, "\n");
-
-            // Eliminate duplicates and write the result to a file
-            std::unique_copy(v.begin(), v.end(), it);
-
-            f.flush();
-            f.close();
-        }
-        */
-
-        // Append a float value to a file.
+        // Append a float value.
         {
             ofstream f;
-            f.open(ANOTHERFILE, std::ios::out | std::ios::app);
+            f.open(FILENAME, std::ios::out | std::ios::app);
 
             f << std::setiosflags(std::ios::fixed | std::ios::showpoint) << std::setprecision(6) << 7.1182; // 7.118200
 
             f << endl;
-        }
-
-        // StringBuilder
-        {
-            std::ostringstream oss;
-            oss << "a:" << 1 << ",";
-            oss << "b:" << 2.2;
-
-            // str() puts everything together and gives a string
-            string text = oss.str();
-            cout << text << " ";
         }
     }
 }

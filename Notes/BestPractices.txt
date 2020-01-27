@@ -7,3 +7,6 @@ COLLECTIONS
 - Measure performance to ensure you are using the right collection.
 - Reserve storage in advance using the reserve method.
 
+EXCEPTIONS
+- Catch exceptions by reference. Otherwise, slicing may occur. This applies to the exceptions that are in the exception hierarchy.
+- Catch more specific exceptions first. For example, catch std::out_of_range before catching std::exception.

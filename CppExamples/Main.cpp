@@ -53,27 +53,27 @@ int main()
     cout << endl << endl;
 
     cout << "*** Containers ***" << endl;
-    ContainerExamples::Containers();
+    ContainerExamples::Test();
     cout << endl << endl;
 
     cout << "*** Conversion ***" << endl;
-    ConversionExamples::Conversion();
+    ConversionExamples::Test();
     cout << endl << endl;
 
     cout << "*** Enums ***" << endl;
-    Enums();
+    EnumExamples::Test();
     cout << endl << endl;
 
     cout << "*** Exceptions ***" << endl;
-    ExceptionsExamples::Exceptions();
+    ExceptionsExamples::Test();
     cout << endl << endl;
 
     cout << "*** Files & Streams ***" << endl;
-    FilesAndStreamsExamples::FilesAndStreams();
+    FileAndStreamExamples::Test();
     cout << endl << endl;
 
     cout << "*** Formatting ***" << endl;
-    FormattingExamples::Formatting();
+    FormattingExamples::Test();
     cout << endl << endl;
 
     cout << "*** Initialization ***" << endl;
@@ -81,7 +81,7 @@ int main()
     cout << endl << endl;
 
     //cout << "*** Input ***" << endl;
-    //InputExamples::Input();
+    //InputExamples::Test();
     //cout << endl << endl;
 
     cout << "*** Lambda ***" << endl;

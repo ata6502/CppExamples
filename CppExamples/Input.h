@@ -12,21 +12,33 @@ namespace InputExamples
 {
     void GetLine()
     {
+        //
         // Input a string into a C-style array.
-        const int MAX = 10; // the maximum number of characters to be read; MAX-1 can be read (the terminating '\0' is appended)
-        char str[MAX]; // the char array into which characters are to be read from cin
+        //
+        // MAX is the maximum number of characters to be read including the terminating '\0'.
+        const int MAX = 10;
+
+        // str is an array that stores characters read from cin.
+        char str[MAX]; 
 
         cout << "Enter a string of not more than 9 characters: ";
-        std::cin.getline(str, MAX, '\n'); // read a string; '\n' is specified as a character that stops the input process; it is not stored in str
+
+        // Read a string. '\n' stops the input process. It is not stored in str.
+        std::cin.getline(str, MAX, '\n'); 
+
         cout << "The string '" << str << "' has " << strlen(str) << " characters." << endl;
 
+        //
         // Input a string into a std::string variable using std::getline(std::cin, std::string).
+        //
         string s;
         cout << "Enter a string: ";
         std::getline(std::cin, s);
         cout << "The string '" << s << "' has " << s.length() << " characters and its size is " << s.size() << "." << endl;
 
-        // Input a sequence of characters up to the first white space.
+        //
+        // Input a string up to the first whitespace.
+        //
         cout << "Enter a string up to the first whitespace: ";
         std::cin >> s;
         cout << "The string '" << s << "' has " << s.length() << " characters." << endl;
@@ -50,7 +62,7 @@ namespace InputExamples
         cout << endl << "You entered " << ch << endl;
     }
 
-    void Input()
+    void Test()
     {
         GetLine();
         GetValues();

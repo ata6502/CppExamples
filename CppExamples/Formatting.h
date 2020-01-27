@@ -13,7 +13,7 @@ namespace FormattingExamples
     void FormatNumbers()
     {
         // Display the value 123.456789 in a field. Set the width of the field to 10 characters. 
-        // Right justify the numbers in their field. Note that the numbers are automatically round up.
+        // Right justify the numbers in their field. Note that the numbers are rounded up automatically.
         cout << std::setiosflags(std::ios::fixed | std::ios::showpoint | std::ios::right)
             << std::setprecision(1) << std::setw(10) << 123.456789 // 123.5
             << std::setprecision(2) << std::setw(10) << 123.456789 // 123.45
@@ -30,7 +30,7 @@ namespace FormattingExamples
         cout << std::to_string(d) << " "; // 2.720000
     }
 
-    // Show integer values of characters as decimal and hexadecimal numbers.
+    // Show ASCII codes as decimal and hexadecimal numbers.
     void FormatHexAndDec()
     {
         for (int i = int('I'); i <= int('K'); ++i)
@@ -57,7 +57,7 @@ namespace FormattingExamples
         cout << std::boolalpha << b << " ";
     }
 
-    void Formatting()
+    void Test()
     {
         FormatNumbers();
         FormatHexAndDec();
