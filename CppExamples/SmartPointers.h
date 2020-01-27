@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 #include <memory> // unique_ptr, shared_ptr, weak_ptr
-#include "Diagnostics.h" // ASSERT
 
 using std::cout;
 using std::endl;
@@ -257,77 +256,11 @@ namespace SmartPointersExamples
         }
     }
 
-
-
-    //
-    // unique_ptr deleter
-    //
-    namespace UniquePtrDeleterExamples
+    void assert(bool condition)
     {
-        // The unique_ptr class template provides a template parameter called a deleter. 
-        // The deleter can be a function or function object. It deletes the object owned 
-        // by the unique_ptr. 
-
-        // In this example we use the Windows Threadpool API - a collection of C-style 
-        // functions and resource handles. 
-
-        // Keep in mind that the pointer kept in unique_ptr is a work handle which isn't 
-        // really a C++ pointer to an object. It's an opaque pointer. You can't dereference 
-        // it so it feels like a hack to use unique_ptr to wrap handles. 
-            
-        // unique_ptr defaults to deleting the resource using delete and that won't do. 
-        // We need a custom deleter for our unique_ptr. Our work_deleter is a traits class.
-        struct work_deleter
-        {
-            // Pointer type kept by unique_ptr.
-            typedef PTP_WORK pointer;
-
-            // The function call operator called when the unique_ptr resource is to be deleted.
-            void operator()(pointer value) const throw()
-            {
-                // Release the work object by closing the work handle.
-                CloseThreadpoolWork(value);
-            }
-        };
-
-        void Test()
-        {
-            // Wrap the work handle with a unique_ptr. 
-            typedef std::unique_ptr<PTP_WORK, work_deleter> work;
-
-            // Initialize the work handle with a result of the CreateThreadpoolWork function.
-            // CreateThreadpoolWork creates a Threadpool work object and returns a handle to it.
-            auto w = work
-            {
-                CreateThreadpoolWork(
-                    // A callback function provided as a lambda expression. The lambda expression is converted by the compiler to a function pointer.
-                    // This works only for stateless lambdas (i.e., lambdas not capturing any variables) as they must be binary compatible with function pointers.
-                    // The lambda's arguments match what the Threadpool API expects for the callback function.
-                    [](PTP_CALLBACK_INSTANCE, void*, PTP_WORK) 
-                    {
-                        cout << "WorkRunning... ";
-                    },
-                    nullptr,
-                    nullptr)
-            };
-
-            // If everything went well with the CreateThreadpoolWork function, it returned a non-null handle.
-            if (w)
-            {
-                // Submit the work object for execution by the Threadpool.
-                SubmitThreadpoolWork(w.get());
-
-                // Although we're in the realm of asynchronous programing, for the sake of this demo we call 
-                // the WaitForThreadpoolWorkCallbacks function to wait for the Callback to complete.
-                // The second parameter lets us cancel any pending callbacks if they haven't yet begun to execute.
-                WaitForThreadpoolWorkCallbacks(w.get(), false);
-
-                // We do not call CloseThreadpoolWork explicitly because our unique_ptr takes care of that.
-            }
-        }
+        if (!condition)
+            cout << "ERROR ";
     }
-
-
 
     //
     // shared_ptr
@@ -359,7 +292,7 @@ namespace SmartPointersExamples
             auto p = std::shared_ptr<Book>{};
 
             // Assert b using the shared_ptr explicit Boolean conversion operator.
-            ASSERT(!p);
+            assert(!p);
             
             cout << "cnt=" << p.use_count() << " "; // 0
 
@@ -367,12 +300,12 @@ namespace SmartPointersExamples
             // The shared_ptr now points to an object.
             p = std::make_shared<Book>();
 
-            ASSERT(p);
+            assert(p != nullptr);
 
             cout << "cnt=" << p.use_count() << " "; // 1
 
             // Check if the shared_ptr is unique i.e., if its use_count is 1.
-            ASSERT(p.unique());
+            assert(p.unique());
 
             // Copy the shared_ptr.
             auto pc = p;
@@ -380,11 +313,11 @@ namespace SmartPointersExamples
             cout << "cnt=" << p.use_count() << " "; // 2
 
             // The pointer is no longer unique.
-            ASSERT(!p.unique()); 
+            assert(!p.unique());
 
             // Because the pointer is shared, the same assertions hold for the copied pointer. 
             cout << "cnt=" << pc.use_count() << " "; // 2
-            ASSERT(!pc.unique());
+            assert(!pc.unique());
 
             // Copy of the object being pointed to.
             Book copy = *p;
@@ -396,8 +329,8 @@ namespace SmartPointersExamples
             Book* ptr = p.get();
 
             // Compare the pointers to determine whether they point to the same object.
-            ASSERT(p.get() == pc.get());
-            ASSERT(p == pc); // the same as above
+            assert(p.get() == pc.get());
+            assert(p == pc); // the same as above
 
             std::shared_ptr<Book> b;
 
@@ -412,7 +345,7 @@ namespace SmartPointersExamples
             }
 
             // The library's only book does not get destroyed together with the library because it is a shared_ptr
-            ASSERT(b);
+            assert(b != nullptr);
 
             // nullptr - type safety
             // You can write if(pi) and if(!pi) with smart pointers. 
@@ -461,10 +394,10 @@ namespace SmartPointersExamples
 
             // Determine whether there is any shared_ptr pointing to a managed object using the expired() method.
             // The weak_ptr is not expired since there is an outstanding shared_ptr.
-            ASSERT(!wp.expired());
+            assert(!wp.expired());
 
             // Get the strong reference use_count.
-            ASSERT(wp.use_count() == 1);
+            assert(wp.use_count() == 1);
 
             // Produce a new shared_ptr by locking the weak_ptr.
             if (auto locked = wp.lock()) // locked: [2 strong refs, 1 weak ref]
@@ -479,10 +412,10 @@ namespace SmartPointersExamples
             sp = nullptr; // sp is empty
             
             // At this point, the weak_ptr is expired but it still holds a weak reference.
-            ASSERT(wp.expired());
+            assert(wp.expired());
 
             // Similarly, the use_count is now 0.
-            ASSERT(wp.use_count() == 0);
+            assert(wp.use_count() == 0);
 
             // It's still safe to lock the weak_ptr but this time the lock method returns an empty 
             // shared_ptr and the if condition fails. In such case we should reset the weak_ptr. 
@@ -513,7 +446,6 @@ namespace SmartPointersExamples
     void Test()
     {
         UniquePtrExamples::Test();
-        UniquePtrDeleterExamples::Test();
         SharedPtrExamples::Test();
         WeakPtrExamples::Test();
     }

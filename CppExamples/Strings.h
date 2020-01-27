@@ -4,7 +4,6 @@
 #include <string>
 #include <sstream> // ostringstream
 #include <algorithm> // find_if_not
-#include "Diagnostics.h"
 
 using std::cout;
 using std::endl;
@@ -52,6 +51,12 @@ namespace StringsExamples
         return string{ front, back.base() };
     }
 
+    void assert(bool condition)
+    {
+        if (!condition)
+            cout << "ERROR ";
+    }
+
     void StringBasics()
     {
         // Bring the user-defined literal (suffix) "s". It's important to use the correct literals because 
@@ -94,8 +99,8 @@ namespace StringsExamples
         // Initialize a string with a string literal.
         s = string{ "hi" };
 
-        ASSERT(!s.empty());
-        ASSERT(s.size() == 2);
+        assert(!s.empty());
+        assert(s.size() == 2);
 
         // Get a pointer to the underlying string.
         cout << s.c_str() << " ";
@@ -110,9 +115,9 @@ namespace StringsExamples
         s.clear();
 
         // The string still needs to present the layout of an empty string rather than an empty container. 
-        ASSERT(s.empty());                      // the string is empty
-        ASSERT(s.size() == 0);                  // the string does not contain any characters
-        ASSERT(strcmp(s.c_str(), "") == 0);     // the string can be passed it to a C-style API which assumes a valid null terminated string
+        assert(s.empty());                      // the string is empty
+        assert(s.size() == 0);                  // the string does not contain any characters
+        assert(strcmp(s.c_str(), "") == 0);     // the string can be passed it to a C-style API which assumes a valid null terminated string
 
         // Given a string...
         s = string{ "abcdef" };
@@ -120,7 +125,7 @@ namespace StringsExamples
         // ...we can obtain a substring.
         s = string(s, 2, 3); // starting with the 2nd position and spanning 3 characters 
 
-        ASSERT(s == "cde");
+        assert(s == "cde");
 
         // String provides begin and end methods. Thanks to that we can use the range-for statement 
         // and enumerate the characters in the sequence.
@@ -139,11 +144,11 @@ namespace StringsExamples
         // Create a substring using the substr method.
         // Substr, by default, runs to the end of the source string.
         auto c = x.substr(pos);
-        ASSERT(c == "@B");
+        assert(c == "@B");
 
         // Trim whitespaces using a custom function Trim.
         auto trimmed = Trim(" \t zzz \r\n ");
-        ASSERT(trimmed == "zzz");
+        assert(trimmed == "zzz");
     }
 
     void StringOperations()

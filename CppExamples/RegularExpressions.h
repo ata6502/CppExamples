@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <regex>
-#include "Diagnostics.h"
 
 using std::cout;
 using std::endl;
@@ -10,6 +9,12 @@ using std::regex;
 
 namespace RegularExpressions
 {
+    void assert(bool condition)
+    {
+        if (!condition)
+            cout << "ERROR ";
+    }
+
     void RegexSearch()
     {
         auto s = string{ "AAA 808-2321 BBB" };
@@ -27,17 +32,17 @@ namespace RegularExpressions
         auto m = std::smatch{}; // the same as m = std::match_results<string::const_iterator> {};
 
         // The results are empty.
-        ASSERT(m.empty());
+        assert(m.empty());
 
         // Perform a match:
         // s - the string to search called the target character sequence
         // m - the match results
         // r - the regular expression applied to determine whether a match exists
         // regex_search returns true if a match exists.
-        ASSERT(std::regex_search(s, m, r));
+        assert(std::regex_search(s, m, r));
 
         // Use the empty method to determine whether a match was found.
-        ASSERT(!m.empty());
+        assert(!m.empty());
 
         // Display found submatches - the groupings in this case. 
         // Each submatch is a pair of iterators defining 

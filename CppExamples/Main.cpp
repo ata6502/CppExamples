@@ -6,7 +6,6 @@
 #include "Classes.h"
 #include "Containers.h"
 #include "Conversion.h"
-#include "Diagnostics.h"
 #include "Enums.h"
 #include "Exceptions.h"
 #include "FilesAndStreams.h"
@@ -20,7 +19,6 @@
 #include "PointersAndReferences.h"
 #include "Rand.h"
 #include "RegularExpressions.h"
-#include "SmartClasses.h"
 #include "SmartPointers.h"
 #include "Strings.h"
 #include "Templates.h"
@@ -60,10 +58,6 @@ int main()
 
     cout << "*** Conversion ***" << endl;
     ConversionExamples::Conversion();
-    cout << endl << endl;
-
-    cout << "*** Diagnostics ***" << endl;
-    Diagnostics::Test();
     cout << endl << endl;
 
     cout << "*** Enums ***" << endl;
@@ -116,10 +110,6 @@ int main()
 
     cout << "*** Regular expressions ***" << endl;
     RegularExpressions::Test();
-    cout << endl << endl;
-
-    cout << "*** Smart classes ***" << endl;
-    SmartClassesExamples::Test();
     cout << endl << endl;
 
     cout << "*** Smart pointers ***" << endl;

@@ -3,6 +3,10 @@
 #include <windows.h>
 #include <crtdbg.h> // Microsoft's implementation of CRT; contains _ASSERTE
 //#include <cassert> // contains the C-style assert macro; good for console apps
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 namespace Diagnostics
 {

@@ -9,12 +9,12 @@
     <ClInclude Include="Vectors.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="App.cpp" />
     <ClCompile Include="Colors.cpp" />
     <ClCompile Include="Matrices.cpp" />
     <ClCompile Include="Operations.cpp" />
     <ClCompile Include="OutputOperators.cpp" />
     <ClCompile Include="Planes.cpp" />
     <ClCompile Include="Vectors.cpp" />
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
 </Project>

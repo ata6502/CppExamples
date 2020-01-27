@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream> // std::ostream
+#include <iostream>
 #include <string>
 #include <vector>
 #include <list>
@@ -9,7 +9,6 @@
 #include <unordered_map>
 #include <algorithm> // for_each, find_if, sort, etc.
 #include <numeric> // std::accumulate
-#include "Diagnostics.h"
 
 using std::cout;
 using std::endl;

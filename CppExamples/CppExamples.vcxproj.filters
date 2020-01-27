@@ -22,8 +22,6 @@
     <ClInclude Include="Templates.h" />
     <ClInclude Include="MoveSemantics.h" />
     <ClInclude Include="SmartPointers.h" />
-    <ClInclude Include="Diagnostics.h" />
-    <ClInclude Include="SmartClasses.h" />
     <ClInclude Include="RegularExpressions.h" />
     <ClInclude Include="Chrono.h" />
     <ClInclude Include="Examples\Histogram.h">
