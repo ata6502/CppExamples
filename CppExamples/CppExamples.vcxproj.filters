@@ -8,7 +8,6 @@
     <ClInclude Include="Containers.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Exceptions.h" />
-    <ClInclude Include="FilesAndStreams.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Lambda.h" />
     <ClInclude Include="Initialization.h" />
@@ -17,7 +16,6 @@
     <ClInclude Include="Conversion.h" />
     <ClInclude Include="Numbers.h" />
     <ClInclude Include="OperatorOverloading.h" />
-    <ClInclude Include="PointersAndReferences.h" />
     <ClInclude Include="Strings.h" />
     <ClInclude Include="Templates.h" />
     <ClInclude Include="MoveSemantics.h" />
@@ -51,6 +49,8 @@
     <ClInclude Include="Examples\pImpl\AccountImpl.h">
       <Filter>Examples\pImpl</Filter>
     </ClInclude>
+    <ClInclude Include="PointersAndReferences.h" />
+    <ClInclude Include="FilesAndStreams.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />

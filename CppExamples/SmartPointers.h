@@ -441,8 +441,6 @@ namespace SmartPointersExamples
         }
     }
 
-
-
     void Test()
     {
         UniquePtrExamples::Test();

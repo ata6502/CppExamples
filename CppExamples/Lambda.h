@@ -14,8 +14,9 @@ using std::string;
     Lambda expressions allow you to write anonymous functions inline, removing the need to write
     a separate function or to write a function object.
 
-    Use an explicit capture block for lambda expressions:
-    - Avoid using [&] and [=]. Specify explicitly what variables you capture.
+    - Use an explicit capture block for lambda expressions.
+    - Avoid using [&] and [=]. 
+    - Specify explicitly what variables you capture.
     - When you use [&] or [=] only variables used in lambda are captured.
     - By default, captured variables are const.
     - Default capture modes implicitly capture 'this'. You can only access class members by capturing 'this'
@@ -23,11 +24,11 @@ using std::string;
     Examples:
         []     - captures nothing (no variables from the enclosing scope are captured)
         [i]    - captures i by value (makes a copy of i)
-        [&j]   - captures j by reference (changes are reflected in the actual variable; dangling reference may be an issue when the original variable j goes out of scope
+        [&j]   - captures j by reference (changes are reflected in the actual variable; dangling reference may be an issue when the original variable j goes out of scope)
         [=]    - captures all variables that are needed in lambda by value (copies the variables)
         [&]    - captures all variables that are needed in lambda by reference
-        [=, &x, &y] - captures by value by default, except variables x and y, which are captured by reference
-        [&, x] - captures by reference by default, except variable x, which is captured by value
+        [=, &x, &y] - captures by value except variables x and y, which are captured by reference
+        [&, x] - captures by reference, except variable x, which is captured by value
         [&x, &x] - illegal because identifiers cannot be repeated
 
     Syntax:
@@ -42,8 +43,6 @@ using std::string;
     By default, the captured variables are const. Use the mutable keyword if you need to modify the variables:
     - If a variable is captured by value, the local copy will be changed.
     - If a variable is captured by reference, the referenced variable will be changed.
-
-    default capture modes implicitly captures *this* and you can only access class members by capturing *this*
 */
 
 namespace LambdaExamples
@@ -82,7 +81,7 @@ namespace LambdaExamples
         cout << cat(1, 2) << " "; // 3
         cout << cat(string("a"), string("b")) << " "; // ab
 
-        // Displaying values of different types.
+        // Display values of different types.
         auto printLine = [](auto item) {cout << item << " "; };
         printLine(8);
         printLine("qq");
@@ -95,7 +94,7 @@ namespace LambdaExamples
         auto increaseValue = [x](int z) { return z + x; };
         cout << increaseValue(3) << " "; // 7
         x = 10; // change the variable
-        cout << increaseValue(3) << " "; // still 7 because the variables are captured by value and x was 4 when it was captured: 3 + 4 = 7
+        cout << increaseValue(3) << " "; // still 7 because the variable is captured by value and x was 4 when it was captured: 3 + 4 = 7
     }
 
     void SpecifyReturnType()
@@ -103,11 +102,9 @@ namespace LambdaExamples
         vector<int> v = { 1, 2, 3, 4 };
         vector<double> dv;
 
-        // Specify the return type explicitly. We need to specify the return type
-        // because this lambda has multiple returns.
+        // Specify the return type explicitly if a lambda has multiple returns.
         // std::transform transforms a collection into another collection.
         // std::back_inserter inserts transfomed items at the back of a collection. 
-        // To insert transfomed items at the beginning of the collection, use begin(dv) instead.
         std::transform(v.begin(), v.end(), std::back_inserter(dv),
             [](int n) -> double
         {
@@ -152,7 +149,7 @@ namespace LambdaExamples
     }
 
     // If the lambda expression is marked as mutable, the copies of captured 
-    // variables are not const and the lambda body can modify the local copies.
+    // variables are not const and the lambda body can modify the local variables.
     void MakeLambdaMutable()
     {
         vector<int> v = { 1, 2, 3, 4 };
@@ -192,7 +189,7 @@ namespace LambdaExamples
         std::generate_n(std::back_inserter(vec1), 3, [n]() mutable { return n++; });
         for (auto i : vec1)
             cout << i;
-        cout << "-" << n << " ";
+        cout << "-" << n << " "; // n remains 0
 
         // The same output: 012
         vector<int> vec2;
@@ -200,7 +197,7 @@ namespace LambdaExamples
         std::generate_n(std::back_inserter(vec2), 3, [&n] { return n++; });
         for (auto i : vec2)
             cout << i;
-        cout << "-" << n << " ";
+        cout << "-" << n << " "; // n is 3
     }
 
     // Non-local variables can always be accessed in a lambda.
@@ -216,7 +213,7 @@ namespace LambdaExamples
         // The parentheses () at the end of a lambda cause the lambda to execute immediately.
         // This pattern is called Immediately Invoked Lambda Expression (IILE).
 
-        // Define a lambda without return type and without any parameters. 
+        // Define a lambda without a return type and with no parameters. 
         [] { cout << "A "; }();
 
         // Define a lambda that accepts a string argument and returns a string. 
@@ -283,11 +280,11 @@ namespace LambdaExamples
         {
             std::function<int()> f;
             {
-                auto i = 5;
-                f = [&i] { return i; }; // i is caught by reference
+                auto n = 5;
+                f = [&n] { return n; }; // n is caught by reference
             }
-            auto i = 10;
-            f(); // undefined because i is out of scope
+            auto n = 10;
+            f(); // undefined behavior because n is out of scope
         }
 
         {
@@ -305,15 +302,11 @@ namespace LambdaExamples
     {
         auto p1 = std::make_unique<string>("a");
 
-        // ...
-
-        // Hand the unique_pointer somewhere else forever.
-        // We expect item to be a pointer so we could dereference it.
+        // We expect 'item' to be a pointer so we could dereference it.
         auto printLine = [](auto item) { cout << *item << " "; };
 
-        // We need to move the unique_pointer rather than copy it because
-        // unique_pointers do not support copying. After the move, the p1 
-        // pointer is empty.
+        // Move the unique_pointer rather than copy because unique_pointers 
+        // do not support copying. After the move, the p1 pointer is empty.
         printLine(std::move(p1));
 
         // Another unique pointer.

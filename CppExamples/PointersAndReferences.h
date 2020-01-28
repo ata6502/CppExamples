@@ -5,15 +5,7 @@
 using std::cout;
 using std::endl;
 
-/*
-    - Always initialize pointers to nullptr.
-    - If a pointer is declared as const, the type it points to should also be declared as const.
-    - Be suspicious of non-const refrence arguments; if you want the function to modify its arguments, use pointers and returned value instead.
-    - A reference is a synonym of a variable or of an operation.
-    - Use references instead of pointers if you can, especially as function parameters (except the incr example below)
-*/
-
-namespace PointersAndReferencesExamples
+namespace PointerAndReferenceExamples
 {
     void Basics()
     {
@@ -60,13 +52,7 @@ namespace PointersAndReferencesExamples
         const int * const p3 = &i;
         //*p3 = 1;                 // illegal - you can't modify const value
         //p3 = &j;                 // illegal - you can't modify const pointer
-
-        // Note that you can modify the value of a variable the 'pointer to a const'
-        // points to but you can't modify the value the pointer contains.
-        j++; // modify the value of a variable the pointer points to (j)
-        cout << *p1 << " ";
-
-        //(*p1)++; // illegal - you can't modify the value the 'pointer to a const' contains
+        //(*p1)++;                 // illegal - you can't modify the value the 'pointer to a const' contains
 
         // const data
         const int k = 1;
@@ -78,7 +64,7 @@ namespace PointersAndReferencesExamples
         const int * const p5 = &k; 
 
         // const pointer to a non-const
-        //int * const p6 = &a;     // illegal - 'k' is const
+        //int * const p6 = &k;     // illegal - 'k' is const
     }
 
     class Book {};
@@ -114,7 +100,7 @@ namespace PointersAndReferencesExamples
         int* pa1 = a;
         int* pa2 = &a[0];
 
-        // an array of pointers to const objects; *ps[0] = "xxx" causes a compile-time error
+        // an array of pointers to const objects
         // you can omit the 'const' keyword; it is allowed by the compiler for backward compatibility
         char const *ps1[] = { "aaa", "bbb", "ccc" };
 
@@ -139,8 +125,6 @@ namespace PointersAndReferencesExamples
         const double& cdr = 1;
     }
 
-    // Be suspicious of non-const refrence arguments; if you want the function to modify its arguments, use pointers and returned value instead.
-    
     // incr1 has better implementation than incr2 because it accepts a pointer as a parameter. 
     void incr1(int* p)
     {
@@ -168,9 +152,7 @@ namespace PointersAndReferencesExamples
         return x * 2;
     }
 
-
-
-    void PointersAndReferences()
+    void Test()
     {
         Basics();
         ConstPointers();

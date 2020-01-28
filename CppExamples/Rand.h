@@ -9,17 +9,18 @@ using std::cout;
 using std::endl;
 using std::string;
 
+/*
+    rand() - generates an integer between 0 and RAND_MAX
+    rand() % n - generates an integer in the range 0 to n-1 (scaling); n is the scaling factor
+    a + rand() % b
+        a is the shifting value (the first number in the desired range)
+        b is the scaling factor (the width of the desired range)
+    a + rand() % (b - a + 1)
+        a <= n <= b
+*/
+
 namespace RandExamples
 {
-    /*
-        rand() - generates an integer between 0 and RAND_MAX
-        rand() % n - generates an integer in the range 0 to n-1 (scaling); n is the scaling factor
-        a + rand() % b
-            a is the shifting value (the first number in the desired range)
-            b is the scaling factor (the width of the desired range)
-        a + rand() % (b - a + 1)
-            a <= n <= b
-    */
     void RandomNumbers()
     {
         int n;
@@ -98,6 +99,7 @@ namespace RandExamples
 
     void StrongRandomization()
     {
+        // available in C++ 11+
         auto seed = std::chrono::system_clock::now()
             .time_since_epoch().count();
         std::mt19937 gen(seed); // Mersenne twister
@@ -108,13 +110,13 @@ namespace RandExamples
             cout << std::setprecision(2) << nd(gen) << ",";
     }
 
-    void Rand()
+    void Test()
     {
         // Start the random generator. It needs to be done once per program run.
         srand((unsigned)time(nullptr));
 
         RandomNumbers();
         TestRandFloat();
-        StrongRandomization(); // available in C++ 11+
+        StrongRandomization();
     }
 }

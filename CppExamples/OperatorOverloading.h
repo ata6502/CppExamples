@@ -8,23 +8,10 @@ using std::endl;
 
 /*
     There are two ways to write an overloaded operator: 
-
-    - As a member function of a type before the operator and an instance of a type after the operator passed as the function's parameter:
-      - can operate on two MyClass objects: bool MyClass::operator<(MyClass p)
-      - can operate on MyClass object and an object of another type: bool MyClass::operator<(OtherType p)
-      - usage: myObject < something
-
-    - A free function that takes two parameters:
-      - the first - the type that's before the operator
-      - the second - the type that's after the operator
+    - As a member function.
+    - As a free function. A free function may be a friend of a class.
     
     When you write a class you should always try to overload operators as member functions.
-
-    The case when you don't own the type before the operator: something < myObject
-    - free function: bool operator<(OtherType something, MyClass p)
-    - access member variables of MyClass through public functions 
-      -or- 
-      declare the free function as a friend - this usage of friend is a good practice
 */
 namespace OperatorOverloadingExamples
 {
@@ -37,19 +24,19 @@ namespace OperatorOverloadingExamples
         std::string GetTitle() const { return m_title; }
         int GetPrice() const { return m_price; }
 
-        // A member operator: compares this book's price to another book's price.
+        // A member operator compares this book's price to another book's price.
         bool operator<(const Book& book) const
         {
             return m_price < book.m_price;
         }
 
-        // A member operator: compares this book's price to an integer.
+        // A member operator compares this book's price to an integer.
         bool operator<(int price) const
         {
             return m_price < price;
         }
 
-        // A friend function: compares an integer to the price of a book.
+        // A friend function compares an integer to the price of a book.
         // Effectively, this function extends the int type to allow for comparison to a book.
         // It could be a free function rather than a friend if we exposed the books's price as 
         // a public accessor.
@@ -63,10 +50,7 @@ namespace OperatorOverloadingExamples
         int m_price;
     };
 
-    // The implementation of the friend function.
-    // Note that despite the friend being included in the class's definition
-    // we need to declare it outside of the class. Here, we declare and
-    // define the friend function.
+    // The declaration and the implementation of the friend function.
     bool operator<(int price, const Book& book)
     {
         return price < book.m_price;
@@ -95,16 +79,11 @@ namespace OperatorOverloadingExamples
         else
             cout << b1.GetTitle() << " costs less than $200" << ", ";
 
-        /*
-        Output:
-
-        AAA is more expensive than BBB
-        BBB costs less than $90
-        AAA costs less than $200
-        */
+        // Output:
+        // AAA is more expensive than BBB
+        // BBB costs less than $90
+        // AAA costs less than $200
     }
-
-
 
     struct Vector2D
     {
@@ -139,7 +118,7 @@ namespace OperatorOverloadingExamples
         // Multiplication of a vector by a scalar.
         // In order to facilitate commutativity, two implementations 
         // of the "Multiply by Scalar" operator are provided as 
-        // global friend functions. 
+        // friend functions. 
         friend Vector2D operator*(float f, Vector2D v);
         friend Vector2D operator*(Vector2D v, float f);
     };
@@ -177,8 +156,7 @@ namespace OperatorOverloadingExamples
         cout << "v3=" << v3 << " ";
     }
 
-
-    void OperatorOverloading()
+    void Test()
     {
         BookTest();
         VectorTest();

@@ -93,7 +93,7 @@ int main()
     cout << endl << endl;
 
     cout << "*** Operator overloading ***" << endl;
-    OperatorOverloadingExamples::OperatorOverloading();
+    OperatorOverloadingExamples::Test();
     cout << endl << endl;
 
     cout << "*** Numbers ***" << endl;
@@ -101,11 +101,11 @@ int main()
     cout << endl << endl;
 
     cout << "*** Pointers & References ***" << endl;
-    PointersAndReferencesExamples::PointersAndReferences();
+    PointerAndReferenceExamples::Test();
     cout << endl << endl;
 
     cout << "*** Rand ***" << endl;
-    RandExamples::Rand();
+    RandExamples::Test();
     cout << endl << endl;
 
     cout << "*** Regular expressions ***" << endl;

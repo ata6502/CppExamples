@@ -19,29 +19,26 @@ namespace RegularExpressions
     {
         auto s = string{ "AAA 808-2321 BBB" };
 
-        // An example of a regular expression.
-        // We use a raw string literal to avoid unnecessary escaping in the regular expression.
-        // We add some grouping to identify the individual parts of the phone number.
+        // Use a raw string literal to avoid unnecessary escaping in the regular expression.
+        // Add grouping to identify the individual parts of the string.
         auto r = regex{ R"((\d{3})-(\d{4}))" };
 
-        // Define a match result object (a match container) that'll be filled with any matches and submatches.
-        // The matches are a sequence of iterators - a vector of pairs of iterators.
-        // The match object doesn't hold a copy of the result which means that it doesn't 
-        // create unnecessary copies. Also, the source string needs to stick around for the iterators to remain valid. 
+        // Define a match result object (a match container). It will be filled with matches and submatches
+        // in a vector containing pairs of iterators.
         // If you want to match C-style strings, use std::cmatch instead of std::smatch.
         auto m = std::smatch{}; // the same as m = std::match_results<string::const_iterator> {};
 
-        // The results are empty.
+        // No matches yet.
         assert(m.empty());
 
         // Perform a match:
-        // s - the string to search called the target character sequence
-        // m - the match results
-        // r - the regular expression applied to determine whether a match exists
+        // s - a string to search called the target character sequence
+        // m - match results
+        // r - a regular expression applied to determine whether a match exists
         // regex_search returns true if a match exists.
         assert(std::regex_search(s, m, r));
 
-        // Use the empty method to determine whether a match was found.
+        // Check if any match has been found.
         assert(!m.empty());
 
         // Display found submatches - the groupings in this case. 
@@ -54,7 +51,7 @@ namespace RegularExpressions
         // 4:2321
         for (auto& sm : m)
         {
-            // str holds a copy of the range in question - a substring. For large documents or many matches 
+            // str holds a copy of the matched range - a substring. For large documents or many matches 
             // it's better to avoid making the substring copies and use the iterators instead.
             //auto str = sm.str();
 
@@ -74,7 +71,7 @@ namespace RegularExpressions
 
     void RegexIterators()
     {
-        // Our string to search.
+        // Our string to search. It contains filenames: a.h, abc.cc, ddd.exe, bb.exe, s.d, and www.txt
         auto s = string{ "a.h qq <abc.cc> abc a,h ddd.exe <bb.exe > <s.d> dd..t <www.txt>" };
 
         // The regex_search function finds a single occurrence of a pattern. In unstructured data it's tedious 

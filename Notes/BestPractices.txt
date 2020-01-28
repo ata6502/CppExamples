@@ -7,6 +7,15 @@ COLLECTIONS
 - Measure performance to ensure you are using the right collection.
 - Reserve storage in advance using the reserve method.
 
+POINTERS & REFERENCES
+- Always initialize pointers to nullptr.
+- If a pointer is declared as const, the type it points to should also be declared as const.
+- Be suspicious of non-const refrence arguments. If you want the function to modify its arguments, use pointers and returned value instead.
+- Try to use references instead of pointers, especially as function parameters.
+
 EXCEPTIONS
 - Catch exceptions by reference. Otherwise, slicing may occur. This applies to the exceptions that are in the exception hierarchy.
 - Catch more specific exceptions first. For example, catch std::out_of_range before catching std::exception.
+
+MOVE SEMANTICS
+- Avoid unnecassary copying by defining a move ctor and a move assignment operator in your class.

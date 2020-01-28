@@ -114,6 +114,8 @@ using std::unordered_map;
     The standard library provides specializations of std::hash and std::equal_to for common types 
     such as integers and strings. For custom types, we need to define our own hash operator and an equality operator.
 
+    Standard library containers (including strings) use move semantics.
+
     A good explanation of implementing a custom key for unordered_map:
     https://stackoverflow.com/questions/17016175/c-unordered-map-using-a-custom-class-type-as-the-key
  */

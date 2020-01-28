@@ -651,7 +651,7 @@ namespace TemplatesExamples
     }
 
 
-    void Templates()
+    void Test()
     {
         ConsumingTemplates::Test();
         TemplateClasses::Test();
