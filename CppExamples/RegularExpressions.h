@@ -71,17 +71,14 @@ namespace RegularExpressions
 
     void RegexIterators()
     {
-        // Our string to search. It contains filenames: a.h, abc.cc, ddd.exe, bb.exe, s.d, and www.txt
+        // Our string to search. The valid filenames contained in the string: <abc.cc> and <www.txt>
         auto s = string{ "a.h qq <abc.cc> abc a,h ddd.exe <bb.exe > <s.d> dd..t <www.txt>" };
 
-        // The regex_search function finds a single occurrence of a pattern. In unstructured data it's tedious 
-        // to use regex_search or regex_match because they match only one occurrence of a pattern.
-        // Regular expression iterators solve that problem. They continue iterating as the regular expression 
-        // matches patterns repeatedly. It requires bidirectional access to the sequence so it may not work for 
-        // certain streams of data.
-        // Also, the regular expression iterators avoid creating temporary string objects.
+        // The regex_search function finds a single occurrence of a pattern. On the other hand, regular 
+        // expression iterators continue iterating as the regular expression matches patterns repeatedly. 
+        // They require bidirectional access to the sequence and avoid creating temporary string objects.
 
-        // Define the regular expression that matches a filename contained within angle brackets. 
+        // Define the regular expression that matches a filename contained within angle brackets.
         // The parentheses are for grouping and ensure that the filename is captured in a submatch.
         auto r = regex{ R"(<\w+\.\w{2,3}>)" };
 
@@ -96,8 +93,8 @@ namespace RegularExpressions
             it != std::cregex_iterator{};
             ++it)
         {
-            // Dereference the iterator to return a match. In this case we further index into 
-            // the match to retrieve the first submatch, the filename.
+            // Dereference the iterator to return a match. In this case, we further index into 
+            // the match to retrieve the first submatch - the filename.
             auto& match = (*it)[0];
 
             cout << match.length() << ":" << match << " ";

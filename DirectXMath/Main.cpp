@@ -24,7 +24,7 @@ int main()
     // 3 - colors
     // 4 - operations
     // 5 - planes
-    int test = 5;
+    int test = 1;
 
     switch (test)
     {

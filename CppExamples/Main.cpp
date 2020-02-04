@@ -121,7 +121,7 @@ int main()
     cout << endl << endl;
 
     cout << "*** Templates ***" << endl;
-    TemplatesExamples::Templates();
+    TemplatesExamples::Test();
     cout << endl << endl;
 
     return 0;

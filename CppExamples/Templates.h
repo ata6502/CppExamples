@@ -32,15 +32,6 @@ using std::vector;
     - int if T is vector<int>
     - string if T is vector<string>
     - Resource if T is vector<Resource> etc.
-    It's an implied constraint. It's up to the programmer to pass the correct type as T. 
-    In the following example, T has to have the value_type member which ctor has to accept 
-    a string. For example, std::string has the value_type member and it can be constructed 
-    from a string.
-    T::value_type res("entry");
-
-    Default values for function template parameters:
-    Default numerical value: template <typename T, int N=1> T& increment(T& i)
-    Default type value: template <typenameT, typename C = std::less<T>>T FindExtreme(std::vector<T> &v, C c = C())
 */
 namespace TemplatesExamples
 {
@@ -52,14 +43,13 @@ namespace TemplatesExamples
         typedef std::pair<int, int> IntPair;
         typedef std::tuple<int, int, int> Trie; // tuple is a variadic template
 
-
-
-        // Return a pair of values: a sum and a product.
+        // Returns a pair of values: a sum and a product.
         IntPair SumAndProduct(int a, int b)
         {
             return IntPair(a + b, a*b);
         }
 
+        // Returns a triple of values: a sum, a product, and an average.
         Trie SumProductAverage(int a, int b, int c)
         {
             Trie t{ a + b + c, a*b*c, (a + b + c) / 3 };
@@ -68,7 +58,7 @@ namespace TemplatesExamples
 
         void Tuples()
         {
-            // std::tuple has built-in comparison operators that check whether two tuples are the same or not.
+            // std::tuple has built-in comparison operators that check whether two tuples are the same.
 
             // Create tuples using uniform initialization.
             tuple<int, string, double> entry1{ 1, "A", 11.1 };
@@ -84,15 +74,15 @@ namespace TemplatesExamples
                 std::make_tuple(4, "D", 44.4) 
             };
 
-            // Get the value out of a tuple and/or change it using the template function get<T>()
-            // that takes a tuple instance. The type parameter is a 0-based index of a tuple element
-            // we want to get. The get function returns a reference to the tuple element.
+            // The template function get<T>() returns a reference to a tuple element. It that takes 
+            // a tuple instance as a parameter. Its type parameter is a 0-based index of a tuple element
+            // we want to get.
             std::get<2>(entry1) = 88.8; // 0 is int, 1 is string, 2 is double
 
             // Insert a tuple at the beginning of a vector.
             vec.insert(begin(vec), entry1);
 
-            // Iterate over our vector of tuples.
+            // Iterate over the vector of tuples.
             for (const auto& v : vec)
             {
                 std::cout << std::get<1>(v);
@@ -119,13 +109,12 @@ namespace TemplatesExamples
         }
     }
 
-
     //
     // Template Classes
     //
     namespace TemplateClasses
     {
-        // Our custom Tuple class.
+        // An example of a template class/struct.
         template<typename T1, typename T2, typename T3>
         struct Triple // it could be 'class' instead of 'struct'
         {
@@ -141,7 +130,7 @@ namespace TemplatesExamples
 
         Trie SumProductAverage(int a, int b, int c)
         {
-            // ??? Although our Triple template does not support uniform initialization
+            // ??? Although the Triple template does not support uniform initialization
             // we are using it here and it's fine. Why? Without uniform initialization
             // we would need to use the ctor.
             Trie t{ a + b + c, a*b*c, (a + b + c) / 3 };
@@ -163,7 +152,7 @@ namespace TemplatesExamples
         void Test()
         {
             //
-            // SumProductAverage
+            // Triple template class
             //
             auto res = SumProductAverage(2, 3, 4);
             cout
@@ -172,9 +161,9 @@ namespace TemplatesExamples
                 << ",Avg:" << res.third << " ";
 
             //
-            // Accumulator
+            // Accumulator template class
             //
-            Accumulator<int> accum(0); // always specify a type for class templates
+            Accumulator<int> accum(0);
             accum += 3;
             accum += 7;
             cout << accum.GetTotal() << " ";
@@ -185,7 +174,6 @@ namespace TemplatesExamples
             cout << accum2.GetTotal() << " ";
         }
     }
-
 
     //
     // Template Functions
@@ -228,22 +216,10 @@ namespace TemplatesExamples
                 cout << a[i];
         }
 
-        template<typename T>
-        void WriteColumn(const T& val, const string& terminator)
-        {
-            // If T and U name the same type (including const/volatile qualifications), 
-            // std::is_same provides the member constant value equal to true. Otherwise 
-            // value is false.
-            if (std::is_same<typename std::remove_const<T>::type, string>::value)
-                cout << "1 ";
-            else
-                cout << "2 ";
-        }
-
         void Test()
         {
             //
-            // SumProductAverage
+            // Triple test
             //
             int a = 14;
             double b = 5.0;
@@ -259,7 +235,7 @@ namespace TemplatesExamples
             // MinMax test
             //
             int p = 2, q = 8;
-            cout << "min:" << Min(p, q) << " "; // the compiler figures out what type you want to use; the same as Min<double>(a,b)
+            cout << "min:" << Min(p, q) << " "; // the compiler figures out what type you want to use; the same as Min<double>(p,q)
             cout << "max:" << Max(p, q) << " ";
 
             char x = 'e', y = 'c';
@@ -275,21 +251,12 @@ namespace TemplatesExamples
         }
     }
 
-
     //
     // Template Specialization
     //
-    // Used to tell the compiler to generate a template for a particular type.
-    // It may be useful when the type does not implement certain operations
-    // such as > or + which are used in the template.
-    // The first choice is to add a missing operator or a function. If you
-    // do not own the code you can extend the type by creating a free function
-    // for the operator.
-    // The second choice is to specialize the template.
     namespace TemplateSpecialization
     {
-        // Specializes a template for a particular type.
-        // As an example, we specialize the complex type.
+        // Specialize the complex type.
 
         template<typename T1, typename T2, typename T3>
         struct Triple
@@ -577,43 +544,15 @@ namespace TemplatesExamples
     }
 
     //
-    // Template Metaprogramming
-    //
-    namespace TemplateMetaprogramming
-    {
-        // Calculate factorial.
-
-        template <int n> struct Factorial
-        {
-            enum { value = n * Factorial<n - 1>::value };
-        };
-
-        // Stopping condition for the recursion.
-        template <> struct Factorial<0>
-        {
-            enum { value = 1 };
-        };
-
-        void Test()
-        {
-            // Pre-calculate factorials in *compile time*.
-            int x = Factorial<4>::value; // 24
-            int y = Factorial<0>::value; // 1
-        }
-    }
-
-    //
     // Default values for function template parameters
     //
     namespace DefaultTemplateParameters
     {
-        // so here I'm saying I'd like to use standard greater instead of standard less, and I have to also tell it that this will be working with a vector of integers, and that will bring me the minimum. So, let's take a look, it thinks the minimum is 4, and if we take a look at nums, that's true, the minimum is 4. These are not hard templates to write, and enabling there to be a default value actually makes these much easier to use. An increment function that you had to every time say, oh by the way this is an integer, and by the way I'd like to increment it by 1, I don't think you would ever use. And to find Extreme Function that you had to specify the type and the comparer every time, again I don't think you would use. So being able to have defaults makes these templates easier to write, and also easier to use. 
-
-        // The function template Increment works with any type that 
-        // has the += operation.
+        // The function template Increment works with any type that has the += operation.
         template <typename T, int N = 1> T& Increment(T& i)
         {
-            i += N; return i;
+            i += N; 
+            return i;
         }
 
         // The second type parameter is a comparer, which by default is the std::less comparer.
@@ -650,14 +589,36 @@ namespace TemplatesExamples
         }
     }
 
+    //
+    // Template Metaprogramming
+    //
+    namespace TemplateMetaprogramming
+    {
+        // Calculate factorial.
+
+        template <int n> struct Factorial
+        {
+            enum { value = n * Factorial<n - 1>::value };
+        };
+
+        // Stopping condition for the recursion.
+        template <> struct Factorial<0>
+        {
+            enum { value = 1 };
+        };
+
+        void Test()
+        {
+            // Pre-calculate factorials in *compile time*.
+            int x = Factorial<4>::value; // 24
+            int y = Factorial<0>::value; // 1
+        }
+    }
 
     void Test()
     {
         ConsumingTemplates::Test();
         TemplateClasses::Test();
         TemplateFunctions::Test();
-        TemplateSpecialization::Test();
-        VariadicTemplates::Test();
-        DefaultTemplateParameters::Test();
     }
 }

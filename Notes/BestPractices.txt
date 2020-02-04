@@ -8,10 +8,26 @@ COLLECTIONS
 - Reserve storage in advance using the reserve method.
 
 POINTERS & REFERENCES
+- DO NOT control the object's lifetime through a raw pointer. 
 - Always initialize pointers to nullptr.
 - If a pointer is declared as const, the type it points to should also be declared as const.
 - Be suspicious of non-const refrence arguments. If you want the function to modify its arguments, use pointers and returned value instead.
 - Try to use references instead of pointers, especially as function parameters.
+
+WHEN TO USE POINTERS OR SMART POINTERS
+- To represent UML composition (has-a) as a class's member variable. Lifetime of the variable is tied to the class.
+  - Make the variable a solid member of your class.
+  - When the containing object is copied, solid members are copied too.
+  - When the containing object is destroyed, all solid objects are also destroyed.
+  - Use a unique_ptr when the member variable is optional or large.
+
+- To access an object. In this case we don't have control over the lifetime of the object referenced by a pointer. 
+  - If an object is in a unique_ptr, give access to it through a raw pointer.
+  - If an object is in a shared_ptr, give access to it through a weak_ptr.
+  - If an object is solid, give access to it through a raw pointer using the & operator or 'this'
+
+- To allow shared access to an object on the free store. 
+  - The object does not have a single owner.
 
 EXCEPTIONS
 - Catch exceptions by reference. Otherwise, slicing may occur. This applies to the exceptions that are in the exception hierarchy.
