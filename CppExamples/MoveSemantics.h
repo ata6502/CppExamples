@@ -11,14 +11,11 @@ using std::vector;
 using std::string;
 
 /*
-    Vector performs well because it implements move semantics i.e., it moves its elements rather then copying them.
-    String performs well because it implements move semantics when concatenating strings.
-    If an object is moveable, it will be moved if there is an appropriate move sematics defined.
-
-    Compiler generates a default move ctor for you if you have moveable contents.
-
+    - std::vector implements move semantics i.e., it moves its elements rather than copying them.
+    - std::string also implements move semantics when concatenating strings.
+    - An objct is moved if there is an appropriate move sematics defined.
+    - The compiler generates a default move ctor if you have moveable contents.
 */
-
 namespace MoveSemanticsExamples
 {
     int get() { return 8; }
