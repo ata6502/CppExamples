@@ -1005,6 +1005,37 @@ namespace ContainerExamples
                 ++n;
             }
         }
+
+        // Source: https://www.interviewbit.com/problems/rotate-matrix/
+        // It has a more efficient solution that has only one pass of the nested for loops.
+        // Anyway, the time complexity of this solution is also O(n^2) because O(2*n^2) = O(n^2)
+        
+        // Test cases
+        //vector<vector<int>> m = { {1,2}, {3,4} };
+        vector<vector<int>> m = { {1,2,3,4}, {5,6,7,8}, {9,10,11,12}, {13,14,15,16} };
+
+        // transpose
+        for (auto i = 0; i < m.size(); ++i)
+        {
+            for (auto j = i + 1; j < m[i].size(); ++j)
+            {
+                auto tmp = m[j][i];
+                m[j][i] = m[i][j];
+                m[i][j] = tmp;
+            }
+        }
+
+        // symmetric reflection by the central column
+        for (auto i = 0; i < m.size(); ++i)
+        {
+            auto n = m[i].size();
+            for (auto j = 0; j < n / 2; ++j)
+            {
+                auto tmp = m[i][j];
+                m[i][j] = m[i][n - j - 1];
+                m[i][n - j - 1] = tmp;
+            }
+        }
     }
 
     void Test()
