@@ -46,18 +46,12 @@
     <ClInclude Include="Examples\pImpl\Account.h">
       <Filter>Examples\pImpl</Filter>
     </ClInclude>
-    <ClInclude Include="Examples\pImpl\AccountImpl.h">
-      <Filter>Examples\pImpl</Filter>
-    </ClInclude>
     <ClInclude Include="PointersAndReferences.h" />
     <ClInclude Include="FilesAndStreams.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Examples\pImpl\Account.cpp">
-      <Filter>Examples\pImpl</Filter>
-    </ClCompile>
-    <ClCompile Include="Examples\pImpl\AccountImpl.cpp">
       <Filter>Examples\pImpl</Filter>
     </ClCompile>
   </ItemGroup>

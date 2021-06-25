@@ -3,14 +3,11 @@
 #include <memory>
 #include <vector>
 
-// When the pImpl idiom is used, no change in AccountImpl triggers recompilation
-// of Main or any other files that #include Account.h
+// When the pImpl idiom is used, changes in AccountImpl do not trigger recompilation
+// of files that #include Account.h
 
 namespace Patterns
 {
-    // Just the forward declaration, not #include "AccountImpl.h"
-    class AccountImpl;
-
     class Account
     {
     public:
@@ -23,7 +20,14 @@ namespace Patterns
         Account& operator=(Account&& otherAccount);
 
     private:
-        // A unique_ptr member makes the class non-copyable.
+        // Forward declaration
+        //
+        // AccountImpl is declared as a private nested class. Use a public nested
+        // implementation class only if other classes or functions need to access
+        // the implementation class members.
+        class AccountImpl;
+
+        // unique_ptr makes the class non-copyable.
         std::unique_ptr<AccountImpl> pImpl;
     };
 

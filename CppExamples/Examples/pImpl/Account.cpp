@@ -1,12 +1,39 @@
 #include "Account.h"
-#include "AccountImpl.h"
 
 #include <iostream>
 
+using std::cout;
+
 using namespace Patterns;
 
+// AccountImpl is as a private nested class in Account.
+
+// AccountImpl interface.
+class Account::AccountImpl
+{
+public:
+    AccountImpl(int v);
+    int MyMethod();
+
+private:
+    // ... implementation details
+    int m_v;
+};
+
+// AccountImpl implementation.
+Account::AccountImpl::AccountImpl(int v)
+{
+    m_v = v;
+}
+
+int Account::AccountImpl::MyMethod()
+{
+    cout << m_v;
+    return m_v;
+}
+
 // Account ctor delegates to pImpl ctor.
-Account::Account(int v) : pImpl(new AccountImpl(v))
+Account::Account(int v) : pImpl(new Account::AccountImpl(v))
 {
 }
 
@@ -30,7 +57,7 @@ Account& Account::operator=(Account&& otherAccount)
 
 int Account::MyMethod()
 {
-    // Delegate to impl.
+    // Access the method via pImpl.
     return pImpl->MyMethod();
 }
 

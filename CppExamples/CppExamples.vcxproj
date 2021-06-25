@@ -29,7 +29,6 @@
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Examples\Histogram.h" />
     <ClInclude Include="Examples\pImpl\Account.h" />
-    <ClInclude Include="Examples\pImpl\AccountImpl.h" />
     <ClInclude Include="Examples\Recursion\CalculateFactorial.h" />
     <ClInclude Include="Examples\Recursion\CalculatePower.h" />
     <ClInclude Include="Examples\Recursion\GreatestCommonDivisor.h" />
@@ -54,7 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Examples\pImpl\Account.cpp" />
-    <ClCompile Include="Examples\pImpl\AccountImpl.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
