@@ -6,8 +6,13 @@ pImpl Idiom (pointer-to-implementation)
 - Separates the implementation (.cpp) from the definition (.h)
 - Keeps implementation details out of the public header files.
 - A class that implements the pImpl idiom has just one private variable - a pointer to the implementation class.
-- The advantage of using the pImpl idiom is that we can change the private 
-  part of the implementation class and minimize the need for recompilation.
+
+Advantages:
+- Faster compiles: we can change the private part of the implementation class and minimize the need for recompilation.
+- Reduced coupling: we can move class dependencies to the .cpp file.
+- Greater binary compatibility: The size of a pimpled object never changes (it's a pointer). Any changes to the private
+  member variables only affect the size of the implementation class that is hidden inside the .cpp file.
+- Lazy allocation: we can construct the implementation class on demand.
 
 A class that is a good candidate for the pImpl idiom:
 - Already non-copyable
@@ -23,6 +28,12 @@ Downsides:
 - You may need to add a pointer in the impl class back to the public class so that the impl class
   can call public methods. You could also pass the public class into the impl class methods
   that need it.
+- There is a performance hit for the extra level of pointer indirection required to access member 
+  variables as well as the cost of additional calls to new and delete. There is "Fast Pimpl" that 
+  improves the memory allocation performance. It overloads the new and delete operators for the 
+  implementation class.
+- The compiler won't catch changes to member variables within const methods. This is because member
+  variables live in a separate object.
 
 pImpl structure with unique_ptr:
 - Everybody #includes Account.h

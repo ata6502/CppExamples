@@ -15,7 +15,10 @@ using std::string;
     2. The **copy assignment operator** - used to copy the value from one object to another of the same type.
     3. The **destructor**.
 
-    With the move operation available, we have the rule of five now.
+    With the move operation available, we have the rule of four now.
+
+    A C++ compiler creates a copy constructor and assignment operator for your class if you don't explicitly
+    define them. However, these compiler-generated constructors perform a shallow copy of your object.
 
     How to distinguish between a copy constructor and a copy assignment:
     - If a new object is being defined, a constructor is called.
